@@ -1,0 +1,5 @@
+name: NonPlayer
+main: iggy.NonPlayers.NonPlayers
+version: 1.02
+description: >
+             Other Players

@@ -1,0 +1,5 @@
+name: AntiGrief
+main: iggy.AntiGrief.AntiGrief
+version: 1.0
+description: >
+             This is my first anti-griefing plugin

@@ -1,0 +1,5 @@
+name: Teleport
+main: iggy.Teleport.Teleport
+version: 1.32
+description: >
+             Simple Jumping

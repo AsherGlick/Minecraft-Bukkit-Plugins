@@ -1,0 +1,14 @@
+name: SuspendBlock
+main: iggy.SuspendBlock.SuspendBlock
+version: 1.3
+description: >
+             Making blocks uneffected by reality
+commands:
+  phaseout:
+    description: Makes blocks not interact with reality
+  po:
+    description: Short for phaseout
+  phasein:
+    description: Brings blocks back to reality
+  pi:
+    description: short for phasein

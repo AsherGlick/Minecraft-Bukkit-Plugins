@@ -1,0 +1,6 @@
+name: HelloWorld
+main: iggy.helloworld.HelloWorld
+version: 1.0
+description: >
+             Hello World!
+commands:
