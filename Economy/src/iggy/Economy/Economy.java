@@ -242,6 +242,7 @@ public class Economy extends JavaPlugin{
 		
 		if (playerMoney > money) {
 			playerBanks.put(player, playerMoney-money);
+			info (player+" was charged $"+money);
 			saveMoney();
 			return true;
 		}
@@ -258,5 +259,13 @@ public class Economy extends JavaPlugin{
 	public boolean giveMoney (String player,long money) {
 		setMoney(player,getMoney(player)+money);
 		return false;
+	}
+	
+	// helpfull functions for output
+	public void info(String input) {
+		this.logger.info(pluginTitle + input);
+	}
+	public void severe (String input) {
+		this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");
 	}
 }
