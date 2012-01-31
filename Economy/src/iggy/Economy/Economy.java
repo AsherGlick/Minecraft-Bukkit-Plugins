@@ -129,20 +129,21 @@ public class Economy extends JavaPlugin{
 			this.getConfig().set("banks."+pairs.getKey(), pairs.getValue());
 		}
 		this.saveConfig();
+		logger.info(pluginTitle+" Players' accounts saved");
 	}
 	public void loadMoney() {
 		playerBanks.clear();
 		ConfigurationSection bankConfig = this.getConfig().getConfigurationSection("banks");
 		
 		if (bankConfig == null) {
-			this.logger.severe(pluginTitle+" Failed to read the Configuration File");
+			this.logger.severe(pluginTitle+" Failed to load bank accounts from config (banks section not found)");
 			return;
 		}
 		
 		Set<String> players = bankConfig.getKeys(false);
 		
 		if (players == null) {
-			this.logger.severe(pluginTitle+" Failed to read the Configuration File");
+			this.logger.severe(pluginTitle+" Failed to load bank accounts from config (No players found)");
 			return;
 		}
 		
@@ -153,7 +154,7 @@ public class Economy extends JavaPlugin{
 			long money = this.getConfig().getLong("banks."+player);
 			playerBanks.put(player, money);
 		}
-		
+		logger.info(pluginTitle+" Players' accounts loaded");
 	}
 	
 	
@@ -165,13 +166,41 @@ public class Economy extends JavaPlugin{
 			this.getConfig().set("blocks."+pairs.getKey().toString(), pairs.getValue());
 		}
 		this.saveConfig();
+		logger.info(pluginTitle+" Block Prices Saved");
 	}
 	public void loadPrices() {
 		blockPrices.clear();
 		for (int i = 0; i < Material.values().length; i++) {
-			long price = 0;
+			long price = -1;
 			blockPrices.put(Material.values()[i], price);
 		}
+		
+		ConfigurationSection blockConfig = this.getConfig().getConfigurationSection("blocks");
+		if (blockConfig == null) {
+			this.logger.severe(pluginTitle+" Failed to load Block prices from configuration (Blocks section not found)");
+			return;
+		}
+		
+		Set<String> blocks = blockConfig.getKeys(false);
+		if (blocks == null) {
+			this.logger.severe(pluginTitle+" Failed to load block prices from config (No blocks found)");
+			return;
+		}
+		
+		Iterator<String> it = blocks.iterator();
+		while (it.hasNext()) {
+			String blockname = it.next();
+			Material block = Material.getMaterial(blockname);
+			if (block == null) {
+				this.logger.severe(pluginTitle+" unknown block found in price list ("+blockname+")");
+				continue;
+			}
+			long price = this.getConfig().getLong("blocks."+blockname);
+			blockPrices.put(block, price);
+		}
+		
+		
+		logger.info(pluginTitle+" Block Prices Loaded");
 	}
 	//Modify 
 	public long getMoney(String player) {
