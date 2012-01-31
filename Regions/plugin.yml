@@ -1,0 +1,5 @@
+name: Regions
+main: iggy.Regions.Regions
+version: 1.03
+description: >
+             regions for building and protecting your house
