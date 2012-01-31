@@ -1,6 +1,6 @@
 name: Economy
 main: iggy.Economy.Economy
-version: 1.05
+version: 1.08
 description: >
              Simple Economy
 commands:

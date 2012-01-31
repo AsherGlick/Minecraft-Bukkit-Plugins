@@ -8,6 +8,11 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
+import org.bukkit.OfflinePlayer;
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
@@ -38,7 +43,67 @@ public class Economy extends JavaPlugin{
 		loadMoney();	
 		this.logger.info(pluginTitle+ " version " + pdFile.getVersion() +" is enabled");
 	}
-
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+		Player player = null;
+		if (sender instanceof Player) {
+			player = (Player) sender;
+		}
+		
+		//World world = player.getWorld();
+		
+		if (commandLabel.equalsIgnoreCase("buy")){
+		}
+		else if (commandLabel.equalsIgnoreCase("sell")){
+			
+		}
+		else if (commandLabel.equalsIgnoreCase("price")){
+			
+		}
+		else if (commandLabel.equalsIgnoreCase("list")){
+			
+		}
+		else if (commandLabel.equalsIgnoreCase("money")){
+			if (args.length == 0){
+				if (player == null){
+					logger.info(pluginTitle+" You need to type in a player name");
+				}
+				else {
+					long money = getMoney(player.getName());
+					player.sendMessage("You have $"+ChatColor.GREEN+money+ChatColor.WHITE+" in the bank");
+				}
+			}
+			else if (args.length == 1){
+				if (player == null){
+					String playername = getFullPlayerName(args[0]);
+					if (playername == null) return false;
+					long money = getMoney(playername);
+					logger.info(pluginTitle+" "+playername+" has $"+money);
+				}
+				else if (player.hasPermission("economy.moneymonitor")||player.isOp()) {
+					String playername = getFullPlayerName(args[0]);
+					if (playername == null) return false;
+					long money = getMoney(playername);
+					player.sendMessage(playername+" has $"+ChatColor.GREEN+money+ChatColor.WHITE+" in the bank");
+				}
+			}
+		}
+		return false;
+	}
+	
+	public String getFullPlayerName (String name) {
+		String playername = "";
+		Player findplayer = Bukkit.getServer().getPlayer(name);
+		if (findplayer == null){
+			logger.info(pluginTitle+" No online player found by that name");
+			return null;
+		}
+		else {
+			playername = findplayer.getName();
+		}
+		return playername;
+	}
+	
 	public void saveMoney() {
 		this.getConfig().set("banks", "");
 		Iterator<Entry<String, Long>> bankIterator =  playerBanks.entrySet().iterator();
@@ -48,7 +113,6 @@ public class Economy extends JavaPlugin{
 		}
 		this.saveConfig();
 	}
-	//TODO
 	public void loadMoney() {
 		playerBanks.clear();
 		ConfigurationSection bankConfig = this.getConfig().getConfigurationSection("banks");
@@ -75,6 +139,7 @@ public class Economy extends JavaPlugin{
 		
 	}
 	
+	//Modify 
 	public long getMoney(String player) {
 		long playerMoney = 0;
 		if (playerBanks.containsKey(player)){
@@ -89,7 +154,6 @@ public class Economy extends JavaPlugin{
 		playerBanks.put(player, money);
 		saveMoney();
 	}
-	
 	
 	/*
 	* returns the ammount of money placed in the new player's account
@@ -123,7 +187,7 @@ public class Economy extends JavaPlugin{
 	/********************************* GIVE MONEY *********************************\
 	| This function gives money to the player, it will not first check the ammount |
 	| of money in the players account (only a problem if the player has more then  |
-	|
+	| 9000000000000000 money                                                       |
 	\******************************************************************************/
 	public boolean giveMoney (Player player,long money) {
 		return giveMoney(player.getName(),money);
