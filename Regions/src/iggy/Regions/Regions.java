@@ -25,7 +25,7 @@ public class Regions extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		// TODO Auto-generated method stub
-		info(pluginTitle + " version " + pdFile.getVersion() +" is disabled");
+		info(" Version " + pdFile.getVersion() +" is disabled");
 	}
 
 	@Override
@@ -50,7 +50,7 @@ public class Regions extends JavaPlugin{
 		economyapi = (Economy) economy;
 		info ("Loaded Economy");
 		
-		info (pluginTitle + " version " + pdFile.getVersion() +" is enabled");
+		info (" Version " + pdFile.getVersion() +" is enabled");
 	}
 	
 	public void info(String input) {
