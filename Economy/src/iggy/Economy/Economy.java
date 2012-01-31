@@ -74,8 +74,30 @@ public class Economy extends JavaPlugin{
 			if (player == null) {
 				logger.info(pluginTitle+" This command can only be run by a player");
 			}
-			int amount = player.getItemInHand().getAmount();
-			Material material = player.getItemInHand().getType();
+			int amount = 1;
+			Material material;
+			if (args.length == 0) {
+				amount = player.getItemInHand().getAmount();
+				material = player.getItemInHand().getType();
+			}
+			else if (args.length == 1){
+				material = Material.getMaterial(args[0]);
+				if (material == null) {
+					player.sendMessage("Unknown material " + args[0]);
+					return false;
+				}
+			}
+			else {
+				player.sendMessage("You cannot list more then one item at a time");
+				return false;
+			}
+			long blockPrice = blockPrices.get(material);
+			if (blockPrice == -1) {
+				player.sendMessage(""+amount+" "+material.toString()+" will sell for $"+ChatColor.GREEN+"0"+ChatColor.WHITE+" and cannot be bought");
+			}
+			else {
+				player.sendMessage(""+amount+" "+material.toString()+" will sell for $"+ChatColor.GREEN+(amount*blockPrice/2)+ChatColor.WHITE+" and can be bought for $"+ChatColor.GREEN+(amount*blockPrice)+ChatColor.WHITE);
+			}
 		}
 		else if (commandLabel.equalsIgnoreCase("list")){
 			
