@@ -1,6 +1,6 @@
 name: Economy
 main: iggy.Economy.Economy
-version: 1.08
+version: 1.10
 description: >
              Simple Economy
 commands:
@@ -14,3 +14,7 @@ commands:
     description: lists the items you can buy
   money:
     description: shows the money you currently have
+  grant:
+  	description: grants a player money
+  fine:
+    description: fines a player money

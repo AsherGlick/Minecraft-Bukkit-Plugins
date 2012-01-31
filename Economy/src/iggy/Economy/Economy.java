@@ -10,7 +10,7 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.OfflinePlayer;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -24,6 +24,7 @@ public class Economy extends JavaPlugin{
 	public static Economy plugin;
 	public final Logger logger = Logger.getLogger("Minecraft");
 	public Map<String,Long> playerBanks = new HashMap<String,Long>();
+	public Map<Material,Long> blockPrices = new HashMap<Material,Long>();
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
@@ -32,6 +33,7 @@ public class Economy extends JavaPlugin{
 	public void onDisable() {
 
 		saveMoney();
+		savePrices();
 		this.logger.info(pluginTitle + " version " + pdFile.getVersion() +" is disabled");
 	}
 
@@ -40,7 +42,8 @@ public class Economy extends JavaPlugin{
 		pdFile = this.getDescription();
 		pluginName = pdFile.getName();
 		pluginTitle = "[\033[0;32m"+pluginName+"\033[0m]";
-		loadMoney();	
+		loadMoney();
+		loadPrices();
 		this.logger.info(pluginTitle+ " version " + pdFile.getVersion() +" is enabled");
 	}
 	
@@ -53,12 +56,26 @@ public class Economy extends JavaPlugin{
 		//World world = player.getWorld();
 		
 		if (commandLabel.equalsIgnoreCase("buy")){
+			if (player == null) {
+				logger.info(pluginTitle+" This command can only be run by a player");
+				return false;
+			}
+			if (args.length != 1) {
+				player.sendMessage("Correct usage is /buy <blockname>");
+			}
 		}
 		else if (commandLabel.equalsIgnoreCase("sell")){
-			
+			if (player == null) {
+				logger.info(pluginTitle+" This commmand can only be run by a player");
+			}
+			player.getItemInHand();
 		}
 		else if (commandLabel.equalsIgnoreCase("price")){
-			
+			if (player == null) {
+				logger.info(pluginTitle+" This command can only be run by a player");
+			}
+			int amount = player.getItemInHand().getAmount();
+			Material material = player.getItemInHand().getType();
 		}
 		else if (commandLabel.equalsIgnoreCase("list")){
 			
@@ -139,6 +156,23 @@ public class Economy extends JavaPlugin{
 		
 	}
 	
+	
+	public void savePrices() {
+		this.getConfig().set("blocks", "");
+		Iterator<Entry<Material, Long>> blockIterator = blockPrices.entrySet().iterator();
+		while (blockIterator.hasNext()) {
+			Entry<Material, Long> pairs = blockIterator.next();
+			this.getConfig().set("blocks."+pairs.getKey().toString(), pairs.getValue());
+		}
+		this.saveConfig();
+	}
+	public void loadPrices() {
+		blockPrices.clear();
+		for (int i = 0; i < Material.values().length; i++) {
+			long price = 0;
+			blockPrices.put(Material.values()[i], price);
+		}
+	}
 	//Modify 
 	public long getMoney(String player) {
 		long playerMoney = 0;
