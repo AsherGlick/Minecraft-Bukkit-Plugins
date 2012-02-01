@@ -1,6 +1,7 @@
 package iggy.Regions;
 
 import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
@@ -13,7 +14,7 @@ public class BlockMonitor implements Listener{
 		plugin = state;
 	}
 	//Called when a block is broken by a player. 
-	@EventHandler
+	@EventHandler (priority = EventPriority.HIGHEST)
 	public void stopBreak (BlockBreakEvent event){
 		Position chunk = new Position(event.getBlock().getLocation());
 		String chunkName = plugin.chunkNames.get(chunk);
