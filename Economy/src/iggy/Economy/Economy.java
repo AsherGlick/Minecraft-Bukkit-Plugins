@@ -104,9 +104,6 @@ public class Economy extends JavaPlugin{
 					player.sendMessage("you cant go to the shop from here");
 				}
 			}
-			if (args.length != 1) {
-				player.sendMessage("Correct usage is /buy <blockname>");
-			}
 		}
 		else if (commandLabel.equalsIgnoreCase("sell")){
 			if (player == null) {
