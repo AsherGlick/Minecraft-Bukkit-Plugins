@@ -9,7 +9,6 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.GameMode;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -88,6 +87,8 @@ public class Economy extends JavaPlugin{
 				return false;
 			}
 			else {
+				// teleporting when you are in a minecart breaks some stuff
+				player.getVehicle().eject();
 				if (player.getWorld() == mainworld || player.getWorld() == thenether){
 					returnPoint.put(player,player.getLocation());
 					//player.setGameMode(GameMode.CREATIVE);
@@ -96,25 +97,20 @@ public class Economy extends JavaPlugin{
 					player.sendMessage("Teleported to the shop");
 				}
 				else if (player.getWorld() == shopworld){
-					player.teleport(returnPoint.get(player));
-					returnPoint.remove(player);
-					player.sendMessage("Returned you to your world");
+					if (returnPoint.containsKey(player)) {
+						player.teleport(returnPoint.get(player));
+						returnPoint.remove(player);
+						player.sendMessage("Returned you to your world");
+					}
+					else {
+						player.teleport(mainworld.getSpawnLocation());
+						player.sendMessage("your old location was corrupted, respawning");
+					}
 				}
 				else {
 					player.sendMessage("you cant go to the shop from here");
 				}
 			}
-		}
-		else if (commandLabel.equalsIgnoreCase("sell")){
-			if (player == null) {
-				logger.info(pluginTitle+" This commmand can only be run by a player");
-			}
-			else {
-				player.setGameMode(GameMode.SURVIVAL);
-				player.setAllowFlight(false);
-				player.sendMessage("Buy Mode deactivated");
-			}
-			player.getItemInHand();
 		}
 		else if (commandLabel.equalsIgnoreCase("price")){
 			if (player == null) {
