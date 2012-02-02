@@ -6,6 +6,9 @@ import java.util.logging.Logger;
 
 import iggy.Economy.Economy;
 
+import org.bukkit.command.Command;
+import org.bukkit.command.CommandSender;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -64,15 +67,50 @@ public class Regions extends JavaPlugin{
 		info ("Loaded Economy");
 		
 		//set up all the block listeners to prevent distruction
-		if (dynmap.isEnabled() && economy.isEnabled()){
-			activate();
-		}
-		else {
-			
+		
+		//economy is required for buying new chunks
+		//dynmap is required for mapfunctions
+		
+		if (!economy.isEnabled() || !dynmap.isEnabled()) {
 			getServer().getPluginManager().registerEvents(new OurServerListener(), this);
-			info("Waiting for Dynmap and Economy to be enabled");
+			if (!economy.isEnabled()) {
+				info("Waiting for Economy to be enabled");
+			}
+			if (!dynmap.isEnabled()) {
+				info("Waiting for Dynmap to be enabled");
+			}
+		}
+		if (economy.isEnabled()){
+			activateEconomy();
+		}
+		if (dynmap.isEnabled()){
+			activatedynmap();
+		}
+		info (" Version " + pdFile.getVersion() +" is enabled");
+	}
+	
+	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
+		Player player = null;
+		if (sender instanceof Player) {
+			player = (Player) sender;
 		}
 		
+		//World world = player.getWorld();
+		
+		if (commandLabel.equalsIgnoreCase("claim")){
+			// if economy is enabled
+			// is plot already claimed
+			// is plot in the regular world or the nether
+			// is a name given
+			// if not then claim
+			  // add to list of claimed blocks
+			  // find highest block at the four corners
+			  // 
+		}
+		if (commandLabel.equalsIgnoreCase("expand")) {
+			
+		}
+		return false;
 	}
 	
 	// listener class to wait for the other plugins to enable
@@ -84,16 +122,21 @@ public class Regions extends JavaPlugin{
         public void onPluginEnable(PluginEnableEvent event) {
             Plugin p = event.getPlugin();
             String name = p.getDescription().getName();
-            if(name.equals("dynmap") || name.equals("Economy")) {
-                if(dynmap.isEnabled() && economy.isEnabled())
-                    activate();
+            if(name.equals("dynmap")) {
+            }
+            if(name.equals("Economy")) {
+            	activateEconomy();
             }
         }
     }
 
 	// funtion to finish activating the plugin once the other plugins are enabled
-	public void activate(){
-		info (" Version " + pdFile.getVersion() +" is enabled");
+	public void activateEconomy(){
+		info ("Economy features (claim, expand) enabled");
+	}
+	
+	public void activatedynmap() {
+		info("dynmap features (view plots on map) enabled");
 	}
 	
 	

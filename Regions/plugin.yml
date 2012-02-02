@@ -1,5 +1,13 @@
 name: Regions
 main: iggy.Regions.Regions
-version: 1.03
+version: 1.04
 description: >
              regions for building and protecting your house
+commands:
+  claim:
+    description: Makes blocks not interact with reality
+  expand:
+    description: Expand a claim to another block
+  addowner:
+    description: add another user to edit
+             

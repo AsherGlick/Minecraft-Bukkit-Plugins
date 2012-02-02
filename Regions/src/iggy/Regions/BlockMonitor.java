@@ -1,5 +1,6 @@
 package iggy.Regions;
 
+import org.bukkit.Bukkit;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -12,6 +13,7 @@ public class BlockMonitor implements Listener{
 	Regions plugin;
 	BlockMonitor (Regions state) {
 		plugin = state;
+		Bukkit.getPluginManager().registerEvents(this, plugin);
 	}
 	//Called when a block is broken by a player. 
 	@EventHandler (priority = EventPriority.HIGHEST)
