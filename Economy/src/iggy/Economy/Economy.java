@@ -88,7 +88,9 @@ public class Economy extends JavaPlugin{
 			}
 			else {
 				// teleporting when you are in a minecart breaks some stuff
-				player.getVehicle().eject();
+				if (player.isInsideVehicle()){
+					player.getVehicle().eject();
+				}
 				if (player.getWorld() == mainworld || player.getWorld() == thenether){
 					returnPoint.put(player,player.getLocation());
 					//player.setGameMode(GameMode.CREATIVE);
