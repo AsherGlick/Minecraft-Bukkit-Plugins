@@ -1,13 +1,11 @@
 name: Economy
 main: iggy.Economy.Economy
-version: 1.12
+version: 1.17
 description: >
              Simple Economy
 commands:
-  buy:
+  shop:
     description: buy a block or an item
-  sell:
-    description: sell a block or an item
   price:
     description: price of a block or item
   list:

@@ -1,6 +1,5 @@
 package iggy.Economy;
 
-
 import java.util.HashMap;
 import java.util.Iterator;
 import java.util.Map;
@@ -10,7 +9,11 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.GameMode;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.World;
+import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
@@ -25,9 +28,16 @@ public class Economy extends JavaPlugin{
 	public final Logger logger = Logger.getLogger("Minecraft");
 	public Map<String,Long> playerBanks = new HashMap<String,Long>();
 	public Map<Material,Long> blockPrices = new HashMap<Material,Long>();
+	public Map<Player,Location> returnPoint = new HashMap<Player,Location>();
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
+	
+	// world list
+	World shopworld;
+	World mainworld;
+	World thenether;
+	World endworld;
 	
 	@Override
 	public void onDisable() {
@@ -42,6 +52,23 @@ public class Economy extends JavaPlugin{
 		pdFile = this.getDescription();
 		pluginName = pdFile.getName();
 		pluginTitle = "[\033[0;32m"+pluginName+"\033[0m]";
+		
+		// create shop world
+		shopworld = Bukkit.getServer().getWorld("shopworld");
+		if (shopworld == null){
+			info(" Shopworld not found, creating shopworld");
+			WorldCreator worldCreator = new WorldCreator("shopworld");
+			worldCreator.generator(new ShopGenerator());
+			shopworld = worldCreator.createWorld();
+			shopworld.setSpawnFlags(false, false);
+			shopworld.setPVP(false);
+			shopworld.setTime(0);
+			shopworld.setSpawnLocation(0, 65, 0);
+			info(" Created shopworld");
+		}
+		mainworld = Bukkit.getServer().getWorld("world");
+		thenether = Bukkit.getServer().getWorld("world_nether");
+		endworld = Bukkit.getServer().getWorld("world_the_end");
 		loadMoney();
 		loadPrices();
 		this.logger.info(pluginTitle+ " version " + pdFile.getVersion() +" is enabled");
@@ -55,10 +82,27 @@ public class Economy extends JavaPlugin{
 		
 		//World world = player.getWorld();
 		
-		if (commandLabel.equalsIgnoreCase("buy")){
+		if (commandLabel.equalsIgnoreCase("shop")){
 			if (player == null) {
 				logger.info(pluginTitle+" This command can only be run by a player");
 				return false;
+			}
+			else {
+				if (player.getWorld() == mainworld || player.getWorld() == thenether){
+					returnPoint.put(player,player.getLocation());
+					//player.setGameMode(GameMode.CREATIVE);
+					//player.setAllowFlight(false);
+					player.teleport(shopworld.getSpawnLocation());
+					player.sendMessage("Teleported to the shop");
+				}
+				else if (player.getWorld() == shopworld){
+					player.teleport(returnPoint.get(player));
+					returnPoint.remove(player);
+					player.sendMessage("Returned you to your world");
+				}
+				else {
+					player.sendMessage("you cant go to the shop from here");
+				}
 			}
 			if (args.length != 1) {
 				player.sendMessage("Correct usage is /buy <blockname>");
@@ -67,6 +111,11 @@ public class Economy extends JavaPlugin{
 		else if (commandLabel.equalsIgnoreCase("sell")){
 			if (player == null) {
 				logger.info(pluginTitle+" This commmand can only be run by a player");
+			}
+			else {
+				player.setGameMode(GameMode.SURVIVAL);
+				player.setAllowFlight(false);
+				player.sendMessage("Buy Mode deactivated");
 			}
 			player.getItemInHand();
 		}
