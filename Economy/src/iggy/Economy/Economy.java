@@ -159,7 +159,7 @@ public class Economy extends JavaPlugin{
 			}
 			else {
 				player.sendMessage(""+amount+" "+material.toString()+" will sell for $"+ChatColor.GREEN+(amount*blockPrice/2)+ChatColor.WHITE+" and can be bought for $"+ChatColor.GREEN+(amount*blockPrice)+ChatColor.WHITE);
-				itemSelector.placeItem(player.getLocation(), material);
+				itemSelector.placeItem(player.getLocation().add(2, 1, 0), material);
 			}
 		}
 		else if (commandLabel.equalsIgnoreCase("money")){
