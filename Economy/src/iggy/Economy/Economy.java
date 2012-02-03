@@ -16,6 +16,7 @@ import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -26,8 +27,16 @@ public class Economy extends JavaPlugin{
 	public static Economy plugin;
 	public final Logger logger = Logger.getLogger("Minecraft");
 	public Map<String,Long> playerBanks = new HashMap<String,Long>();
+	
+	//
 	public Map<Material,Long> blockPrices = new HashMap<Material,Long>();
+	
+	// where to go back to
 	public Map<Player,Location> returnPoint = new HashMap<Player,Location>();
+	
+	// items
+	public Map<Item,Location> itemPlacements = new HashMap<Item,Location>();
+	
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
@@ -65,9 +74,15 @@ public class Economy extends JavaPlugin{
 			shopworld.setSpawnLocation(0, 65, 0);
 			info(" Created shopworld");
 		}
+		// set world variables
 		mainworld = Bukkit.getServer().getWorld("world");
 		thenether = Bukkit.getServer().getWorld("world_nether");
 		endworld = Bukkit.getServer().getWorld("world_the_end");
+		
+		// spawn and maintain items
+		  //spawn items
+		Bukkit.getServer().getPluginManager().registerEvents(new ItemSelector(this), this);
+		
 		loadMoney();
 		loadPrices();
 		this.logger.info(pluginTitle+ " version " + pdFile.getVersion() +" is enabled");
@@ -80,6 +95,8 @@ public class Economy extends JavaPlugin{
 		}
 		
 		//World world = player.getWorld();
+		
+		
 		
 		if (commandLabel.equalsIgnoreCase("shop")){
 			if (player == null) {
@@ -142,9 +159,6 @@ public class Economy extends JavaPlugin{
 			else {
 				player.sendMessage(""+amount+" "+material.toString()+" will sell for $"+ChatColor.GREEN+(amount*blockPrice/2)+ChatColor.WHITE+" and can be bought for $"+ChatColor.GREEN+(amount*blockPrice)+ChatColor.WHITE);
 			}
-		}
-		else if (commandLabel.equalsIgnoreCase("list")){
-			
 		}
 		else if (commandLabel.equalsIgnoreCase("money")){
 			if (args.length == 0){
@@ -288,7 +302,7 @@ public class Economy extends JavaPlugin{
 	* returns the ammount of money placed in the new player's account
 	*/
 	public long createAccount(String player) {
-		long money = 500;
+		long money = 5000;
 		playerBanks.put(player, money);
 		saveMoney();
 		return money;
@@ -306,7 +320,7 @@ public class Economy extends JavaPlugin{
 	public boolean chargeMoney(String player, long money) {
 		long playerMoney = getMoney(player);
 		
-		if (playerMoney > money) {
+		if (playerMoney >= money) {
 			playerBanks.put(player, playerMoney-money);
 			info (player+" was charged $"+money);
 			saveMoney();
