@@ -6,6 +6,8 @@ import java.util.logging.Logger;
 
 import iggy.Economy.Economy;
 
+import org.bukkit.Bukkit;
+import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
@@ -33,10 +35,14 @@ public class Regions extends JavaPlugin{
 	MarkerAPI markerapi;
 	Economy economyapi;
 	
+	World mainworld;
+	World thenether;
+	
+	
 	public Map<Position,String> chunkNames = new HashMap<Position,String>();
 	public Map<String,Owners> chunkOwners = new HashMap<String,Owners>();
 	
-	BlockMonitor pluginMonitor = new BlockMonitor(this);
+	BlockMonitor pluginMonitor;
 	
 	@Override
 	public void onDisable() {
@@ -49,7 +55,14 @@ public class Regions extends JavaPlugin{
 		pdFile = this.getDescription();
 		String pluginName = pdFile.getName();
 		pluginTitle = "[\033[2;33m"+pluginName+"\033[0m]";
-		// TODO Auto-generated method stub
+
+		pluginMonitor = new BlockMonitor(this);
+		
+		// define worlds
+		mainworld = Bukkit.getWorld("world");
+		thenether = Bukkit.getWorld("world_nether");
+		
+		// add external plugin links
 		PluginManager pm = getServer().getPluginManager();
 		dynmap = pm.getPlugin("dynmap");
 		economy = pm.getPlugin("Economy");
@@ -99,16 +112,65 @@ public class Regions extends JavaPlugin{
 		
 		if (commandLabel.equalsIgnoreCase("claim")){
 			// if economy is enabled
-			// is plot already claimed
+			if (!economy.isEnabled()) {
+				player.sendMessage("Economy plugin is not enabled, contact admin for help");
+				return false;
+			}
+			// is plot is not already claimed
+			else if (chunkOwners.containsKey(new Position(player.getLocation()))){
+				player.sendMessage("This plot has allready been claimed, you cannot claim it");
+				return false;
+			}
 			// is plot in the regular world or the nether
+			else if (player.getWorld() != mainworld && player.getWorld() != thenether){
+				player.sendMessage("You can only claim plots in the nether or the main world");
+			}
 			// is a name given
-			// if not then claim
+			else if (args.length == 0) {
+				player.sendMessage("You need to specify a name for this plot");
+				return false;
+			}
+			// try to claim block
+			else {
+				String plotName = args[0];
+				for (int i = 1; i < args.length; i++) {
+					plotName += " "+args[i];
+				}
+				// check to see if the name has already been taken
+				if (chunkOwners.containsKey(plotName)) {
+					player.sendMessage("This plot name has allready been taken");
+					return false;
+				}
+				
+				if (economyapi.chargeMoney(player, 1000)) {
+					Position plot = new Position(player.getLocation());
+					Owners owner = new Owners();
+					owner.addOwner(player.getName());
+					chunkOwners.put(plotName, owner);
+					chunkNames.put(plot, plotName);
+					// find highest block at the four corners
+					plot.placeTorches();
+					
+					player.sendMessage("You bought the plot "+plotName+"for $1000");
+				}
+				
+				else {
+					player.sendMessage("You dont have enough money to buy this plot");
+					return false;
+				}
+			}
+				
 			  // add to list of claimed blocks
 			  // find highest block at the four corners
 			  // 
 		}
 		if (commandLabel.equalsIgnoreCase("expand")) {
-			
+			// if economy is enabled
+			// if plot is not already claimed
+			// if plot is in regularworld or netherworld
+			// if name is given
+			// claim block
+			// find highest block at the four courners
 		}
 		return false;
 	}
