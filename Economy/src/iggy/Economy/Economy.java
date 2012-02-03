@@ -16,7 +16,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Item;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -35,7 +34,6 @@ public class Economy extends JavaPlugin{
 	public Map<Player,Location> returnPoint = new HashMap<Player,Location>();
 	
 	// items
-	public Map<Item,Location> itemPlacements = new HashMap<Item,Location>();
 	public ItemSelector itemSelector = new ItemSelector(this);
 	
 	PluginDescriptionFile pdFile;
