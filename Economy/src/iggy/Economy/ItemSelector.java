@@ -16,7 +16,9 @@ public class ItemSelector implements Listener {
 	}
 	
 	public void placeItem(Location location,Material material){
-		plugin.itemPlacements.put(location.getWorld().dropItem(location, new ItemStack(material)), location);
+		Item item = location.getWorld().dropItem(location, new ItemStack(material));
+		item.setPickupDelay(2147483647);
+		plugin.itemPlacements.put(item, location);
 	}
 	
 	

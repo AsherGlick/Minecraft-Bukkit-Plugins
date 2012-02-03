@@ -36,6 +36,7 @@ public class Economy extends JavaPlugin{
 	
 	// items
 	public Map<Item,Location> itemPlacements = new HashMap<Item,Location>();
+	public ItemSelector itemSelector = new ItemSelector(this);
 	
 	PluginDescriptionFile pdFile;
 	String pluginName;
@@ -81,7 +82,7 @@ public class Economy extends JavaPlugin{
 		
 		// spawn and maintain items
 		  //spawn items
-		Bukkit.getServer().getPluginManager().registerEvents(new ItemSelector(this), this);
+		Bukkit.getServer().getPluginManager().registerEvents(itemSelector, this);
 		
 		loadMoney();
 		loadPrices();
@@ -158,6 +159,7 @@ public class Economy extends JavaPlugin{
 			}
 			else {
 				player.sendMessage(""+amount+" "+material.toString()+" will sell for $"+ChatColor.GREEN+(amount*blockPrice/2)+ChatColor.WHITE+" and can be bought for $"+ChatColor.GREEN+(amount*blockPrice)+ChatColor.WHITE);
+				itemSelector.placeItem(player.getLocation(), material);
 			}
 		}
 		else if (commandLabel.equalsIgnoreCase("money")){
