@@ -62,10 +62,16 @@ public class ItemSelector implements Listener {
 		double eyex = eye.getX();
 		double eyey = eye.getY();
 		double eyez = eye.getZ();
-		List<Block> blocks = player.getLineOfSight(null, 8);
+		List<Block> blocks = player.getLineOfSight( new HashSet<Byte>() , 8);
+		player.sendMessage("there were "+blocks.size()+" blocks selected");
 		List<QuarterBlock> miniblocks = new ArrayList<QuarterBlock>();
 		
+		player.sendMessage(player.getLocation().getYaw() + "," + player.getLocation().getPitch());
+		
 		for (int i = 0; i < blocks.size(); i++) {
+			
+			
+			
 			Location blocklocation = blocks.get(i).getLocation();
 			
 			double delx = blocklocation.getX() - eyex;
@@ -80,7 +86,9 @@ public class ItemSelector implements Listener {
 		}
 		
 		for (int i = 0; i < miniblocks.size(); i++){
-			placeItem(miniblocks.get(i).getLocation(),Material.GOLD_INGOT);
+			Location loc = miniblocks.get(i).getLocation();
+			placeItem(loc,Material.GOLD_INGOT);
+			plugin.info("placed ingot at"+loc);
 		}
 		plugin.info("finished LOS miniblock");
 	}
