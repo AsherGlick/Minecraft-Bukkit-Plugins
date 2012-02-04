@@ -158,7 +158,6 @@ public class Economy extends JavaPlugin{
 		
 		//World world = player.getWorld();
 		
-		
 		/************************************ SHOP ************************************\
 		| This command will teleport the player to and from the shop world. It saves   |
 		| where they are and teleports them to the center of the shop world. If the    |
@@ -168,7 +167,7 @@ public class Economy extends JavaPlugin{
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("shop")){
 			if (player == null) {
-				info(" This command can only be run by a player");
+				info(" This command can only be run by a pldayer");
 				return false;
 			}
 			else {
@@ -380,10 +379,44 @@ public class Economy extends JavaPlugin{
  ////////////////////////////////// Bounties //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 	public void saveBounties() {
+		this.getConfig().set("creatures", "");
 		
+		Iterator<Entry<CreatureType, Long>> creatureIterator = creatureBounties.entrySet().iterator();
+		while (creatureIterator.hasNext()) {
+			Entry<CreatureType, Long> pairs = creatureIterator.next();
+			this.getConfig().set("creatures."+pairs.getKey(), pairs.getValue());
+		}
+		this.saveConfig();
+		info(" Creature Bounties Saved");
 	}
 	public void loadBounties() {
-		
+		creatureBounties.clear();
+		for (int i = 0; i < CreatureType.values().length; i++) {
+			long bounty = -1;
+			creatureBounties.put(CreatureType.values()[i], bounty);
+		}
+		ConfigurationSection creatureConfig = this.getConfig().getConfigurationSection("creatures");
+		if (creatureConfig == null) {
+			severe(" Failed to load creature bounties from configuration (creature section not found)");
+			return;
+		}
+		Set<String> creatures = creatureConfig.getKeys(false);
+		if (creatures == null){
+			severe(" failed to load creature bounties from configuration (no creatures found)");
+			return;
+		}
+		Iterator<String> it = creatures.iterator();
+		while(it.hasNext()) {
+			String creaturename = it.next();
+			CreatureType creature = CreatureType.fromName(creaturename);
+			if (creature == null) {
+				severe(" unknown creature found in bounty list ("+creaturename+")");
+				continue;
+			}
+			long price = this.getConfig().getLong("creatures."+creaturename);
+			creatureBounties.put(creature, price);
+		}
+		info (" Creature bounties loaded");
 	}
   //////////////////////////////////////////////////////////////////////////////
  ///////////////////////////// Money Modification /////////////////////////////
