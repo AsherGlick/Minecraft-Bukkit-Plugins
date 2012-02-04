@@ -441,7 +441,7 @@ public class Economy extends JavaPlugin{
 		return false;
 	}
 	/********************************* GIVE MONEY *********************************\
-	| This function gives money to the player, it will not first check the ammount |
+	| This function gives money to the player, it will not first check the amount  |
 	| of money in the players account (only a problem if the player has more then  |
 	| 9000000000000000 money                                                       |
 	\******************************************************************************/
