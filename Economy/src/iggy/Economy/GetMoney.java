@@ -46,6 +46,8 @@
 \******************************************************************************/
 package iggy.Economy;
 
+import org.bukkit.entity.LivingEntity;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -68,6 +70,24 @@ public class GetMoney implements Listener{
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void killMob (EntityDeathEvent event) {
+		LivingEntity killed = null;
+		if (event.getEntity() instanceof LivingEntity) {
+			killed = (LivingEntity) event.getEntity();
+		}
+		else {
+			//dont fucking care
+			return;
+		}
+		Player killer = killed.getKiller();
+		if (killer == null) {
+			// fuck that!
+			return;
+		}
 		// TODO: get money on entity death
+		plugin.info("killed a "+event.getEntity().getClass());
+		long price = plugin.creatureBounties.get(killed);
+		if (price > 0){
+			plugin.giveMoney(killer, price);
+		}
 	}
 }

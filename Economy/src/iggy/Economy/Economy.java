@@ -63,6 +63,7 @@ import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.CreatureType;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -72,7 +73,6 @@ public class Economy extends JavaPlugin{
   //////////////////////////////////////////////////////////////////////////////
  ///////////////////////////// GLOBAL DECLARATIONS ////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-
 	public static Economy plugin;
 	public final Logger logger = Logger.getLogger("Minecraft");
 	public Map<String,Long> playerBanks = new HashMap<String,Long>();
@@ -82,7 +82,7 @@ public class Economy extends JavaPlugin{
 	public Map<Material,Long> blockPrices = new HashMap<Material,Long>();
 	
 	// prices of each Mob
-	public Map<CreatureType,Long> creatureBounties = new HashMap<CreatureType,Long>();
+	public Map<Class<? extends Entity>,Long> creatureBounties = new HashMap<Class<? extends Entity>,Long>();
 	
 	// Keep a record of where to send the player back to when they leave the shop
 	public Map<Player,Location> returnPoint = new HashMap<Player,Location>();
@@ -174,7 +174,7 @@ public class Economy extends JavaPlugin{
 				// teleporting when you are in a minecart breaks some stuff
 				if (player.isInsideVehicle()){player.getVehicle().eject();}
 				// teleporting from the main world or the nether
-				if (player.getWorld() == mainworld || player.getWorld() == thenether){
+				if (player.getWorld() == mainworld || player.getWorld() == thenether) {
 					returnPoint.put(player,player.getLocation());
 					player.teleport(shopworld.getSpawnLocation());
 					player.sendMessage("Teleported to the shop");
@@ -381,10 +381,10 @@ public class Economy extends JavaPlugin{
 	public void saveBounties() {
 		this.getConfig().set("creatures", "");
 		
-		Iterator<Entry<CreatureType, Long>> creatureIterator = creatureBounties.entrySet().iterator();
+		Iterator<Entry<Class<? extends Entity>, Long>> creatureIterator = creatureBounties.entrySet().iterator();
 		while (creatureIterator.hasNext()) {
-			Entry<CreatureType, Long> pairs = creatureIterator.next();
-			this.getConfig().set("creatures."+pairs.getKey(), pairs.getValue());
+			Entry<Class<? extends Entity>, Long> pairs = creatureIterator.next();
+			this.getConfig().set("creatures."+pairs.getKey().getCanonicalName(), pairs.getValue());
 		}
 		this.saveConfig();
 		info(" Creature Bounties Saved");
@@ -393,7 +393,7 @@ public class Economy extends JavaPlugin{
 		creatureBounties.clear();
 		for (int i = 0; i < CreatureType.values().length; i++) {
 			long bounty = -1;
-			creatureBounties.put(CreatureType.values()[i], bounty);
+			creatureBounties.put(CreatureType.values()[i].getEntityClass(), bounty);
 		}
 		ConfigurationSection creatureConfig = this.getConfig().getConfigurationSection("creatures");
 		if (creatureConfig == null) {
@@ -414,7 +414,7 @@ public class Economy extends JavaPlugin{
 				continue;
 			}
 			long price = this.getConfig().getLong("creatures."+creaturename);
-			creatureBounties.put(creature, price);
+			creatureBounties.put(creature.getEntityClass(), price);
 		}
 		info (" Creature bounties loaded");
 	}
