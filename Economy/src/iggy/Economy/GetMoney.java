@@ -62,7 +62,7 @@ public class GetMoney implements Listener{
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void breakMoney (BlockBreakEvent event) {
-		plugin.giveMoney(event.getPlayer(), 5);
+		plugin.giveMoney(event.getPlayer(), 1);
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void placeMoney (BlockPlaceEvent event) {
@@ -71,7 +71,6 @@ public class GetMoney implements Listener{
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void killMob (EntityDeathEvent event) {
 		LivingEntity killed = null;
-		plugin.info("Entity Death");
 		if (event.getEntity() instanceof LivingEntity) {
 			killed = (LivingEntity) event.getEntity();
 		}
@@ -79,15 +78,12 @@ public class GetMoney implements Listener{
 			//dont fucking care
 			return;
 		}
-		plugin.info("Entity was LivingEntity");
 		Player killer = killed.getKiller();
 		if (killer == null) {
 			// fuck that!
 			return;
 		}
-		plugin.info("Player Killer:"+killer.getName());
 		// TODO: get money on entity death
-		plugin.info("killed a "+event.getEntity().getClass());
 		long price = plugin.creatureBounties.get(killed);
 		if (price > 0){
 			plugin.info("Entity has a bounty");
