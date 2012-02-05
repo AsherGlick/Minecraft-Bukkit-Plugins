@@ -90,6 +90,9 @@ public class Economy extends JavaPlugin{
 	// Initilize the clickable items class
 	public ItemSelector itemSelector = new ItemSelector(this);
 	
+	// Initilize income events
+	public GetMoney incomeEvents = new GetMoney(this);
+	
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
@@ -144,6 +147,8 @@ public class Economy extends JavaPlugin{
 		loadBounties();
 		loadMoney();
 		loadPrices();
+		// activate income events
+		Bukkit.getServer().getPluginManager().registerEvents(incomeEvents, this);
 		// report that the plugin is enabled
 		info(" version " + pdFile.getVersion() +" is enabled");
 	}
