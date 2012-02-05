@@ -209,10 +209,6 @@ public class Regions extends JavaPlugin{
 					chunkOwners.put(plotName, owner);
 					chunkNames.put(plot, plotName);
 					
-					Position plot2 = new Position(player.getLocation());
-					if (chunkNames.get(plot2) == null) {
-						severe("WHAT THE FUCK JAVA HOW DO YOUR VARIABLES WORK");
-					}
 					// find highest block at the four corners
 					plot.placeTorches();
 					
