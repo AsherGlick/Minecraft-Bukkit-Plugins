@@ -84,7 +84,6 @@ public class DisplayPlotTitles implements Listener{
 		String playerSpot = lastLocation.get(event.getPlayer());
 		if (plotName == null){plotName = "The Wild";}
 		if (playerSpot == null){playerSpot = "The Wild";}
-		event.getPlayer().sendMessage(playerSpot+"->"+plotName);
 		if (plotName != playerSpot){
 			lastLocation.put(event.getPlayer(), plotName);
 			event.getPlayer().sendMessage("You have entered :"+ChatColor.LIGHT_PURPLE +plotName+ ChatColor.WHITE);
