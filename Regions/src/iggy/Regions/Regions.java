@@ -1,3 +1,49 @@
+/******************************************************************************\
+|                                     ,,                                       |
+|                    db             `7MM                                       |
+|                   ;MM:              MM                                       |
+|                  ,V^MM.    ,pP"Ybd  MMpMMMb.  .gP"Ya `7Mb,od8                |
+|                 ,M  `MM    8I   `"  MM    MM ,M'   Yb  MM' "'                |
+|                 AbmmmqMA   `YMMMa.  MM    MM 8M""""""  MM                    |
+|                A'     VML  L.   I8  MM    MM YM.    ,  MM                    |
+|              .AMA.   .AMMA.M9mmmP'.JMML  JMML.`Mbmmd'.JMML.                  |
+|                                                                              |
+|                                                                              |
+|                                ,,    ,,                                      |
+|                     .g8"""bgd `7MM    db        `7MM                         |
+|                   .dP'     `M   MM                MM                         |
+|                   dM'       `   MM  `7MM  ,p6"bo  MM  ,MP'                   |
+|                   MM            MM    MM 6M'  OO  MM ;Y                      |
+|                   MM.    `7MMF' MM    MM 8M       MM;Mm                      |
+|                   `Mb.     MM   MM    MM YM.    , MM `Mb.                    |
+|                     `"bmmmdPY .JMML..JMML.YMbmd'.JMML. YA.                   |
+|                                                                              |
+\******************************************************************************/
+/******************************************************************************\
+| Copyright (c) 2012, Asher Glick                                              |
+| All rights reserved.                                                         |
+|                                                                              |
+| Redistribution and use in source and binary forms, with or without           |
+| modification, are permitted provided that the following conditions are met:  |
+|                                                                              |
+| * Redistributions of source code must retain the above copyright notice,     |
+|   this list of conditions and the following disclaimer.                      |
+| * Redistributions in binary form must reproduce the above copyright notice,  |
+|   this list of conditions and the following disclaimer in the documentation  |
+|   and/or other materials provided with the distribution.                     |
+|                                                                              |
+| THIS SOFTWARE IS PROVIDED BY THE COPYRIGHT HOLDERS AND CONTRIBUTORS "AS IS"  |
+| AND ANY EXPRESS OR IMPLIED WARRANTIES, INCLUDING, BUT NOT LIMITED TO, THE    |
+| IMPLIED WARRANTIES OF MERCHANTABILITY AND FITNESS FOR A PARTICULAR PURPOSE   |
+| ARE DISCLAIMED. IN NO EVENT SHALL THE COPYRIGHT HOLDER OR CONTRIBUTORS BE    |
+| LIABLE FOR ANY DIRECT, INDIRECT, INCIDENTAL, SPECIAL, EXEMPLARY, OR          |
+| CONSEQUENTIAL DAMAGES (INCLUDING, BUT NOT LIMITED TO, PROCUREMENT OF         |
+| SUBSTITUTE GOODS OR SERVICES; LOSS OF USE, DATA, OR PROFITS; OR BUSINESS     |
+| INTERRUPTION) HOWEVER CAUSED AND ON ANY THEORY OF LIABILITY, WHETHER IN      |
+| CONTRACT, STRICT LIABILITY, OR TORT (INCLUDING NEGLIGENCE OR OTHERWISE)      |
+| ARISING IN ANY WAY OUT OF THE USE OF THIS SOFTWARE, EVEN IF ADVISED OF THE   |
+| POSSIBILITY OF SUCH DAMAGE.                                                  |
+\******************************************************************************/
 package iggy.Regions;
 
 import java.util.HashMap;
@@ -19,11 +65,15 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
+
 import org.dynmap.DynmapAPI;
 import org.dynmap.markers.MarkerAPI;
 
 
 public class Regions extends JavaPlugin{
+  //////////////////////////////////////////////////////////////////////////////
+ ///////////////////////////// GLOBAL DECLARATIONS ////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 	Logger logger = Logger.getLogger("Minecraft");
 	
 	String pluginTitle;
@@ -38,12 +88,16 @@ public class Regions extends JavaPlugin{
 	World mainworld;
 	World thenether;
 	
+	DisplayPlotTitles displayPlotTitles = new DisplayPlotTitles(this);
+	
 	
 	public Map<Position,String> chunkNames = new HashMap<Position,String>();
 	public Map<String,Owners> chunkOwners = new HashMap<String,Owners>();
 	
 	BlockMonitor pluginMonitor;
-	
+  //////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////// ENABLE / DISABLE //////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 	@Override
 	public void onDisable() {
 		// TODO Auto-generated method stub
@@ -61,6 +115,8 @@ public class Regions extends JavaPlugin{
 		// define worlds
 		mainworld = Bukkit.getWorld("world");
 		thenether = Bukkit.getWorld("world_nether");
+		
+		displayPlotTitles.EnableRegionDisplayNames();
 		
 		// add external plugin links
 		PluginManager pm = getServer().getPluginManager();
@@ -101,7 +157,9 @@ public class Regions extends JavaPlugin{
 		}
 		info (" Version " + pdFile.getVersion() +" is enabled");
 	}
-	
+  //////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////// INPUT COMMANDS ///////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = null;
 		if (sender instanceof Player) {
@@ -109,7 +167,9 @@ public class Regions extends JavaPlugin{
 		}
 		
 		//World world = player.getWorld();
-		
+		/************************************ CLAIM ***********************************\
+		|
+		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("claim")){
 			// if economy is enabled
 			if (!economy.isEnabled()) {
@@ -148,6 +208,11 @@ public class Regions extends JavaPlugin{
 					owner.addOwner(player.getName());
 					chunkOwners.put(plotName, owner);
 					chunkNames.put(plot, plotName);
+					
+					Position plot2 = new Position(player.getLocation());
+					if (chunkNames.get(plot2) == null) {
+						severe("WHAT THE FUCK JAVA HOW DO YOUR VARIABLES WORK");
+					}
 					// find highest block at the four corners
 					plot.placeTorches();
 					
@@ -159,11 +224,10 @@ public class Regions extends JavaPlugin{
 					return false;
 				}
 			}
-				
-			  // add to list of claimed blocks
-			  // find highest block at the four corners
-			  // 
 		}
+		/*********************************** EXPAND ***********************************\
+		|
+		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("expand")) {
 			// if economy is enabled
 			// if plot is not already claimed
@@ -174,7 +238,9 @@ public class Regions extends JavaPlugin{
 		}
 		return false;
 	}
-	
+  //////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////// WAIT FOR PLUGINS //////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 	// listener class to wait for the other plugins to enable
 	private class OurServerListener implements Listener {
 		// warnings are suppressed becasue this is called using registerEvents when the 
@@ -194,17 +260,23 @@ public class Regions extends JavaPlugin{
 
 	// funtion to finish activating the plugin once the other plugins are enabled
 	public void activateEconomy(){
+		//TODO: make these features not enabled if the plugin is not enabeled
 		info ("Economy features (claim, expand) enabled");
 	}
 	
 	public void activatedynmap() {
+		markerapi =  dynmapapi.getMarkerAPI();
+		if (markerapi == null){
+			severe ("error loading the dynmap marker api");
+			return;
+		}
+		
+		//TODO: make the plots show up on the map
 		info("dynmap features (view plots on map) enabled");
 	}
-	
-	
-	
-	
-	// helper functions for output
+  //////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////// DISPLAY HELPERS //////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 	public void info(String input) {
 		this.logger.info(pluginTitle + input);
 	}
