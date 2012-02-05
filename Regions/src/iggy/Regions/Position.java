@@ -69,4 +69,47 @@ public class Position {
 	public String toString() {
 		return (_world+","+_x+","+_z);
 	}
+	@Override
+	public boolean equals(Object obj) {
+		if (obj == null) {
+			return false;
+		}
+        if (getClass() != obj.getClass()) {
+            return false;
+        }
+        final Position other = (Position) obj;
+        if (this._world != other._world && (this._world == null || !this._world.equals(other._world))) {
+        	return false;
+        }
+        if (Double.doubleToLongBits(this._x) != Double.doubleToLongBits(other._x)) {
+			return false;
+        }
+        if (Double.doubleToLongBits(this._z) != Double.doubleToLongBits(other._z)) {
+        	return false;
+        }
+        	return true;
+	}
+		
+	@Override
+	public int hashCode() {
+		int hash = 3;
+		hash = 19 * hash + (this._world != null ? this._world.hashCode() : 0);
+		hash = 19 * hash + (int) (Double.doubleToLongBits(this._x) ^ (Double.doubleToLongBits(this._x) >>> 32));
+		hash = 19 * hash + (int) (Double.doubleToLongBits(this._z) ^ (Double.doubleToLongBits(this._z) >>> 32));
+		return hash;
+	}
+	
+	@Override
+	public Position clone() {
+		try {
+			Position l = (Position) super.clone();
+			l._world = _world;
+			l._x = _x;
+            l._z = _z;
+            return l;
+		} catch (CloneNotSupportedException e) {
+            e.printStackTrace();
+        }
+		return null;
+	}
 }
