@@ -384,16 +384,23 @@ public class Economy extends JavaPlugin{
 		Iterator<Entry<Class<? extends Entity>, Long>> creatureIterator = creatureBounties.entrySet().iterator();
 		while (creatureIterator.hasNext()) {
 			Entry<Class<? extends Entity>, Long> pairs = creatureIterator.next();
-			this.getConfig().set("creatures."+pairs.getKey().getCanonicalName(), pairs.getValue());
+			this.getConfig().set("creatures."+pairs.getKey().getSimpleName(), pairs.getValue());
 		}
 		this.saveConfig();
 		info(" Creature Bounties Saved");
 	}
 	public void loadBounties() {
 		creatureBounties.clear();
+		
+		Map<String,Class<? extends Entity> > creatureLookup = new HashMap<String,Class<? extends Entity>>();
+		
 		for (int i = 0; i < CreatureType.values().length; i++) {
 			long bounty = -1;
-			creatureBounties.put(CreatureType.values()[i].getEntityClass(), bounty);
+			Class<? extends Entity> clazz = CreatureType.values()[i].getEntityClass();
+			creatureBounties.put(clazz, bounty);
+			
+			creatureLookup.put(clazz.getSimpleName(), clazz);
+			
 		}
 		ConfigurationSection creatureConfig = this.getConfig().getConfigurationSection("creatures");
 		if (creatureConfig == null) {
@@ -405,16 +412,17 @@ public class Economy extends JavaPlugin{
 			severe(" failed to load creature bounties from configuration (no creatures found)");
 			return;
 		}
+		
 		Iterator<String> it = creatures.iterator();
 		while(it.hasNext()) {
 			String creaturename = it.next();
-			CreatureType creature = CreatureType.fromName(creaturename);
+			Class<? extends Entity> creature = creatureLookup.get(creaturename);
 			if (creature == null) {
 				severe(" unknown creature found in bounty list ("+creaturename+")");
 				continue;
 			}
 			long price = this.getConfig().getLong("creatures."+creaturename);
-			creatureBounties.put(creature.getEntityClass(), price);
+			creatureBounties.put(creature, price);
 		}
 		info (" Creature bounties loaded");
 	}
