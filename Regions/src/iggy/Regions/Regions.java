@@ -61,6 +61,7 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -319,9 +320,14 @@ public class Regions extends JavaPlugin{
 		//TODO
 		chunkNames.clear();
 		chunkOwners.clear();
-		Set<String> regions = getConfig().getConfigurationSection("regions").getKeys(false);
+		ConfigurationSection regionSection = getConfig().getConfigurationSection("regions");
+		if (regionSection == null){
+			severe("cannot load regions (region section no found)");
+			return;
+		}
+		Set<String> regions = regionSection.getKeys(false);
 		if (regions == null){
-			severe("cannot load regions (regions section not found)");
+			severe("cannot load regions (no regions found in regions)");
 			return;
 		}
 		// for each region
