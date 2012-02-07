@@ -61,8 +61,6 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -283,19 +281,18 @@ public class Regions extends JavaPlugin{
 	public void saveRegions() {
 		getConfig().set("regions", "");
 		
-		
 		Map<String,List<String> > plotLists = new HashMap<String,List<String>>();
 		
 		// load all of the plots toghether in an array with their plotname
-		Iterator<Entry<Position, String>> namesIterator = chunkNames.entrySet().iterator();
-		while (namesIterator.hasNext()){
-			Entry<Position, String> pairs = namesIterator.next();
-			List <String> plotsLocations = plotLists.get(pairs.getValue());
+		Iterator<Entry<Position, String>> plotIterator = chunkNames.entrySet().iterator();
+		while (plotIterator.hasNext()){
+			Entry<Position, String> pair = plotIterator.next();
+			List <String> plotsLocations = plotLists.get(pair.getValue());
 			if (plotsLocations == null){
 				plotsLocations = new ArrayList<String>();
 			}
-			plotsLocations.add(pairs.getKey().toString());
-			plotLists.put(pairs.getValue(), plotsLocations);
+			plotsLocations.add(pair.getKey().toString());
+			plotLists.put(pair.getValue(), plotsLocations);
 		}
 		
 		// write the plots by their plotnames at regions.plotname.plots
@@ -323,9 +320,28 @@ public class Regions extends JavaPlugin{
 			severe("cannot load regions (regions section not found)");
 			return;
 		}
-		
-		for (int i = 0; i < regions.size(); i++){
-			 
+		// for each region
+		for (String region : regions){
+			 List<String> plots = getConfig().getStringList("regions."+region+".plots");
+			 List<String> ownerslist= getConfig().getStringList("regions."+region+".owners");
+			 if (plots == null) {
+				 severe("errot loading configuration (no plots found for this region)");
+				 continue;
+			 }
+			 if (ownerslist == null) {
+				 severe("error loading configuration (no owners found for this region)");
+				 continue;
+			 }
+			 // add all of the plots for each region to the region list
+			 for (String plot : plots){
+				Position position = new Position();
+				position.setFromString(plot);
+				chunkNames.put(position, region);
+			 }
+			 // add all of the users to the user list
+			 Owners owners = new Owners();
+			 owners.addOwners(ownerslist);
+			 chunkOwners.put(region, owners);
 		}
 	}
   //////////////////////////////////////////////////////////////////////////////

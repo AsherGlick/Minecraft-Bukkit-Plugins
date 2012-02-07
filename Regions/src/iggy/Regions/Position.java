@@ -24,6 +24,12 @@ public class Position {
 		_world = location.getWorld().getName();
 	}
 	
+	Position (){
+		_x=0;
+		_z=0;
+		_world=null;
+	}
+	
 	private long floorDivide(long input, int mod) {
 		return input<0?(input/8)-1:input/8;
 	}
