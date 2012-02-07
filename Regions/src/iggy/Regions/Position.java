@@ -1,7 +1,6 @@
 package iggy.Regions;
 
 
-import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;

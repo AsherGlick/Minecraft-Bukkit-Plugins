@@ -235,12 +235,51 @@ public class Regions extends JavaPlugin{
 		|
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("expand")) {
+			// TODO this is not finished yet
 			// if economy is enabled
-			// if plot is not already claimed
-			// if plot is in regularworld or netherworld
-			// if name is given
-			// claim block
-			// find highest block at the four courners
+			if (!economy.isEnabled()) {
+				player.sendMessage("Economy plugin is not enabled, contact admin for help");
+				return false;
+			}
+			// is plot is not already claimed
+			else if (chunkNames.containsKey(new Position(player.getLocation()))){
+				player.sendMessage("This plot has allready been claimed, you cannot claim it");
+				return false;
+			}
+			// is plot in the regular world or the nether
+			else if (player.getWorld() != mainworld && player.getWorld() != thenether){
+				player.sendMessage("You can only claim plots in the nether or the main world");
+			}
+
+			// try to claim block
+			else {
+				// if a plot you own is adjacent
+				Position plot = new Position(player.getLocation());
+				String plotName = "";
+				for (int i = 1; i < args.length; i++) {
+					plotName += " "+args[i];
+				}
+				// check to see if the name has already been taken
+				if (chunkOwners.containsKey(plotName)) {
+					player.sendMessage("This plot name has allready been taken");
+					return false;
+				}
+				
+				if (economyapi.chargeMoney(player, 1000)) {
+					
+					chunkNames.put(plot, plotName);
+					
+					// find highest block at the four corners
+					plot.placeTorches();
+					
+					player.sendMessage("You expanded the plot "+plotName+"for $1000");
+				}
+				
+				else {
+					player.sendMessage("You dont have enough money to buy this plot");
+					return false;
+				}
+			}
 			saveRegions();
 		}
 		return false;
