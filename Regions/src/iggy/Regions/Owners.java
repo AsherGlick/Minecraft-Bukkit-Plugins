@@ -1,6 +1,8 @@
 package iggy.Regions;
 
+import java.util.ArrayList;
 import java.util.HashSet;
+import java.util.List;
 import java.util.Set;
 
 public class Owners {
@@ -11,5 +13,10 @@ public class Owners {
 	}
 	public boolean hasOwner(String player){
 		return _players.contains(player);
+	}
+	public List<String> getOwners() {
+		List<String> owners = new ArrayList<String>();
+		// TODO
+		return owners;
 	}
 }

@@ -46,8 +46,10 @@
 \******************************************************************************/
 package iggy.Regions;
 
+import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.List;
 import java.util.Map;
 import java.util.Set;
 import java.util.Map.Entry;
@@ -281,25 +283,39 @@ public class Regions extends JavaPlugin{
 	public void saveRegions() {
 		getConfig().set("regions", "");
 		
+		
+		Map<String,List<String> > plotLists = new HashMap<String,List<String>>();
+		
+		// load all of the plots toghether in an array with their plotname
 		Iterator<Entry<Position, String>> namesIterator = chunkNames.entrySet().iterator();
 		while (namesIterator.hasNext()){
 			Entry<Position, String> pairs = namesIterator.next();
-			this.getConfig().set(pairs.getValue()+".plots",);
+			List <String> plotsLocations = plotLists.get(pairs.getValue());
+			if (plotsLocations == null){
+				plotsLocations = new ArrayList<String>();
+			}
+			plotsLocations.add(pairs.getKey().toString());
+			plotLists.put(pairs.getValue(), plotsLocations);
 		}
 		
+		// write the plots by their plotnames at regions.plotname.plots
+		Iterator<Entry<String, List<String>>> plotList = plotLists.entrySet().iterator();
+		while (plotList.hasNext()) {
+			Entry<String, List<String>> pair = plotList.next();
+			getConfig().set("regions."+pair.getKey()+".plots", pair.getValue());
+		}
 		
-		
-		public Map<String,Owners> chunkOwners
-		
-		Iterator<Entry<Class<? extends Entity>, Long>> creatureIterator = creatureBounties.entrySet().iterator();
-		while (creatureIterator.hasNext()) {
-			Entry<Class<? extends Entity>, Long> pairs = creatureIterator.next();
-			this.getConfig().set("creatures."+pairs.getKey().getSimpleName(), pairs.getValue());
+		// write the owners to the plots as well
+		Iterator<Entry<String, Owners>> ownerIterator = chunkOwners.entrySet().iterator();
+		while (ownerIterator.hasNext()) {
+			Entry<String, Owners> pairs = ownerIterator.next();
+			this.getConfig().set("regions."+pairs.getKey()+".owners",pairs.getValue().getOwners());
 		}
 		this.saveConfig();
-		info(" Creature Bounties Saved");
+		info("Regions Saved");
 	}
 	public void loadRegions() {
+		//TODO
 		chunkNames.clear();
 		chunkOwners.clear();
 		Set<String> regions = getConfig().getConfigurationSection("regions").getKeys(false);
