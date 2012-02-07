@@ -123,6 +123,8 @@ public class Regions extends JavaPlugin{
 		
 		displayPlotTitles.EnableRegionDisplayNames();
 		
+		loadRegions();
+		
 		// add external plugin links
 		PluginManager pm = getServer().getPluginManager();
 		dynmap = pm.getPlugin("dynmap");
@@ -160,6 +162,7 @@ public class Regions extends JavaPlugin{
 		if (dynmap.isEnabled()){
 			activatedynmap();
 		}
+		saveRegions();
 		info (" Version " + pdFile.getVersion() +" is enabled");
 	}
   //////////////////////////////////////////////////////////////////////////////
@@ -252,6 +255,7 @@ public class Regions extends JavaPlugin{
             Plugin p = event.getPlugin();
             String name = p.getDescription().getName();
             if(name.equals("dynmap")) {
+            	activatedynmap();
             }
             if(name.equals("Economy")) {
             	activateEconomy();
