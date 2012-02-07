@@ -32,7 +32,7 @@ public class Position {
 	}
 	
 	private long floorDivide(long input, int mod) {
-		return input<0?(input/8)-1:input/8;
+		return input<0?((input+1)/8)-1:input/8;
 	}
 	
 	public void placeTorches() {
