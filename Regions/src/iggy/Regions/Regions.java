@@ -47,7 +47,10 @@
 package iggy.Regions;
 
 import java.util.HashMap;
+import java.util.Iterator;
 import java.util.Map;
+import java.util.Set;
+import java.util.Map.Entry;
 import java.util.logging.Logger;
 
 import iggy.Economy.Economy;
@@ -56,6 +59,8 @@ import org.bukkit.Bukkit;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -269,6 +274,43 @@ public class Regions extends JavaPlugin{
 		
 		//TODO: make the plots show up on the map
 		info("dynmap features (view plots on map) enabled");
+	}
+  //////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////// REGION STORAGE ///////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+	public void saveRegions() {
+		getConfig().set("regions", "");
+		
+		Iterator<Entry<Position, String>> namesIterator = chunkNames.entrySet().iterator();
+		while (namesIterator.hasNext()){
+			Entry<Position, String> pairs = namesIterator.next();
+			this.getConfig().set(pairs.getValue()+".plots",);
+		}
+		
+		
+		
+		public Map<String,Owners> chunkOwners
+		
+		Iterator<Entry<Class<? extends Entity>, Long>> creatureIterator = creatureBounties.entrySet().iterator();
+		while (creatureIterator.hasNext()) {
+			Entry<Class<? extends Entity>, Long> pairs = creatureIterator.next();
+			this.getConfig().set("creatures."+pairs.getKey().getSimpleName(), pairs.getValue());
+		}
+		this.saveConfig();
+		info(" Creature Bounties Saved");
+	}
+	public void loadRegions() {
+		chunkNames.clear();
+		chunkOwners.clear();
+		Set<String> regions = getConfig().getConfigurationSection("regions").getKeys(false);
+		if (regions == null){
+			severe("cannot load regions (regions section not found)");
+			return;
+		}
+		
+		for (int i = 0; i < regions.size(); i++){
+			 
+		}
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
