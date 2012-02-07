@@ -186,7 +186,7 @@ public class Regions extends JavaPlugin{
 				return false;
 			}
 			// is plot is not already claimed
-			else if (chunkOwners.containsKey(new Position(player.getLocation()))){
+			else if (chunkNames.containsKey(new Position(player.getLocation()))){
 				player.sendMessage("This plot has allready been claimed, you cannot claim it");
 				return false;
 			}
