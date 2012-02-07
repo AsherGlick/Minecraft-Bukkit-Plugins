@@ -1,6 +1,8 @@
 package iggy.Regions;
 
 
+import java.util.logging.Logger;
+
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
@@ -48,6 +50,7 @@ public class Position {
 	
 	
 	public boolean setFromString(String input) {
+		Logger.getLogger("minecraft").info("1)"+input);
 		for (int i = 0; i< input.length(); i++){
 			if (input.charAt(i)==','){
 				_world = input.substring(0,i);
@@ -55,9 +58,11 @@ public class Position {
 				break;
 			}
 		}
+		Logger.getLogger("minecraft").info("2)"+input);
 		for (int i = 0; i< input.length(); i++){
 			if (input.charAt(i)==','){
-				_x = Long.getLong(input.substring(0,i));
+				Logger.getLogger("minecraft").info("2.5)"+input.substring(0,i));
+				_x = Long.valueOf(input.substring(0,i));
 				input = input.substring(i+1);
 				break;
 			}
@@ -68,7 +73,8 @@ public class Position {
 				return false;
 			}
 		}
-		_z = Long.getLong(input);
+		Logger.getLogger("minecraft").info("3)"+input);
+		_z = Long.valueOf(input);
 		return true;
 	}
 	@Override

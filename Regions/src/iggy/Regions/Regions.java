@@ -107,6 +107,7 @@ public class Regions extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		// TODO Auto-generated method stub
+		saveRegions();
 		info(" Version " + pdFile.getVersion() +" is disabled");
 	}
 
@@ -163,7 +164,6 @@ public class Regions extends JavaPlugin{
 		if (dynmap.isEnabled()){
 			activatedynmap();
 		}
-		saveRegions();
 		info (" Version " + pdFile.getVersion() +" is enabled");
 	}
   //////////////////////////////////////////////////////////////////////////////
@@ -229,6 +229,7 @@ public class Regions extends JavaPlugin{
 					return false;
 				}
 			}
+			saveRegions();
 		}
 		/*********************************** EXPAND ***********************************\
 		|
@@ -240,6 +241,7 @@ public class Regions extends JavaPlugin{
 			// if name is given
 			// claim block
 			// find highest block at the four courners
+			saveRegions();
 		}
 		return false;
 	}
@@ -353,6 +355,7 @@ public class Regions extends JavaPlugin{
 			 owners.addOwners(ownerslist);
 			 chunkOwners.put(region, owners);
 		}
+		info ("regions loaded");
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
