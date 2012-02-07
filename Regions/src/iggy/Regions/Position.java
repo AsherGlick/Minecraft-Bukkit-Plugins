@@ -50,7 +50,6 @@ public class Position {
 	
 	
 	public boolean setFromString(String input) {
-		Logger.getLogger("minecraft").info("1)"+input);
 		for (int i = 0; i< input.length(); i++){
 			if (input.charAt(i)==','){
 				_world = input.substring(0,i);
@@ -58,10 +57,8 @@ public class Position {
 				break;
 			}
 		}
-		Logger.getLogger("minecraft").info("2)"+input);
 		for (int i = 0; i< input.length(); i++){
 			if (input.charAt(i)==','){
-				Logger.getLogger("minecraft").info("2.5)"+input.substring(0,i));
 				_x = Long.valueOf(input.substring(0,i));
 				input = input.substring(i+1);
 				break;
@@ -73,7 +70,6 @@ public class Position {
 				return false;
 			}
 		}
-		Logger.getLogger("minecraft").info("3)"+input);
 		_z = Long.valueOf(input);
 		return true;
 	}
