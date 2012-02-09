@@ -73,7 +73,9 @@ import org.bukkit.plugin.PluginManager;
 import org.bukkit.plugin.java.JavaPlugin;
 
 import org.dynmap.DynmapAPI;
+import org.dynmap.markers.AreaMarker;
 import org.dynmap.markers.MarkerAPI;
+import org.dynmap.markers.MarkerSet;
 
 
 public class Regions extends JavaPlugin{
@@ -285,13 +287,13 @@ public class Regions extends JavaPlugin{
 		return false;
 	}
   //////////////////////////////////////////////////////////////////////////////
- ////////////////////////////// WAIT FOR PLUGINS //////////////////////////////
+ /////////////////////////// WAIT FOR OTHER PLUGINS ///////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 	// listener class to wait for the other plugins to enable
 	private class OurServerListener implements Listener {
 		// warnings are suppressed becasue this is called using registerEvents when the 
 		@SuppressWarnings("unused")
-		// required plugins are not enabled on start
+		// this function runs whenever a plugin is enabled
 		@EventHandler (priority = EventPriority.MONITOR)
         public void onPluginEnable(PluginEnableEvent event) {
             Plugin p = event.getPlugin();
@@ -311,12 +313,42 @@ public class Regions extends JavaPlugin{
 		info ("Economy features (claim, expand) enabled");
 	}
 	
+	/*
+	| Very confusing function 
+	\*/
+	MarkerSet set;
 	public void activatedynmap() {
 		markerapi =  dynmapapi.getMarkerAPI();
 		if (markerapi == null){
 			severe ("error loading the dynmap marker api");
 			return;
 		}
+		// create the market set
+		/* Now, add marker set for mobs (make it transient) */
+        set = markerapi.getMarkerSet("regions.markerset");
+        if(set == null)
+            set = markerapi.createMarkerSet("regions.markerset", "regions", null, false);
+        else
+            set.setMarkerSetLabel("regions");
+        if(set == null) {
+            severe("Error creating marker set");
+            return;
+        }
+        int minzoom = 0;
+        if(minzoom > 0)
+        set.setMinZoom(minzoom);
+        set.setLayerPriority(10);
+        set.setHideByDefault(false);
+        //use3d = cfg.getBoolean("use3dregions", false);
+        //infowindow = cfg.getString("infowindow", DEF_INFOWINDOW);
+		// draw an outline
+		double[] x = new double[4];
+		double[] z = new double[4];
+		x[0]=0; z[0]=0;
+		x[1]=0; z[1]=1;
+		x[2]=1; z[2]=1;
+		x[3]=1; z[3]=0;
+		AreaMarker m = set.createAreaMarker("testpoly", "generalName", false, "world", x, z, false);
 		
 		//TODO: make the plots show up on the map
 		info("dynmap features (view plots on map) enabled");
@@ -329,7 +361,7 @@ public class Regions extends JavaPlugin{
 		
 		Map<String,List<String> > plotLists = new HashMap<String,List<String>>();
 		
-		// load all of the plots toghether in an array with their plotname
+		// load all of the plots together in an array with their plotname
 		Iterator<Entry<Position, String>> plotIterator = chunkNames.entrySet().iterator();
 		while (plotIterator.hasNext()){
 			Entry<Position, String> pair = plotIterator.next();
