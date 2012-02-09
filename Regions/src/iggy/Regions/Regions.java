@@ -313,9 +313,10 @@ public class Regions extends JavaPlugin{
 		info ("Economy features (claim, expand) enabled");
 	}
 	
-	/*
-	| Very confusing function 
-	\*/
+	/******************************* ACTIVATE DYNMAP ******************************\
+	| This function is run when dynmap is activated. It sets up the functions that |
+	| map the regions onto the dynmap display                                      |
+	\******************************************************************************/
 	MarkerSet set;
 	public void activatedynmap() {
 		markerapi =  dynmapapi.getMarkerAPI();
@@ -341,14 +342,23 @@ public class Regions extends JavaPlugin{
         set.setHideByDefault(false);
         //use3d = cfg.getBoolean("use3dregions", false);
         //infowindow = cfg.getString("infowindow", DEF_INFOWINDOW);
-		// draw an outline
-		double[] x = new double[4];
-		double[] z = new double[4];
-		x[0]=0; z[0]=0;
-		x[1]=0; z[1]=8;
-		x[2]=8; z[2]=8;
-		x[3]=8; z[3]=0;
-		AreaMarker m = set.createAreaMarker("testpoly", "generalName", false, "world", x, z, false);
+        
+        // TEST CODE :)
+        // loop through all of the 
+        for (Entry<Position,String> regionIterator : chunkNames.entrySet()) {
+        	double getx = regionIterator.getKey().getMinimumXCorner();
+        	double gety = regionIterator.getKey().getMinimumZCorner();
+        	
+        	// draw an outline
+    		double[] x = new double[4];
+    		double[] z = new double[4];
+    		x[0]=getx+0; z[0]=gety+0;
+    		x[1]=getx+0; z[1]=gety+7;
+    		x[2]=getx+7; z[2]=gety+7;
+    		x[3]=getx+7; z[3]=gety+0;
+    		AreaMarker m = set.createAreaMarker("testpoly", regionIterator.getValue(), false, "world", x, z, false);
+        }
+		
 		
 		//TODO: make the plots show up on the map
 		info("dynmap features (view plots on map) enabled");
@@ -378,6 +388,7 @@ public class Regions extends JavaPlugin{
 		while (plotList.hasNext()) {
 			Entry<String, List<String>> pair = plotList.next();
 			getConfig().set("regions."+pair.getKey()+".plots", pair.getValue());
+			// draw the regions
 		}
 		
 		// write the owners to the plots as well

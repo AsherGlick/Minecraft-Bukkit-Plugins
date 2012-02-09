@@ -12,13 +12,12 @@ public class Position {
 	public long _z;
 	public String _world;
 	
-	
-	
 	Position (String world,long x, long z){
 		_x=x;
 		_z=z;
 		_world = world;
 	}
+	
 	Position (Location location) {
 		_x = floorDivide(location.getBlockX(),8);
 		_z = floorDivide(location.getBlockZ(),8);
@@ -29,6 +28,13 @@ public class Position {
 		_x=0;
 		_z=0;
 		_world=null;
+	}
+	
+	public double getMinimumXCorner() {
+		return _x*8;
+	}
+	public double getMinimumZCorner() {
+		return _z*8;
 	}
 	
 	private long floorDivide(long input, int mod) {
