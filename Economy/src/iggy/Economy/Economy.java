@@ -433,7 +433,9 @@ public class Economy extends JavaPlugin{
 	}
   //////////////////////////////////////////////////////////////////////////////
  ///////////////////////////// Money Modification /////////////////////////////
-/////////////////////////////////////////////////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+	//the amount of money needed to change at once for any account to be saved
+	public long moneyDeadZone = 10;
 	/********************************** GET MONEY *********************************\
 	| This function returns the amount of money a player has in the bank, if they  |
 	| don't have a bank account yet the create account function is called to       |
@@ -450,12 +452,12 @@ public class Economy extends JavaPlugin{
 		return playerMoney;
 	}
 	/********************************** SET MONEY *********************************\
-	| Sets a player's money to a specific value, then saves the configuration      |
-	| settings. This function does not do an error checking                        |
+	| Sets a player's money to a specific value. This function does not do an      |
+	| error checking. It also does not save the money to the config because it     |
+	| cannot check to see if the amount of money added is above the 'deadzone'     |
 	\******************************************************************************/
 	public void setMoney(String player, long money) {
 		playerBanks.put(player, money);
-		saveMoney();
 	}
 	/******************************* CREATE ACCOUNT *******************************\
 	| Creates a new user account for a player with a default amount of money. Then |
@@ -481,7 +483,9 @@ public class Economy extends JavaPlugin{
 		if (playerMoney >= money) {
 			playerBanks.put(player, playerMoney-money);
 			info (player+" was charged $"+money);
-			saveMoney();
+			if (money > moneyDeadZone){
+				saveMoney();
+			}
 			return true;
 		}
 		return false;
@@ -494,6 +498,9 @@ public class Economy extends JavaPlugin{
 	public boolean giveMoney (Player player,long money) {return giveMoney(player.getName(),money);}
 	public boolean giveMoney (String player,long money) {
 		setMoney(player,getMoney(player)+money);
+		if (money > moneyDeadZone){
+			saveMoney();
+		}
 		return false;
 	}
   //////////////////////////////////////////////////////////////////////////////
