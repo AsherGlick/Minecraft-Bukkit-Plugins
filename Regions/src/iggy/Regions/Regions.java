@@ -345,9 +345,9 @@ public class Regions extends JavaPlugin{
 		double[] x = new double[4];
 		double[] z = new double[4];
 		x[0]=0; z[0]=0;
-		x[1]=0; z[1]=1;
-		x[2]=1; z[2]=1;
-		x[3]=1; z[3]=0;
+		x[1]=0; z[1]=8;
+		x[2]=8; z[2]=8;
+		x[3]=8; z[3]=0;
 		AreaMarker m = set.createAreaMarker("testpoly", "generalName", false, "world", x, z, false);
 		
 		//TODO: make the plots show up on the map
