@@ -40,11 +40,15 @@ public class ShopGenerator extends ChunkGenerator {
 		    	
 		    	
 		    	// generate bedrock
-		    	if ((totalx*totalx)+(totaly*totaly)<=shopRadius) {
+		    	if ((totalx*totalx)+(totaly*totaly)<=shopRadius*shopRadius) {
 		    		
 		    		result[xyzToByte(x,bedrocky,z)] = (byte) Material.BEDROCK.getId();
 		    		
 		    		result[xyzToByte(x,floor1,z)] = (byte) Material.DOUBLE_STEP.getId();
+		    		
+		    		if ((totalx*totalx)+(totaly*totaly)<=(shopRadius-1)*(shopRadius-1)){
+		    			result[xyzToByte(x,floor1+1,z)] = (byte) Material.SMOOTH_BRICK.getId();
+		    		}
 		    	}
 		    }
 	    }
