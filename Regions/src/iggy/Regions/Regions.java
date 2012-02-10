@@ -390,7 +390,8 @@ public class Regions extends JavaPlugin{
     		x[2]=getx+8; z[2]=gety+8;
     		x[3]=getx+8; z[3]=gety+0;
     		AreaMarker m = set.createAreaMarker(regionIterator.getValue()+countID, regionIterator.getValue(), false, "world", x, z, false);
-    		coundID++;
+    		m.setLineStyle(0, 0, 0);
+    		countID++;
         }
 		
 		
