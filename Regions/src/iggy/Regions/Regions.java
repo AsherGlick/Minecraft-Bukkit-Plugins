@@ -360,8 +360,8 @@ public class Regions extends JavaPlugin{
         	x[8] = 1*8; z[8] = 2*8;
         	x[9] = 0*8; z[9] = 3*8;
         			
-        	AreaMarker m = set.createAreaMarker("HOLE IN THE MIDDLE", "HOLE IN THE MIDDLE", false, "world", x, z, false);
-        	m.setLineStyle(0, 0, 0);
+        	AreaMarker m = set.createAreaMarker("HOLE IN THE MIDDLE", "", false, "world", x, z, false);
+        	//m.setLineStyle(0, 0, 0);
         }
         
         /*
