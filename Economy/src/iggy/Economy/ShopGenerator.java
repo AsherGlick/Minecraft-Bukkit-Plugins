@@ -32,7 +32,9 @@ public class ShopGenerator extends ChunkGenerator {
 	    byte[] result = new byte[32768];
 	    
 	    int bedrocky = 64;
-	    int floor1 = 65;
+	    int groundFloor = 65;
+	    int floorHeight = 7;
+	    int floors = 1;
 	    
 	    //This will set the floor of each chunk at bedrock level to bedrock
 	    for(int x=0; x<16; x++){
@@ -48,10 +50,10 @@ public class ShopGenerator extends ChunkGenerator {
 		    		
 		    		result[xyzToByte(x,bedrocky,z)] = (byte) Material.BEDROCK.getId();
 		    		
-		    		result[xyzToByte(x,floor1,z)] = (byte) Material.DOUBLE_STEP.getId();
+		    		result[xyzToByte(x,groundFloor,z)] = (byte) Material.DOUBLE_STEP.getId();
 		    		
 		    		if ((totalx*totalx)+(totaly*totaly)>(shopRadius-1)*(shopRadius-1)){
-		    			result[xyzToByte(x,floor1+1,z)] = (byte) Material.SMOOTH_BRICK.getId();
+		    			result[xyzToByte(x,groundFloor+1,z)] = (byte) Material.SMOOTH_BRICK.getId();
 		    		}
 		    	}
 		    	
