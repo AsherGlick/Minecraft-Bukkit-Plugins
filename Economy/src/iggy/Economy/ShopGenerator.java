@@ -10,9 +10,7 @@ import org.bukkit.generator.ChunkGenerator;
 public class ShopGenerator extends ChunkGenerator {
     //This is where you stick your populators - these will be covered in another tutorial
 	
-	int storeLength = 2;
-	int storeWidth = 2;
-	
+	int shopRadius = 30;
 	/*@Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         //return Arrays.asList((BlockPopulator) new BlankPopulator());
@@ -30,14 +28,24 @@ public class ShopGenerator extends ChunkGenerator {
     @Override
     public byte[] generate(World world, Random rand, int chunkx, int chunkz) {
 	    byte[] result = new byte[32768];
-	    int y = 64;
+	    
+	    int bedrocky = 64;
+	    int floor1 = 65;
+	    
 	    //This will set the floor of each chunk at bedrock level to bedrock
 	    for(int x=0; x<16; x++){
 		    for(int z=0; z<16; z++) {
-		    	if (chunkx > -storeWidth && chunkx < storeWidth && chunkz > -storeLength && chunkz < storeLength ) {
-		    		result[xyzToByte(x,y,z)] = (byte) Material.BEDROCK.getId();
+		    	int totalx = x + chunkx*16;
+		    	int totaly = z + chunkz*16;
+		    	
+		    	
+		    	// generate bedrock
+		    	if ((totalx*totalx)+(totaly*totaly)<=shopRadius) {
+		    		
+		    		result[xyzToByte(x,bedrocky,z)] = (byte) Material.BEDROCK.getId();
+		    		
+		    		result[xyzToByte(x,floor1,z)] = (byte) Material.DOUBLE_STEP.getId();
 		    	}
-		    	result[xyzToByte(x,0,z)] = (byte) Material.WATER.getId();
 		    }
 	    }
 	    return result;
