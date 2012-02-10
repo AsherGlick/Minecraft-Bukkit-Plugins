@@ -11,6 +11,8 @@ public class ShopGenerator extends ChunkGenerator {
     //This is where you stick your populators - these will be covered in another tutorial
 	
 	int shopRadius = 30;
+	int waterRadius = 40;
+	byte waterBorder = (byte) Material.LOG.getId();
 	/*@Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
         //return Arrays.asList((BlockPopulator) new BlankPopulator());
@@ -38,17 +40,26 @@ public class ShopGenerator extends ChunkGenerator {
 		    	int totalx = x + chunkx*16;
 		    	int totaly = z + chunkz*16;
 		    	
+		    	long circleValue = (totalx*totalx)+(totaly*totaly);
+		    	
 		    	
 		    	// generate bedrock
-		    	if ((totalx*totalx)+(totaly*totaly)<=shopRadius*shopRadius) {
+		    	if (circleValue<=shopRadius*shopRadius) {
 		    		
 		    		result[xyzToByte(x,bedrocky,z)] = (byte) Material.BEDROCK.getId();
 		    		
 		    		result[xyzToByte(x,floor1,z)] = (byte) Material.DOUBLE_STEP.getId();
 		    		
-		    		if ((totalx*totalx)+(totaly*totaly)<=(shopRadius-1)*(shopRadius-1)){
+		    		if ((totalx*totalx)+(totaly*totaly)>(shopRadius-1)*(shopRadius-1)){
 		    			result[xyzToByte(x,floor1+1,z)] = (byte) Material.SMOOTH_BRICK.getId();
 		    		}
+		    	}
+		    	
+		    	if (circleValue<waterBorder*waterBorder) {
+		    		result[xyzToByte(x,0,z)] = (byte) Material.WATER.getId();
+		    	}
+		    	if (circleValue==waterBorder*waterBorder) {
+		    		result[xyzToByte(x,0,z)] = waterBorder;
 		    	}
 		    }
 	    }
