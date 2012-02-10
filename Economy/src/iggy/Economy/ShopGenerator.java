@@ -11,7 +11,7 @@ public class ShopGenerator extends ChunkGenerator {
     //This is where you stick your populators - these will be covered in another tutorial
 	
 	int shopRadius = 30;
-	int waterRadius = 40;
+	int waterRadius = 60;
 	byte waterBorder = (byte) Material.LOG.getId();
 	/*@Override
     public List<BlockPopulator> getDefaultPopulators(World world) {
@@ -55,12 +55,13 @@ public class ShopGenerator extends ChunkGenerator {
 		    		}
 		    	}
 		    	
-		    	if (circleValue<waterBorder*waterBorder) {
+		    	if (circleValue<=waterRadius*waterRadius ) {
 		    		result[xyzToByte(x,0,z)] = (byte) Material.WATER.getId();
+		    		if (circleValue>(waterRadius-1)*(waterRadius-1)) {
+			    		result[xyzToByte(x,0,z)] = waterBorder;
+			    	}
 		    	}
-		    	if (circleValue==waterBorder*waterBorder) {
-		    		result[xyzToByte(x,0,z)] = waterBorder;
-		    	}
+		    	
 		    }
 	    }
 	    return result;
