@@ -344,6 +344,39 @@ public class Regions extends JavaPlugin{
         //infowindow = cfg.getString("infowindow", DEF_INFOWINDOW);
         
         // TEST CODE :)
+        if(true){
+        	double[] x = new double[10];
+        	double[] z = new double[10];
+        	x[0] = 0*8; z[0] = 0*8;
+        	x[1] = 3*8; z[1] = 0*8;
+        	x[2] = 3*8; z[2] = 3*8;
+        	x[3] = 0*8; z[3] = 3*8;
+        	
+        	x[4] = 1*8; z[4] = 2*8;
+        	x[5] = 2*8; z[5] = 2*8;
+        	x[6] = 2*8; z[6] = 1*8;
+        	x[7] = 1*8; z[7] = 1*8;
+        	
+        	x[8] = 1*8; z[8] = 2*8;
+        	x[9] = 0*8; z[9] = 3*8;
+        			
+        	AreaMarker m = set.createAreaMarker("HOLE IN THE MIDDLE", "HOLE IN THE MIDDLE", false, "world", x, z, false);
+        	m.setLineStyle(0, 0, 0);
+        }
+        
+        /*
+        for (int i = 0; i < 10; i++){
+        	double[] x = new double[4];
+    		double[] z = new double[4];
+    		x[0]=(i*8)+0; z[0]=0;
+    		x[1]=(i*8)+0; z[1]=8;
+    		x[2]=(i*8)+8; z[2]=8;
+    		x[3]=(i*8)+8; z[3]=0;
+    		AreaMarker m = set.createAreaMarker("Color"+i, "Color"+i, false, "world", x, z, false);
+    		m.setFillStyle(m.getFillOpacity(), 0x00FF00);
+        }
+        */
+        int countID = 0;
         // loop through all of the 
         for (Entry<Position,String> regionIterator : chunkNames.entrySet()) {
         	double getx = regionIterator.getKey().getMinimumXCorner();
@@ -353,10 +386,11 @@ public class Regions extends JavaPlugin{
     		double[] x = new double[4];
     		double[] z = new double[4];
     		x[0]=getx+0; z[0]=gety+0;
-    		x[1]=getx+0; z[1]=gety+7;
-    		x[2]=getx+7; z[2]=gety+7;
-    		x[3]=getx+7; z[3]=gety+0;
-    		AreaMarker m = set.createAreaMarker("testpoly", regionIterator.getValue(), false, "world", x, z, false);
+    		x[1]=getx+0; z[1]=gety+8;
+    		x[2]=getx+8; z[2]=gety+8;
+    		x[3]=getx+8; z[3]=gety+0;
+    		AreaMarker m = set.createAreaMarker(regionIterator.getValue()+countID, regionIterator.getValue(), false, "world", x, z, false);
+    		coundID++;
         }
 		
 		
