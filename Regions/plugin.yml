@@ -5,9 +5,13 @@ description: >
              regions for building and protecting your house
 commands:
   claim:
-    description: Makes blocks not interact with reality
+    description: claim a plot of land for your own use
+  sclaim:
+    description: claim a plot of land without placing torches
   expand:
     description: Expand a claim to another block
+  sexpand:
+    description: Expand a claim without placing torches
   addowner:
     description: add another user to edit
              
