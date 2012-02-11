@@ -6,7 +6,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
-import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
@@ -21,34 +21,31 @@ public class SignShops implements Listener{
 	
 	//
 	/********************************* PLACE SIGN *********************************\
-	|
+	| Still debuggin this function
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
-	public void placeSign(BlockPlaceEvent event) {
-		// this item may need to be 'Material.SIGN'
-		if (event.getBlock().getType() == Material.SIGN_POST) {
-			Sign placedSign = (Sign) event.getBlock();
-			if (placedSign.getLine(0) == "[SHOP]"){
-				if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
-					Material foundMaterial = Material.matchMaterial(placedSign.getLine(1));
-					if (foundMaterial == null){
-						placedSign.setLine(2, "FOUND");
-						placedSign.setLine(1, "NOT");
-						placedSign.setLine(0, "");
-					}
-					else{
-						placedSign.setLine(2, foundMaterial.name());
-					}
+	public void placeSign(SignChangeEvent event) {
+		Sign placedSign = (Sign) event.getBlock().getState();
+		if (placedSign.getLine(0) == "[SHOP]"){
+			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
+				Material foundMaterial = Material.matchMaterial(placedSign.getLine(1));
+				if (foundMaterial == null){
+					placedSign.setLine(2, "FOUND");
+					placedSign.setLine(1, "NOT");
+					placedSign.setLine(0, "");
 				}
-				else {
-					event.setCancelled(true);
+				else{
+					placedSign.setLine(2, foundMaterial.name());
 				}
+			}
+			else {
+				event.setCancelled(true);
 			}
 		}
 	}
 	// click sign
 	/********************************* CLICK SIGN *********************************\
-	|
+	| Still debuggin this too
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void clickSign(PlayerInteractEvent event){
@@ -58,7 +55,7 @@ public class SignShops implements Listener{
 		}
 		// this might need to be 'Material.SIGN'
 		if (clickedBlock.getType() == Material.SIGN_POST) {
-			Sign clickedSign = (Sign) clickedBlock;
+			Sign clickedSign = (Sign) clickedBlock.getState();
 			if (clickedSign.getLine(0) == "[SHOP]") {
 				Material purchaceMaterial = Material.matchMaterial(clickedSign.getLine(1));
 				//find price
