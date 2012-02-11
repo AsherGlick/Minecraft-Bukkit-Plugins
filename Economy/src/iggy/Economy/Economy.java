@@ -93,6 +93,9 @@ public class Economy extends JavaPlugin{
 	// Initialize income events
 	public GetMoney incomeEvents = new GetMoney(this);
 	
+	// Initialize sign shop events
+	public SignShops signshops = new SignShops(this);
+	
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
@@ -142,6 +145,7 @@ public class Economy extends JavaPlugin{
 		// TODO:spawn and maintain items
 		  //TODO: spawn items
 		Bukkit.getServer().getPluginManager().registerEvents(itemSelector, this);
+		Bukkit.getServer().getPluginManager().registerEvents(signshops, this);
 		
 		// Load all the configuration info
 		loadBounties();
