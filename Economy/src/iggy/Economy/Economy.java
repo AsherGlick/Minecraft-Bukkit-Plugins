@@ -87,10 +87,10 @@ public class Economy extends JavaPlugin{
 	// Keep a record of where to send the player back to when they leave the shop
 	public Map<Player,Location> returnPoint = new HashMap<Player,Location>();
 	
-	// Initilize the clickable items class
+	// Initialize the clickable items class
 	public ItemSelector itemSelector = new ItemSelector(this);
 	
-	// Initilize income events
+	// Initialize income events
 	public GetMoney incomeEvents = new GetMoney(this);
 	
 	PluginDescriptionFile pdFile;
