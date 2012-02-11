@@ -8,6 +8,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.inventory.ItemStack;
 
 public class SignShops implements Listener{
 	Economy plugin;
@@ -61,6 +62,26 @@ public class SignShops implements Listener{
 			if (clickedSign.getLine(0) == "[SHOP]") {
 				Material purchaceMaterial = Material.matchMaterial(clickedSign.getLine(1));
 				//find price
+				long price;
+				if (plugin.blockPrices.containsKey(purchaceMaterial)){
+					price = plugin.blockPrices.get(purchaceMaterial);
+				}
+				else {
+					event.getPlayer().sendMessage("There was an error with this sign, contact the administration");
+					return;
+				}
+				if (plugin.chargeMoney(event.getPlayer(), price)) {
+					ItemStack item = new ItemStack(purchaceMaterial, 1);
+					event.getPlayer().getInventory().addItem(item);
+					event.getPlayer().sendMessage("You just bought some "+purchaceMaterial.name()+" for $"+price);
+				}
+				else {
+					event.getPlayer().sendMessage("You need $"+price+" to buy 1 "+purchaceMaterial.name());
+				}
+			}
+			else if (clickedSign.getLine(0) == "[SELL]"){
+				//[create a global hash table for players and when they last clicked (maybe what item as well)]
+				// check to see when the last click was if it was over 500ms and less then 5000ms then it will sell
 			}
 		}
 	}
