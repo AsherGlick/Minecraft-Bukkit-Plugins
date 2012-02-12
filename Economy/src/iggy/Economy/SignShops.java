@@ -26,10 +26,8 @@ public class SignShops implements Listener{
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
-		plugin.info("sign placed");
 		//Sign placedSign = (Sign) event.getBlock().getState();
 		if (event.getLine(0).equalsIgnoreCase("[SHOP]")){
-			plugin.info ("first line was [SHOP]");
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
 				Material foundMaterial = Material.matchMaterial(event.getLine(1));
 				if (foundMaterial == null){
@@ -65,8 +63,6 @@ public class SignShops implements Listener{
 			Sign clickedSign = (Sign) clickedBlock.getState();
 			if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP]")) {
 				
-				
-				plugin.info("first line of clicked shop is shop");
 				Material purchaceMaterial = Material.matchMaterial(clickedSign.getLine(1));
 				//find price
 				long price;
@@ -77,7 +73,10 @@ public class SignShops implements Listener{
 					event.getPlayer().sendMessage("There was an error with this sign, contact the administration");
 					return;
 				}
-				if (plugin.chargeMoney(event.getPlayer(), price)) {
+				if (price < 0) {
+					event.getPlayer().sendMessage("This block cannot be bought");
+				}
+				else if (plugin.chargeMoney(event.getPlayer(), price)) {
 					ItemStack item = new ItemStack(purchaceMaterial, 1);
 					event.getPlayer().getInventory().addItem(item);
 					event.getPlayer().sendMessage("You just bought some "+purchaceMaterial.name()+" for $"+price);
