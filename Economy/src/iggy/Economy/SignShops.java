@@ -25,6 +25,7 @@ public class SignShops implements Listener{
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
+		plugin.info("sign placed");
 		Sign placedSign = (Sign) event.getBlock().getState();
 		if (placedSign.getLine(0) == "[SHOP]"){
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
@@ -49,12 +50,14 @@ public class SignShops implements Listener{
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void clickSign(PlayerInteractEvent event){
+		plugin.info("player click");
 		Block clickedBlock = event.getClickedBlock();
 		if (clickedBlock == null) {
 			return;
 		}
 		// this might need to be 'Material.SIGN'
-		if (clickedBlock.getType() == Material.SIGN_POST) {
+		if (clickedBlock.getType() == Material.SIGN_POST || clickedBlock.getType() == Material.WALL_SIGN) {
+			plugin.info("player click sign");
 			Sign clickedSign = (Sign) clickedBlock.getState();
 			if (clickedSign.getLine(0) == "[SHOP]") {
 				Material purchaceMaterial = Material.matchMaterial(clickedSign.getLine(1));
