@@ -6,6 +6,7 @@ import org.bukkit.block.Sign;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
+import org.bukkit.event.block.Action;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -26,18 +27,18 @@ public class SignShops implements Listener{
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
 		plugin.info("sign placed");
-		Sign placedSign = (Sign) event.getBlock().getState();
-		if (placedSign.getLine(0).equalsIgnoreCase("[SHOP]")){
+		//Sign placedSign = (Sign) event.getBlock().getState();
+		if (event.getLine(0).equalsIgnoreCase("[SHOP]")){
 			plugin.info ("first line was [SHOP]");
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
-				Material foundMaterial = Material.matchMaterial(placedSign.getLine(1));
+				Material foundMaterial = Material.matchMaterial(event.getLine(1));
 				if (foundMaterial == null){
-					placedSign.setLine(2, "FOUND");
-					placedSign.setLine(1, "NOT");
-					placedSign.setLine(0, "");
+					event.setLine(2, "FOUND");
+					event.setLine(1, "NOT");
+					event.setLine(0, "");
 				}
 				else{
-					placedSign.setLine(2, foundMaterial.name());
+					event.setLine(2, foundMaterial.name());
 				}
 			}
 			else {
@@ -51,6 +52,9 @@ public class SignShops implements Listener{
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void clickSign(PlayerInteractEvent event){
+		if (event.getAction() != Action.LEFT_CLICK_BLOCK){
+			return;	
+		}
 		Block clickedBlock = event.getClickedBlock();
 		if (clickedBlock == null) {
 			return;
@@ -60,6 +64,8 @@ public class SignShops implements Listener{
 			plugin.info("player click sign");
 			Sign clickedSign = (Sign) clickedBlock.getState();
 			if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP]")) {
+				
+				
 				plugin.info("first line of clicked shop is shop");
 				Material purchaceMaterial = Material.matchMaterial(clickedSign.getLine(1));
 				//find price
@@ -79,6 +85,8 @@ public class SignShops implements Listener{
 				else {
 					event.getPlayer().sendMessage("You need $"+price+" to buy 1 "+purchaceMaterial.name());
 				}
+				// cancel the event so nothing else happens
+				event.setCancelled(true);
 			}
 			else if (clickedSign.getLine(0) == "[SELL]"){
 				//[create a global hash table for players and when they last clicked (maybe what item as well)]
