@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEvent;
 
 public class BlockMonitor implements Listener{
 	Regions plugin;
@@ -37,6 +38,12 @@ public class BlockMonitor implements Listener{
  	public void stopBuild (BlockPlaceEvent event) {
  		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
 	}
+ 	
+ 	//Called when a bucket is placed
+ 	@EventHandler
+ 	public void stopBuckets (PlayerBucketEvent event){
+ 		event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer()));
+ 	}
  	
  	/******************************** SHOULD CANCEL *******************************\
  	| this function reads in the situation and desides if the even should be canceld
