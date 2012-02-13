@@ -108,7 +108,7 @@ public class Regions extends JavaPlugin{
 //////////////////////////////////////////////////////////////////////////////
 	@Override
 	public void onDisable() {
-		// TODO Auto-generated method stub
+		// TODO clear the regions so they don't double
 		saveRegions();
 		info(" Version " + pdFile.getVersion() +" is disabled");
 	}
@@ -258,9 +258,29 @@ public class Regions extends JavaPlugin{
 				// if a plot you own is adjacent
 				Position plot = new Position(player.getLocation());
 				String plotName = "";
-				for (int i = 1; i < args.length; i++) {
-					plotName += " "+args[i];
+				
+				Position plotN = new Position(player.getLocation().add(-8,0, 0));
+				Position plotS = new Position(player.getLocation().add(-8,0, 0));
+				Position plotE = new Position(player.getLocation().add(0, 0,-8));
+				Position plotW = new Position(player.getLocation().add(0, 0,-8));
+				
+				if (chunkNames.containsKey(plotN)){
+					plotName = chunkNames.get(plotN);
 				}
+				else if (chunkNames.containsKey(plotS)){
+					plotName = chunkNames.get(plotS);
+				}
+				else if (chunkNames.containsKey(plotE)){
+					plotName = chunkNames.get(plotE);
+				}
+				else if (chunkNames.containsKey(plotW)){
+					plotName = chunkNames.get(plotW);
+				}
+				else {
+					player.sendMessage("no adjacent plot found, cannot expand");
+					return false;
+				}
+				
 				// check to see if the name has already been taken
 				if (chunkOwners.containsKey(plotName)) {
 					player.sendMessage("This plot name has allready been taken");
@@ -377,6 +397,8 @@ public class Regions extends JavaPlugin{
     		m.setFillStyle(m.getFillOpacity(), 0x00FF00);
         }
         */
+        // make the plots show up on the map
+        // TODO: make the plots able to refresh live duing play
         int countID = 0;
         // loop through all of the 
         for (Entry<Position,String> regionIterator : chunkNames.entrySet()) {
@@ -395,8 +417,6 @@ public class Regions extends JavaPlugin{
     		countID++;
         }
 		
-		
-		//TODO: make the plots show up on the map
 		info("dynmap features (view plots on map) enabled");
 	}
   //////////////////////////////////////////////////////////////////////////////
@@ -437,7 +457,6 @@ public class Regions extends JavaPlugin{
 		info("Regions Saved");
 	}
 	public void loadRegions() {
-		//TODO
 		chunkNames.clear();
 		chunkOwners.clear();
 		ConfigurationSection regionSection = getConfig().getConfigurationSection("regions");
