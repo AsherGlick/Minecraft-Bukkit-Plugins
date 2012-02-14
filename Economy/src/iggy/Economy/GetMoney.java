@@ -46,6 +46,7 @@
 \******************************************************************************/
 package iggy.Economy;
 
+import org.bukkit.entity.Entity;
 import org.bukkit.entity.LivingEntity;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -84,7 +85,7 @@ public class GetMoney implements Listener{
 			return;
 		}
 		// TODO: get money on entity death
-		long price = plugin.creatureBounties.get(killed);
+		long price = plugin.creatureBounties.get((Entity)killed);
 		if (price > 0){
 			plugin.info("Entity has a bounty");
 			plugin.giveMoney(killer, price);
