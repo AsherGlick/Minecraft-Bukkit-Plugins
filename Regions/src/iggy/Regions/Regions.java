@@ -312,11 +312,13 @@ public class Regions extends JavaPlugin{
 					return false;
 				}
 				
-				// check to see if the name has already been taken
+				// check to see if the name has already been taken (this is not nessasary
+				// because only plots you own can be expanded
+				/*
 				if (chunkOwners.containsKey(plotName)) {
 					player.sendMessage("This plot name has allready been taken");
 					return false;
-				}
+				}*/
 				
 				if (economyapi.chargeMoney(player, 1000)) {
 					
