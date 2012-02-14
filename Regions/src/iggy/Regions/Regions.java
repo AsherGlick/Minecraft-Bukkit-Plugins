@@ -264,19 +264,50 @@ public class Regions extends JavaPlugin{
 				Position plotE = new Position(player.getLocation().add(0, 0,-8));
 				Position plotW = new Position(player.getLocation().add(0, 0,-8));
 				
+				// Check plot to the north
 				if (chunkNames.containsKey(plotN)){
-					plotName = chunkNames.get(plotN);
+					String tempName = chunkNames.get(plotN);
+					Owners plotOwners = chunkOwners.get(tempName);
+					// if the player owns the found chunk
+					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+					// display an error if there is no owners list
+					else severe("error finding plot owners for "+tempName);
 				}
-				else if (chunkNames.containsKey(plotS)){
-					plotName = chunkNames.get(plotS);
+				if (chunkNames.containsKey(plotS)){
+					String tempName = chunkNames.get(plotS);
+					Owners plotOwners = chunkOwners.get(tempName);
+					// if the player owns the found chunk
+					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+					// display an error if there is no owners list
+					else severe("error finding plot owners for "+tempName);
 				}
-				else if (chunkNames.containsKey(plotE)){
-					plotName = chunkNames.get(plotE);
+				if (chunkNames.containsKey(plotE)){
+					String tempName = chunkNames.get(plotE);
+					Owners plotOwners = chunkOwners.get(tempName);
+					if (plotOwners != null) {
+						if (plotOwners.hasOwner(player.getName())){
+							plotName = tempName;
+						}
+					}
+					else {
+						// debug catching
+						severe("error finding plot owners for "+tempName);
+					}
 				}
-				else if (chunkNames.containsKey(plotW)){
-					plotName = chunkNames.get(plotW);
+				if (chunkNames.containsKey(plotW)){
+					String tempName = chunkNames.get(plotW);
+					Owners plotOwners = chunkOwners.get(tempName);
+					if (plotOwners != null) {
+						if (plotOwners.hasOwner(player.getName())){
+							plotName = tempName;
+						}
+					}
+					else {
+						// debug catching
+						severe("error finding plot owners for "+tempName);
+					}
 				}
-				else {
+				if (plotName.equalsIgnoreCase("")) {
 					player.sendMessage("no adjacent plot found, cannot expand");
 					return false;
 				}

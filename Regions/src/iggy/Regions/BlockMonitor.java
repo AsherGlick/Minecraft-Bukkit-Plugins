@@ -10,6 +10,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketEvent;
 
 public class BlockMonitor implements Listener{
@@ -24,26 +25,32 @@ public class BlockMonitor implements Listener{
 		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
 	}
 	//Called when a block is destroyed as a result of being burnt by fire. 
-	@EventHandler
+	@EventHandler (priority = EventPriority.HIGHEST)
 	public void stopBurn (BlockBurnEvent event){
 		event.setCancelled(shouldCancel(event.getBlock().getLocation(),null));
 	}
 	//Called when a block is ignited
-	@EventHandler
+	@EventHandler (priority = EventPriority.HIGHEST)
 	public void stopFire (BlockIgniteEvent event){
 		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
 	}
  	//Called when a block is placed by a player. 
- 	@EventHandler
+ 	@EventHandler (priority = EventPriority.HIGHEST)
  	public void stopBuild (BlockPlaceEvent event) {
  		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
 	}
  	
+ 	
  	//Called when a bucket is placed
- 	@EventHandler
- 	public void stopBuckets (PlayerBucketEvent event){
+ 	@EventHandler (priority = EventPriority.HIGHEST)
+ 	public void stopEmptyBuckets (PlayerBucketEmptyEvent event){
  		event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer()));
  	}
+ 	
+ 	@EventHandler (priority = EventPriority.HIGHEST)
+ 	public void stopFillBuckets (PlayerBucketFillEvent event){
+ 		event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer()));
+ 	} 
  	
  	/******************************** SHOULD CANCEL *******************************\
  	| this function reads in the situation and desides if the even should be canceld
