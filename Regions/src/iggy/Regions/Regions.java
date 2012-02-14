@@ -232,6 +232,11 @@ public class Regions extends JavaPlugin{
 				}
 			}
 			saveRegions();
+			
+			// dynmap overlay
+			if (dynmap.isEnabled()){
+				refreshRegions ();
+			}
 		}
 		/*********************************** EXPAND ***********************************\
 		|
@@ -324,6 +329,10 @@ public class Regions extends JavaPlugin{
 				}
 			}
 			saveRegions();
+			// dynmap overlay
+			if (dynmap.isEnabled()){
+				refreshRegions ();
+			}
 		}
 		return false;
 	}
@@ -430,8 +439,15 @@ public class Regions extends JavaPlugin{
 
 
 	public void refreshRegions () {
+		int newCount = 0;
+		int replaceCount = 0;
+		
 		int countID = 0;
+		
+		Map<String, AreaMarker> newresareas = new HashMap<String, AreaMarker>();
+		
 		for (Entry<Position,String> regionIterator : chunkNames.entrySet()) {
+			
 		    //String wname = areas[i].getWorld().getName();
 		    //if(isVisible(resid, wname) == false) continue;
 		    
@@ -456,15 +472,21 @@ public class Regions extends JavaPlugin{
 			AreaMarker m = resareas.remove(id); /* Existing area? */
 		    if(m == null) {
 			    m = set.createAreaMarker(id, name, false, wname, x, z, false);
-		        if(m == null) continue;
-		        resareas.put(id, m);
+		        if(m == null) {info("null region");continue;}
+		        m.setLineStyle(0, 0, 0);
+		        newCount++;
 		    }
 		    else {
 		        m.setCornerLocations(x, z); /* Replace corner locations */
 		        m.setLabel(name); /* Update label */
+		        replaceCount++;		        
 		    }
+		    newresareas.put(id, m);
 		    countID += 1;
 		}
+		resareas = newresareas;
+		info ("NEW COUNT:"+newCount);
+		info ("REPLACE COUNT:"+replaceCount);
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// REGION STORAGE ///////////////////////////////
