@@ -259,9 +259,9 @@ public class Regions extends JavaPlugin{
 				Position plot = new Position(player.getLocation());
 				String plotName = "";
 				
-				Position plotN = new Position(player.getLocation().add(-8,0, 0));
+				Position plotN = new Position(player.getLocation().add( 8,0, 0));
 				Position plotS = new Position(player.getLocation().add(-8,0, 0));
-				Position plotE = new Position(player.getLocation().add(0, 0,-8));
+				Position plotE = new Position(player.getLocation().add(0, 0, 8));
 				Position plotW = new Position(player.getLocation().add(0, 0,-8));
 				
 				// Check plot to the north
@@ -284,28 +284,16 @@ public class Regions extends JavaPlugin{
 				if (chunkNames.containsKey(plotE)){
 					String tempName = chunkNames.get(plotE);
 					Owners plotOwners = chunkOwners.get(tempName);
-					if (plotOwners != null) {
-						if (plotOwners.hasOwner(player.getName())){
-							plotName = tempName;
-						}
-					}
-					else {
-						// debug catching
-						severe("error finding plot owners for "+tempName);
-					}
+					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+					// display an error if there is no owners list
+					else severe("error finding plot owners for "+tempName);
 				}
 				if (chunkNames.containsKey(plotW)){
 					String tempName = chunkNames.get(plotW);
 					Owners plotOwners = chunkOwners.get(tempName);
-					if (plotOwners != null) {
-						if (plotOwners.hasOwner(player.getName())){
-							plotName = tempName;
-						}
-					}
-					else {
-						// debug catching
-						severe("error finding plot owners for "+tempName);
-					}
+					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+					// display an error if there is no owners list
+					else severe("error finding plot owners for "+tempName);
 				}
 				if (plotName.equalsIgnoreCase("")) {
 					player.sendMessage("no adjacent plot found, cannot expand");

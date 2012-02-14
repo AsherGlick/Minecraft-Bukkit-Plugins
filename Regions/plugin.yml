@@ -1,6 +1,6 @@
 name: Regions
 main: iggy.Regions.Regions
-version: 1.24
+version: 1.25
 description: >
              regions for building and protecting your house
 commands:
