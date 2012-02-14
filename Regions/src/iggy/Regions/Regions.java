@@ -421,24 +421,7 @@ public class Regions extends JavaPlugin{
         */
         // make the plots show up on the map
         // TODO: make the plots able to refresh live duing play
-        int countID = 0;
-        // loop through all of the 
-        for (Entry<Position,String> regionIterator : chunkNames.entrySet()) {
-        	double getx = regionIterator.getKey().getMinimumXCorner();
-        	double gety = regionIterator.getKey().getMinimumZCorner();
-        	
-        	// draw an outline
-    		double[] x = new double[4];
-    		double[] z = new double[4];
-    		x[0]=getx+0; z[0]=gety+0;
-    		x[1]=getx+0; z[1]=gety+8;
-    		x[2]=getx+8; z[2]=gety+8;
-    		x[3]=getx+8; z[3]=gety+0;
-    		AreaMarker m = set.createAreaMarker(regionIterator.getValue()+countID, regionIterator.getValue(), false, "world", x, z, false);
-    		m.setLineStyle(0, 0, 0);
-    		countID++;
-        }
-		
+        refreshRegions();
 		info("dynmap features (view plots on map) enabled");
 	}
 	
@@ -480,6 +463,7 @@ public class Regions extends JavaPlugin{
 		        m.setCornerLocations(x, z); /* Replace corner locations */
 		        m.setLabel(name); /* Update label */
 		    }
+		    countID += 1;
 		}
 	}
   //////////////////////////////////////////////////////////////////////////////
