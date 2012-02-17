@@ -63,7 +63,7 @@ public class GetMoney implements Listener{
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void breakMoney (BlockBreakEvent event) {
-		plugin.giveMoney(event.getPlayer(), 1);
+		plugin.giveMoney(event.getPlayer(), 5);
 	}
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void placeMoney (BlockPlaceEvent event) {
