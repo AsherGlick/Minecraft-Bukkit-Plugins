@@ -277,10 +277,36 @@ public class Economy extends JavaPlugin{
 				}
 			}
 		}
+		else if (commandLabel.equalsIgnoreCase("grant")) {
+			if (args.length != 2) {
+				if (player == null) {
+					info(" Correct usage is /grant <money> <player>");
+				}
+				else {
+					player.sendMessage(" Correct usage is /grant <money> <player>");
+				}
+			}
+			
+			else if (args.length == 2) {
+				if (player != null) {
+					if (!player.isOp() && !player.hasPermission("economy.moneygive")) {
+						return false;
+					}
+				}
+				String target = getFullPlayerName(args[1]);
+				if (target == null) return false;
+				long money = (long)Long.parseLong(args[0]);
+				giveMoney(target, money);
+				
+			}
+		}
+		else if (commandLabel.equalsIgnoreCase("")){
+			
+		}
 		// return false if none of these commands are called (to make java happy)
 		return false;
 	}
-	/**************************** CET FULL PLAYER NAME ****************************\
+	/**************************** GET FULL PLAYER NAME ****************************\
 	| This is a helper function for the commands when trying to find a player.     |
 	| if a player is not found it returns null                                     |
 	|                                                                              |

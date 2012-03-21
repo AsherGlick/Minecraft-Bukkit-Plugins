@@ -1,6 +1,6 @@
 name: Economy
 main: iggy.Economy.Economy
-version: 1.26
+version: 1.27
 description: >
              Simple Economy
 commands:
@@ -8,8 +8,6 @@ commands:
     description: buy a block or an item
   price:
     description: price of a block or item
-  list:
-    description: lists the items you can buy
   money:
     description: shows the money you currently have
   grant:

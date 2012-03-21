@@ -1,8 +1,10 @@
 package iggy.Economy;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.block.Sign;
+import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
@@ -41,6 +43,13 @@ public class SignShops implements Listener{
 			}
 			else {
 				event.setCancelled(true);
+			}
+		}
+		if (event.getLine(0).equalsIgnoreCase("[SELL]")) {
+			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
+				event.setLine(1, ""+ChatColor.GOLD);
+				event.setLine(2, "ALL THE THINGS");
+				event.setLine(3, ""+ChatColor.BLACK);
 			}
 		}
 	}
@@ -90,6 +99,26 @@ public class SignShops implements Listener{
 			else if (clickedSign.getLine(0) == "[SELL]"){
 				//[create a global hash table for players and when they last clicked (maybe what item as well)]
 				// check to see when the last click was if it was over 500ms and less then 5000ms then it will sell
+				
+				// get the player clicking the sign
+				Player player = event.getPlayer();
+				// Set the default quantity of the item to be questioned
+				int amount = 1;
+				Material material;
+				
+				amount = player.getItemInHand().getAmount();
+				material = player.getItemInHand().getType();
+				
+				long blockPrice = plugin.blockPrices.get(material);
+				if (blockPrice == -1) {
+					player.sendMessage("We cannot buy this item");
+				}
+				else {
+					player.sendMessage("You sold "+amount+" "+material.toString()+" for "+amount*blockPrice/2);
+					plugin.giveMoney(player, amount*blockPrice/2);
+				}
+				
+				
 			}
 		}
 	}
