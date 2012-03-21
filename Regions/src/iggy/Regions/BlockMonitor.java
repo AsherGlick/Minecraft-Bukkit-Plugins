@@ -40,7 +40,6 @@ public class BlockMonitor implements Listener{
  		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
 	}
  	
- 	
  	//Called when a bucket is placed
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void stopEmptyBuckets (PlayerBucketEmptyEvent event){
