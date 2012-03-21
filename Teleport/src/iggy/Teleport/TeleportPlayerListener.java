@@ -3,7 +3,6 @@ package iggy.Teleport;
 import java.util.Date;
 import java.util.List;
 
-import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -24,7 +23,7 @@ public class TeleportPlayerListener implements Listener {
 	
 	public TeleportPlayerListener (Teleport instance) {
 		plugin = instance;
-		Bukkit.getServer().getPluginManager().registerEvents(this, plugin);
+		
 	}
 	
 	

@@ -10,6 +10,7 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.World;
 import org.bukkit.command.Command;
@@ -215,6 +216,8 @@ public class Teleport extends JavaPlugin {
 		pdFile = this.getDescription();
 		pluginName = pdFile.getName();
 		pluginTitle = "[\033[0;36m"+pluginName+"\033[0m]";
+		
+		Bukkit.getServer().getPluginManager().registerEvents(playerListen, this);
 		
 		loadCities();
 		loadActivations();
