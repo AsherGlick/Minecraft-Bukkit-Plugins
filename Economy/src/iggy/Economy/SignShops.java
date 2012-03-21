@@ -1,5 +1,6 @@
 package iggy.Economy;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -116,6 +117,11 @@ public class SignShops implements Listener{
 				else {
 					player.sendMessage("You sold "+amount+" "+material.toString()+" for "+amount*blockPrice/2);
 					plugin.giveMoney(player, amount*blockPrice/2);
+					ItemStack item = player.getItemInHand();
+					item.setType(Material.AIR);
+					item.setAmount(0);
+					player.setItemInHand(item);
+					
 				}
 				
 				
