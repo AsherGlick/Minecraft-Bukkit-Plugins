@@ -96,7 +96,7 @@ public class SignShops implements Listener{
 				// cancel the event so nothing else happens
 				event.setCancelled(true);
 			}
-			else if (clickedSign.getLine(0) == "[SELL]"){
+			else if (clickedSign.getLine(0).equalsIgnoreCase("[SELL]")){
 				//[create a global hash table for players and when they last clicked (maybe what item as well)]
 				// check to see when the last click was if it was over 500ms and less then 5000ms then it will sell
 				
