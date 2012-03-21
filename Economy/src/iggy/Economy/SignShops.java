@@ -10,6 +10,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -22,7 +23,14 @@ public class SignShops implements Listener{
 	// this class does two things, allows admins to place shops
 	// and allows players to buy from shops
 	// sell signs and buy signs
-	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void breakShop(BlockBreakEvent event) {
+		if (event.getBlock().getWorld() == Bukkit.getWorld("shopworld")) {
+			if (!event.getPlayer().isOp() && !event.getPlayer().hasPermission("economy.editshop")) {
+				event.setCancelled(true);
+			}
+		}
+	}
 	//
 	/********************************* PLACE SIGN *********************************\
 	| Still debuggin this function
@@ -51,6 +59,9 @@ public class SignShops implements Listener{
 				event.setLine(1, ""+ChatColor.GOLD);
 				event.setLine(2, "ALL THE THINGS");
 				event.setLine(3, ""+ChatColor.BLACK);
+			}
+			else {
+				event.setCancelled(true);
 			}
 		}
 	}
@@ -89,10 +100,10 @@ public class SignShops implements Listener{
 				else if (plugin.chargeMoney(event.getPlayer(), price)) {
 					ItemStack item = new ItemStack(purchaceMaterial, 1);
 					event.getPlayer().getInventory().addItem(item);
-					event.getPlayer().sendMessage("You just bought some "+purchaceMaterial.name()+" for $"+price);
+					event.getPlayer().sendMessage("You just bought some "+purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
 				}
 				else {
-					event.getPlayer().sendMessage("You need $"+price+" to buy 1 "+purchaceMaterial.name());
+					event.getPlayer().sendMessage("You need "+ChatColor.GREEN+"$"+price+ChatColor.WHITE+" to buy 1 "+purchaceMaterial.name());
 				}
 				// cancel the event so nothing else happens
 				event.setCancelled(true);
@@ -115,7 +126,7 @@ public class SignShops implements Listener{
 					player.sendMessage("We cannot buy this item");
 				}
 				else {
-					player.sendMessage("You sold "+amount+" "+material.toString()+" for "+amount*blockPrice/2);
+					player.sendMessage("You sold "+amount+" "+material.toString()+" for "+ChatColor.GREEN+"$"+amount*blockPrice/2+ChatColor.WHITE);
 					plugin.giveMoney(player, amount*blockPrice/2);
 					ItemStack item = player.getItemInHand();
 					item.setType(Material.AIR);
@@ -123,7 +134,7 @@ public class SignShops implements Listener{
 					player.setItemInHand(item);
 					
 				}
-				
+				event.setCancelled(true);
 				
 			}
 		}
