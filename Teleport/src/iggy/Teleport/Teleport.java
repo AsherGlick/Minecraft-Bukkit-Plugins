@@ -281,7 +281,9 @@ public class Teleport extends JavaPlugin {
 	//
 	public void warp (Player player, String cityname){
 		Date nowdate = new Date();
-		Date thendate = plugin.lastJump.put(player, nowdate);
+		Date thendate = lastWarpTime.put(player, nowdate);
+		
+		
 		
 		// prevent rapid jumping or quick jumping
 		long nowtime = nowdate.getTime();
