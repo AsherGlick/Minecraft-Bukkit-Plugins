@@ -313,11 +313,13 @@ public class Teleport extends JavaPlugin {
 				Player player = teleportingPlayerQueue.poll();
 				Location location = teleportingDestinationQueue.poll();
 				
-				if (teleportingPlayers.containsKey(player))
+				if (teleportingPlayers.containsKey(player)) {
+					location.getWorld().strikeLightningEffect(location);
+					
+					player.sendBlockChange(player.getLocation(), player.getWorld().getBlockTypeIdAt(player.getLocation()), (byte) 0);
 				
-				player.sendBlockChange(player.getLocation(), player.getWorld().getBlockTypeIdAt(player.getLocation()), (byte) 0);
-				
-				player.teleport(location);
+					player.teleport(location);
+				}
 			}
 		}, 120L);
 	}
