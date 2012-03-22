@@ -241,8 +241,14 @@ public class Regions extends JavaPlugin{
 		/*********************************** EXPAND ***********************************\
 		|
 		\******************************************************************************/
-		if (commandLabel.equalsIgnoreCase("expand")) {
-			// TODO this is not finished yet
+		if (commandLabel.equalsIgnoreCase("expand") || commandLabel.equalsIgnoreCase("ex") ||
+				commandLabel.equalsIgnoreCase("dark-expand") || commandLabel.equalsIgnoreCase("dx")) {
+			boolean dark = false;
+			// check to see if the expand should have torches
+			if (commandLabel.equalsIgnoreCase("dark-expand") || commandLabel.equalsIgnoreCase("dx")) {
+				dark = true;
+			}
+			// TODO this is not finished yet, it needs to find out the clostest plot to your position
 			// if economy is enabled
 			if (!economy.isEnabled()) {
 				player.sendMessage("Economy plugin is not enabled, contact admin for help");
@@ -318,7 +324,9 @@ public class Regions extends JavaPlugin{
 					chunkNames.put(plot, plotName);
 					
 					// find highest block at the four corners
-					plot.placeTorches();
+					if (!dark) {
+						plot.placeTorches();
+					}
 					
 					player.sendMessage("You expanded the plot "+plotName+"for $1000");
 				}

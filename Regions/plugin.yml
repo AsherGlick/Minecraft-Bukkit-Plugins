@@ -6,12 +6,14 @@ description: >
 commands:
   claim:
     description: claim a plot of land for your own use
-  sclaim:
-    description: claim a plot of land without placing torches
   expand:
     description: Expand a claim to another block
-  sexpand:
+  ex:
+  	description: alias for expand
+  dark-expand:
     description: Expand a claim without placing torches
+  dx:
+  	description: alias for dark-expand
   addowner:
     description: add another user to edit
              
