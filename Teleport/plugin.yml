@@ -1,5 +1,10 @@
 name: Teleport
 main: iggy.Teleport.Teleport
-version: 1.32
+version: 1.33
 description: >
-             Simple Jumping
+             Jumping and Warping
+commands:
+  warp:
+    description: warp to a city you have visited
+  createwarp:
+    description: Lets an admin create a warp

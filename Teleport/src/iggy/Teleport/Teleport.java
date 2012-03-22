@@ -4,14 +4,17 @@ import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
 import java.util.Iterator;
+import java.util.LinkedList;
 import java.util.List;
 import java.util.Map;
 import java.util.Map.Entry;
+import java.util.Queue;
 import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -254,17 +257,63 @@ public class Teleport extends JavaPlugin {
 		}
 		if (commandLabel.equalsIgnoreCase("warp")){
 			if ( args.length == 1) {
-				//attempt to teleport the player
-				warp(player,args[0]);
+				if (playerActivations.get(player.getName()).contains(args[0])) {
+					//attempt to teleport the player
+					warp(player,args[0]);
+					player.sendMessage("begining warp");
+				} else {
+					player.sendMessage("You have not visited this warp, or this warp does not exist");
+				}
 			}
 			else {
-				player.sendMessage("Ask an admin to create this warp for you");
+				player.sendMessage("correct usage is /warp <location>");
 			}
 			
 		}
 		return false;
 	}
+	// queue for teleporters
+	public Queue<Player>   teleportingPlayerQueue = new LinkedList<Player>();
+	public Queue<Location> teleportingDestinationQueue = new LinkedList<Location>();
+	// hash table for waiting teleporters
+	public Map<Player,Location> teleportingPlayers = new HashMap<Player,Location>();
+	public Map<Player,Date> lastWarpTime = new HashMap<Player,Date>();
+	//
 	public void warp (Player player, String cityname){
+		Date nowdate = new Date();
+		Date thendate = plugin.lastJump.put(player, nowdate);
+		
+		// prevent rapid jumping or quick jumping
+		long nowtime = nowdate.getTime();
+		long thentime = thendate.getTime();
+			
+		if ((nowtime - thentime) < 6000) {
+			player.sendMessage("You must wait to teleport");
+			return;
+		}
+		
+		teleportingPlayerQueue.offer(player);
+		teleportingDestinationQueue.offer(cityTeleports.get(cityname));
+		teleportingPlayers.put(player, player.getLocation());
+		
+		
+		
+		
 		// need to continue this function later
+		//trick the client to displaying a warp animation by creating a portal under the player
+		player.sendBlockChange(player.getLocation(), Material.PORTAL, (byte) 0);
+		
+		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+			public void run() {
+				Player player = teleportingPlayerQueue.poll();
+				Location location = teleportingDestinationQueue.poll();
+				
+				if (teleportingPlayers.containsKey(player))
+				
+				player.sendBlockChange(player.getLocation(), player.getWorld().getBlockTypeIdAt(player.getLocation()), (byte) 0);
+				
+				player.teleport(location);
+			}
+		}, 120L);
 	}
 }
