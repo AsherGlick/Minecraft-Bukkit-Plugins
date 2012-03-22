@@ -11,6 +11,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.block.BlockBreakEvent;
+import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
@@ -25,6 +26,14 @@ public class SignShops implements Listener{
 	// sell signs and buy signs
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void breakShop(BlockBreakEvent event) {
+		if (event.getBlock().getWorld() == Bukkit.getWorld("shopworld")) {
+			if (!event.getPlayer().isOp() && !event.getPlayer().hasPermission("economy.editshop")) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void placeShop(BlockPlaceEvent event) {
 		if (event.getBlock().getWorld() == Bukkit.getWorld("shopworld")) {
 			if (!event.getPlayer().isOp() && !event.getPlayer().hasPermission("economy.editshop")) {
 				event.setCancelled(true);
