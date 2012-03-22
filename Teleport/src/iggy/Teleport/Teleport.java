@@ -67,7 +67,7 @@ public class Teleport extends JavaPlugin {
 	        }
 	        
 	        Double warpX = this.getConfig().getDouble("city."+cityName+".warp.x");
-	        Double warpY = this.getConfig().getDouble("city."+cityName+".warp.z");
+	        Double warpY = this.getConfig().getDouble("city."+cityName+".warp.y");
 	        Double warpZ = this.getConfig().getDouble("city."+cityName+".warp.z");
 	        
 	        float warpYaw = Float.parseFloat(this.getConfig().getString("city."+cityName+".warp.yaw"));
@@ -287,7 +287,10 @@ public class Teleport extends JavaPlugin {
 		
 		// prevent rapid jumping or quick jumping
 		long nowtime = nowdate.getTime();
-		long thentime = thendate.getTime();
+		long thentime = 0;
+		if (thendate != null) {
+			thentime = thendate.getTime();
+		}
 			
 		if ((nowtime - thentime) < 6000) {
 			player.sendMessage("You must wait to teleport");
@@ -300,12 +303,12 @@ public class Teleport extends JavaPlugin {
 		
 		
 		
-		
 		// need to continue this function later
 		//trick the client to displaying a warp animation by creating a portal under the player
 		player.sendBlockChange(player.getLocation(), Material.PORTAL, (byte) 0);
 		
-		plugin.getServer().getScheduler().scheduleSyncDelayedTask(plugin, new Runnable() {
+		getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+			
 			public void run() {
 				Player player = teleportingPlayerQueue.poll();
 				Location location = teleportingDestinationQueue.poll();
