@@ -1,6 +1,6 @@
 name: Regions
 main: iggy.Regions.Regions
-version: 1.25
+version: 1.26
 description: >
              regions for building and protecting your house
 commands:
@@ -9,11 +9,10 @@ commands:
   expand:
     description: Expand a claim to another block
   ex:
-  	description: alias for expand
+    description: alias for expand
   dark-expand:
     description: Expand a claim without placing torches
   dx:
-  	description: alias for dark-expand
+    description: alias for dark-expand
   addowner:
     description: add another user to edit
-             
