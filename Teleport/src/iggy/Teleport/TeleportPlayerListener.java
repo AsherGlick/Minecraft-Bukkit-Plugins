@@ -15,6 +15,7 @@ import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
 import org.bukkit.event.player.PlayerInteractEvent;
+import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
@@ -132,6 +133,21 @@ public class TeleportPlayerListener implements Listener {
 		}
 		else if (event.getAction() == Action.LEFT_CLICK_AIR) {
 			jump(event);
+		}
+	}
+	/********************************* PLAYER MOVE ********************************\
+	| When the player moves, if it is in the hash table then remove it from the    |
+	| table and re-send the block                                                  |
+	\******************************************************************************/
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void playerMove (PlayerMoveEvent event) {
+		Player player = event.getPlayer();
+		if (plugin.teleportingPlayers.containsKey(player)) {
+			Location oldPosition = event.getFrom();
+			plugin.teleportingPlayers.remove(player);
+			
+			Block block = player.getWorld().getBlockAt(oldPosition);
+			player.sendBlockChange(oldPosition, block.getType(), block.getData());
 		}
 	}
 }

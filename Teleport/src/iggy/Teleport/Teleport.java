@@ -16,11 +16,13 @@ import org.bukkit.Bukkit;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
+
 
 public class Teleport extends JavaPlugin {
 	public static Teleport plugin;
@@ -316,8 +318,10 @@ public class Teleport extends JavaPlugin {
 				if (teleportingPlayers.containsKey(player)) {
 					location.getWorld().strikeLightningEffect(location);
 					
-					player.sendBlockChange(player.getLocation(), player.getWorld().getBlockTypeIdAt(player.getLocation()), (byte) 0);
-				
+					Block block = player.getWorld().getBlockAt(player.getLocation());
+					
+					player.sendBlockChange(player.getLocation(), block.getType(), block.getData());
+					
 					player.teleport(location);
 				}
 			}
