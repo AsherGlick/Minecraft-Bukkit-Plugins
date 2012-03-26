@@ -113,7 +113,7 @@ public class TeleportPlayerListener implements Listener {
 	| instead they will activate the city. It will also change where the compass   |
 	| is pointing.                                                                 |
 	\******************************************************************************/
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.NORMAL) 
 	public void playerClick (PlayerInteractEvent event){
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			if (plugin.cityActivators.containsKey(event.getClickedBlock().getLocation())) {
@@ -148,6 +148,7 @@ public class TeleportPlayerListener implements Listener {
 			
 			Block block = player.getWorld().getBlockAt(oldPosition);
 			player.sendBlockChange(oldPosition, block.getType(), block.getData());
+			player.sendMessage("Teleport Interrupted");
 		}
 	}
 }

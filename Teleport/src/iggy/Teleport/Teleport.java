@@ -19,7 +19,10 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.Inventory;
+import org.bukkit.inventory.ItemStack;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -251,7 +254,9 @@ public class Teleport extends JavaPlugin {
 		
 		if (commandLabel.equalsIgnoreCase("createwarp")){
 			if (player.isOp() || (player.hasPermission("teleport.createwarp"))){
-					
+				ItemStack item = new ItemStack(Material.SIGN);
+				item.addUnsafeEnchantment(Enchantment.DURABILITY, 5);
+				player.getInventory().addItem(item);
 			}
 			else {
 				player.sendMessage("Ask an admin to create this warp for you");
@@ -262,7 +267,7 @@ public class Teleport extends JavaPlugin {
 				if (playerActivations.get(player.getName()).contains(args[0])) {
 					//attempt to teleport the player
 					warp(player,args[0]);
-					player.sendMessage("begining warp");
+					player.sendMessage("Warping to "+args[0]);
 				} else {
 					player.sendMessage("You have not visited this warp, or this warp does not exist");
 				}
@@ -316,12 +321,18 @@ public class Teleport extends JavaPlugin {
 				Location location = teleportingDestinationQueue.poll();
 				
 				if (teleportingPlayers.containsKey(player)) {
-					location.getWorld().strikeLightningEffect(location);
+					teleportingPlayers.remove(player);
+					
+					//location.getWorld().strikeLightningEffect(location);
 					
 					Block block = player.getWorld().getBlockAt(player.getLocation());
 					
 					player.sendBlockChange(player.getLocation(), block.getType(), block.getData());
 					
+					// Move the player to another world so they have to reload the chunks or 'simulate the world for a bit'
+					Location otherworld = new Location(getServer().getWorld("shopworld"), 0, 64, 0);
+					player.teleport(otherworld);
+					// Teleport the player to the real location
 					player.teleport(location);
 				}
 			}
