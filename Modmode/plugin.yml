@@ -1,0 +1,11 @@
+name: ModMode
+main: iggy.Modmode.Modmode
+version: 1.06
+description: >
+             admin carnage
+commands:
+  godmode:
+    description: become strong enough to deal with your enemies 
+  rage:
+    description: call fourth the power of the hevans
+
