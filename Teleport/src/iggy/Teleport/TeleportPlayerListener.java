@@ -14,6 +14,7 @@ import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.Action;
+import org.bukkit.event.block.SignChangeEvent;
 import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
@@ -133,6 +134,22 @@ public class TeleportPlayerListener implements Listener {
 		}
 		else if (event.getAction() == Action.LEFT_CLICK_AIR) {
 			jump(event);
+		}
+	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void playerPlaceSign (SignChangeEvent event){
+		if (event.getLine(0).equalsIgnoreCase("[teleport]")){
+			String cityName = event.getLine(1);
+			if (plugin.cityTeleports.containsValue(cityName)) {
+				
+			}
+			else {
+				event.setLine(0, "");
+				event.setLine(1, "CITY");
+				event.setLine(2, "&cNOT FOUND");
+				event.setLine(3, "");
+			}
 		}
 	}
 	/********************************* PLAYER MOVE ********************************\
