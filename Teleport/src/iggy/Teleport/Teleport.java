@@ -277,6 +277,14 @@ public class Teleport extends JavaPlugin {
 			}
 			
 		}
+		if (commandLabel.equalsIgnoreCase("refresh")||commandLabel.equalsIgnoreCase("re")) {
+			Location myLocation = player.getLocation();
+			
+			Location otherworld = new Location(getServer().getWorld("shopworld"), 0, 64, 0);
+			player.teleport(otherworld);
+			
+			player.teleport(myLocation);
+		}
 		return false;
 	}
 	// queue for teleporters

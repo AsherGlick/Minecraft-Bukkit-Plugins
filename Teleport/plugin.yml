@@ -8,3 +8,7 @@ commands:
     description: warp to a city you have visited
   createwarp:
     description: Lets an admin create a warp
+  refresh:
+    description: reloads the world
+  re:
+    description: alias for refresh
