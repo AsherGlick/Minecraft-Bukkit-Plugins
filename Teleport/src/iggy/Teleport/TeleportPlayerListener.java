@@ -7,8 +7,8 @@ import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
 import org.bukkit.block.Block;
-import org.bukkit.block.BlockState;
-import org.bukkit.block.Sign;
+//import org.bukkit.block.BlockState;
+//import org.bukkit.block.Sign;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -59,7 +59,7 @@ public class TeleportPlayerListener implements Listener {
 					}
 					if (blocklist.get(i).getType() != Material.AIR) {
 						targetBlock = blocklist.get(i);
-						plugin.logger.info("Block was element " + i + " player at" + player.getLocation().getY());
+						//plugin.logger.info("Block was element " + i + " player at" + player.getLocation().getY());
 						break;
 					}
 					lastheight = blocklist.get(i).getY();
@@ -82,7 +82,7 @@ public class TeleportPlayerListener implements Listener {
 					Block blocka = world.getBlockAt(blockLocation.getBlockX(), testBlockHeight, blockLocation.getBlockZ());
 					Block blockb = world.getBlockAt(blockLocation.getBlockX(), testBlockHeight-1, blockLocation.getBlockZ());
 					if (blocka.getType() == Material.AIR && blockb.getType() == Material.AIR){
-						player.sendMessage("Found a point!" + targetBlock.getType().toString() + "at" + targetBlock.getY());
+						//player.sendMessage("Found a point!" + targetBlock.getType().toString() + "at" + targetBlock.getY());
 						break;
 					}
 					testBlockHeight++;
@@ -118,8 +118,8 @@ public class TeleportPlayerListener implements Listener {
 	public void playerClick (PlayerInteractEvent event){
 		if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
 			if (plugin.cityActivators.containsKey(event.getClickedBlock().getLocation())) {
-				BlockState blockState = event.getClickedBlock().getState();
-				Sign sign = (Sign)blockState;
+				//BlockState blockState = event.getClickedBlock().getState();
+				//Sign sign = (Sign)blockState;
 				
 				String city = plugin.cityActivators.get(event.getClickedBlock().getLocation());
 				String player = event.getPlayer().getName();
