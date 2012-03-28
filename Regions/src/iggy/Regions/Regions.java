@@ -213,7 +213,7 @@ public class Regions extends JavaPlugin{
 					return false;
 				}
 				
-				if (economyapi.chargeMoney(player, 1000)) {
+				if (economyapi.chargeMoney(player, 5000)) {
 					Position plot = new Position(player.getLocation());
 					Owners owner = new Owners();
 					owner.addOwner(player.getName());
@@ -223,7 +223,7 @@ public class Regions extends JavaPlugin{
 					// find highest block at the four corners
 					plot.placeTorches();
 					
-					player.sendMessage("You bought the plot "+plotName+"for $1000");
+					player.sendMessage("You bought the plot "+plotName+" for $5000");
 				}
 				
 				else {
