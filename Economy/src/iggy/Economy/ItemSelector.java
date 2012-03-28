@@ -50,7 +50,8 @@ public class ItemSelector implements Listener {
 		event.getPlayer().getLineOfSight(new HashSet<Byte>(), 6);
 	}
 	
-	// new click the item
+	// new click the item (removed until future versions)
+	/*
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void playerclick (PlayerInteractEvent event) {
 		Player player = event.getPlayer();
@@ -91,5 +92,5 @@ public class ItemSelector implements Listener {
 			plugin.info("placed ingot at"+loc);
 		}
 		plugin.info("finished LOS miniblock");
-	}
+	}*/
 }
