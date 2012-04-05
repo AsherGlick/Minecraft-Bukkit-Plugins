@@ -114,10 +114,10 @@ public class SignShops implements Listener{
 				else if (plugin.chargeMoney(event.getPlayer(), price)) {
 					ItemStack item = new ItemStack(purchaceMaterial, quantity);
 					event.getPlayer().getInventory().addItem(item);
-					event.getPlayer().sendMessage("You just bought "+ quantity +purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
+					event.getPlayer().sendMessage("You just bought "+ quantity + " " +purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
 				}
 				else {
-					event.getPlayer().sendMessage("You need "+ChatColor.GREEN+"$"+price+ChatColor.WHITE+" to buy 1 "+purchaceMaterial.name());
+					event.getPlayer().sendMessage("You need "+ChatColor.GREEN+"$"+price+ChatColor.WHITE+" to buy "+quantity+" "+purchaceMaterial.name());
 				}
 				// cancel the event so nothing else happens
 				event.setCancelled(true);
