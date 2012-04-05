@@ -3,6 +3,7 @@ package iggy.Teleport;
 import java.util.Date;
 import java.util.List;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -125,7 +126,13 @@ public class TeleportPlayerListener implements Listener {
 				String player = event.getPlayer().getName();
 				if (!plugin.addActivation (player,city)) {
 					event.getPlayer().setCompassTarget(plugin.cityTeleports.get(city));
+					event.getPlayer().sendMessage("Teleport Allready Activated, changing compass magnetism");
 				}
+				else {
+					event.getPlayer().sendMessage("Teleport for " +city+ChatColor.BLUE+" ACTIVATED"+ChatColor.WHITE);
+				}
+				//prevent anything from happening to the sign
+				event.setCancelled(true);
 				
 			}
 			else{
