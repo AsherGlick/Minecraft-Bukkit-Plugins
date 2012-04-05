@@ -307,7 +307,7 @@ public class Regions extends JavaPlugin{
 					else severe("error finding plot owners for "+tempName);
 				}
 				if (plotName.equalsIgnoreCase("")) {
-					player.sendMessage("no adjacent plot found, cannot expand");
+					player.sendMessage("No adjacent plot found, cannot expand");
 					return false;
 				}
 				
@@ -328,7 +328,7 @@ public class Regions extends JavaPlugin{
 						plot.placeTorches();
 					}
 					
-					player.sendMessage("You expanded the plot "+plotName+"for $1000");
+					player.sendMessage("You expanded the plot "+plotName+" for $1000");
 				}
 				
 				else {

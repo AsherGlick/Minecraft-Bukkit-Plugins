@@ -12,19 +12,19 @@ public class Position {
 	public long _z;
 	public String _world;
 	
-	Position (String world,long x, long z){
+	public Position (String world,long x, long z){
 		_x=x;
 		_z=z;
 		_world = world;
 	}
 	
-	Position (Location location) {
+	public Position (Location location) {
 		_x = floorDivide(location.getBlockX(),8);
 		_z = floorDivide(location.getBlockZ(),8);
 		_world = location.getWorld().getName();
 	}
 	
-	Position (){
+	public Position (){
 		_x=0;
 		_z=0;
 		_world=null;
