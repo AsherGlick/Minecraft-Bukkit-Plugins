@@ -494,7 +494,7 @@ public class Economy extends JavaPlugin{
 	| returns the amount of money placed in the new player's account               |
 	\******************************************************************************/
 	public long createAccount(String player) {
-		long money = 5000;
+		long money = 10000;
 		playerBanks.put(player, money);
 		saveMoney();
 		return money;
