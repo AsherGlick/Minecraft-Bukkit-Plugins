@@ -46,15 +46,11 @@
 \******************************************************************************/
 package iggy.Economy;
 
-import org.bukkit.entity.Entity;
-import org.bukkit.entity.LivingEntity;
-import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
 import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
-import org.bukkit.event.entity.EntityDeathEvent;
 
 public class GetMoney implements Listener{
 	Economy plugin;
@@ -69,6 +65,9 @@ public class GetMoney implements Listener{
 	public void placeMoney (BlockPlaceEvent event) {
 		plugin.giveMoney(event.getPlayer(), 1);
 	}
+	
+	
+	/*  //// BROKEN ////
 	@EventHandler(priority = EventPriority.NORMAL)
 	public void killMob (EntityDeathEvent event) {
 		LivingEntity killed = null;
@@ -90,5 +89,5 @@ public class GetMoney implements Listener{
 			plugin.info("Entity has a bounty");
 			plugin.giveMoney(killer, price);
 		}
-	}
+	}*/
 }

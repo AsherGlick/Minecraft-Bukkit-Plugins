@@ -62,8 +62,6 @@ import org.bukkit.WorldCreator;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
-import org.bukkit.entity.CreatureType;
-import org.bukkit.entity.Entity;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -81,8 +79,8 @@ public class Economy extends JavaPlugin{
 	// TODO: make a way of separating the blocks into categories that can be sold by salesNPCs
 	public Map<Material,Long> blockPrices = new HashMap<Material,Long>();
 	
-	// prices of each Mob
-	public Map<Class<? extends Entity>,Long> creatureBounties = new HashMap<Class<? extends Entity>,Long>();
+	// prices of each Mob//// BROKEN
+	//public Map<Class<? extends Entity>,Long> creatureBounties = new HashMap<Class<? extends Entity>,Long>();
 	
 	// Keep a record of where to send the player back to when they leave the shop
 	public Map<Player,Location> returnPoint = new HashMap<Player,Location>();
@@ -111,7 +109,7 @@ public class Economy extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		// save all the configuration info
-		saveBounties();
+		//saveBounties();//BROKEN
 		saveMoney();
 		savePrices();
 		// reporth that the plugin is disabled
@@ -148,7 +146,7 @@ public class Economy extends JavaPlugin{
 		Bukkit.getServer().getPluginManager().registerEvents(signshops, this);
 		
 		// Load all the configuration info
-		loadBounties();
+		//loadBounties();// BROKEN
 		loadMoney();
 		loadPrices();
 		// activate income events
@@ -413,7 +411,7 @@ public class Economy extends JavaPlugin{
   //////////////////////////////////////////////////////////////////////////////
  ////////////////////////////////// Bounties //////////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
-	public void saveBounties() {
+	/*public void saveBounties() {
 		this.getConfig().set("creatures", "");
 		
 		Iterator<Entry<Class<? extends Entity>, Long>> creatureIterator = creatureBounties.entrySet().iterator();
@@ -423,8 +421,9 @@ public class Economy extends JavaPlugin{
 		}
 		this.saveConfig();
 		info(" Creature Bounties Saved");
-	}
-	public void loadBounties() {
+	}*/
+	/////////////////////////////////////////BROKEN//////////////////////////////////////////////////////////////
+	/*public void loadBounties() {
 		creatureBounties.clear();
 		
 		Map<String,Class<? extends Entity> > creatureLookup = new HashMap<String,Class<? extends Entity>>();
@@ -460,7 +459,7 @@ public class Economy extends JavaPlugin{
 			creatureBounties.put(creature, price);
 		}
 		info (" Creature bounties loaded");
-	}
+	}*/
   //////////////////////////////////////////////////////////////////////////////
  ///////////////////////////// Money Modification /////////////////////////////
 //////////////////////////////////////////////////////////////////////////////

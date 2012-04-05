@@ -47,7 +47,7 @@ public class SignShops implements Listener{
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
 		//Sign placedSign = (Sign) event.getBlock().getState();
-		if (event.getLine(0).equalsIgnoreCase("[SHOP]")){
+		if (event.getLine(0).equalsIgnoreCase("[SHOP]") || event.getLine(0).equalsIgnoreCase("[SHOP-STACK]")){
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
 				Material foundMaterial = Material.matchMaterial(event.getLine(1));
 				if (foundMaterial == null){
@@ -91,13 +91,18 @@ public class SignShops implements Listener{
 		if (clickedBlock.getType() == Material.SIGN_POST || clickedBlock.getType() == Material.WALL_SIGN) {
 			plugin.info("player click sign");
 			Sign clickedSign = (Sign) clickedBlock.getState();
-			if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP]")) {
+			if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP]") || clickedSign.getLine(0).equalsIgnoreCase("[SHOP-STACK]")) {
+				
+				int quantity = 0;
+				if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP-STACK]")) {
+					quantity = 64;
+				}
 				
 				Material purchaceMaterial = Material.matchMaterial(clickedSign.getLine(1));
 				//find price
 				long price;
 				if (plugin.blockPrices.containsKey(purchaceMaterial)){
-					price = plugin.blockPrices.get(purchaceMaterial);
+					price = plugin.blockPrices.get(purchaceMaterial) * quantity;
 				}
 				else {
 					event.getPlayer().sendMessage("There was an error with this sign, contact the administration");
@@ -107,9 +112,9 @@ public class SignShops implements Listener{
 					event.getPlayer().sendMessage("This block cannot be bought");
 				}
 				else if (plugin.chargeMoney(event.getPlayer(), price)) {
-					ItemStack item = new ItemStack(purchaceMaterial, 1);
+					ItemStack item = new ItemStack(purchaceMaterial, quantity);
 					event.getPlayer().getInventory().addItem(item);
-					event.getPlayer().sendMessage("You just bought some "+purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
+					event.getPlayer().sendMessage("You just bought "+ quantity +purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
 				}
 				else {
 					event.getPlayer().sendMessage("You need "+ChatColor.GREEN+"$"+price+ChatColor.WHITE+" to buy 1 "+purchaceMaterial.name());
