@@ -137,22 +137,32 @@ public class TeleportPlayerListener implements Listener {
 		}
 	}
 	
+	/***************************** PLACE TELEPORT SIGN ****************************\
+	| When a player places a sign with the first line being "[teleport]" this      |
+	| function looks to see if a city is currently being set                       |
+	| If it is then the sign is configured, if not an error message is displayed   |
+	|                                                                              |
+	| Only an Operator can place these signs                                       |
+	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void playerPlaceSign (SignChangeEvent event){
-		if (event.getLine(0).equalsIgnoreCase("[teleport]")){
-			String cityName = event.getLine(1);
-			if (plugin.cityTeleports.containsValue(cityName)) {
-				
-			}
-			else {
-				event.setLine(0, "");
-				event.setLine(1, "CITY");
-				event.setLine(2, "&cNOT FOUND");
-				event.setLine(3, "");
+		if (event.getPlayer().isOp()) {
+			if (event.getLine(0).equalsIgnoreCase("[teleport]")){
+				if (!plugin.tempCityWarpName.equalsIgnoreCase("")) {
+					//check to see if there is a city waiting to recieve the teleport sign
+					plugin.addCity(plugin.tempCityWarpName, plugin.tempCityWarpLocation, event.getBlock().getLocation());
+					event.getPlayer().sendMessage("Created Warp and Sign for "+plugin.tempCityWarpName);
+				}
+				else {
+					event.setLine(0, "");
+					event.setLine(1, "No City");
+					event.setLine(2, "Being Activated");
+					event.setLine(3, "Currently");
+				}
 			}
 		}
 	}
-	/********************************* PLAYER MOVE ********************************\
+	/******************************* CANCEL TELEPORT ******************************\
 	| When the player moves, if it is in the hash table then remove it from the    |
 	| table and re-send the block                                                  |
 	\******************************************************************************/

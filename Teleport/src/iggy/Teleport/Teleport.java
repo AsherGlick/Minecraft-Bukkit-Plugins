@@ -1,5 +1,8 @@
 package iggy.Teleport;
 
+import iggy.Regions.Position;
+import iggy.Regions.Regions;
+
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
@@ -19,12 +22,15 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
+import org.bukkit.event.EventHandler;
+import org.bukkit.event.EventPriority;
+import org.bukkit.event.Listener;
+import org.bukkit.event.server.PluginEnableEvent;
 import org.bukkit.inventory.ItemStack;
+import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
-
 
 public class Teleport extends JavaPlugin {
 	public static Teleport plugin;
@@ -36,6 +42,8 @@ public class Teleport extends JavaPlugin {
 	public Map<Location,String> cityActivators = new HashMap<Location,String>();
 	public Map<String,List<String>> playerActivations = new HashMap<String,List<String>>();
 	
+	public String tempCityWarpName = "";
+	public Location tempCityWarpLocation = null;
 	
 	PluginDescriptionFile pdFile;
 	String pluginName;
@@ -138,7 +146,9 @@ public class Teleport extends JavaPlugin {
 		}
 		
 	}
-	
+	/********************************** ADD CITY **********************************\
+	| This function adds a city to the list of citys, warps, and activators        |
+	\******************************************************************************/
 	public void addCity(String city, Location warp, Location activator) {
 		cityActivators.put(activator, city);
 		cityTeleports.put(city, warp);
@@ -217,6 +227,8 @@ public class Teleport extends JavaPlugin {
 		return true;
 	}
 	
+	Plugin regions;
+	Regions regionsapi;
 	
 	@Override
 	public void onEnable() {
@@ -229,6 +241,32 @@ public class Teleport extends JavaPlugin {
 		loadCities();
 		loadActivations();
 		
+		
+		regions = Bukkit.getServer().getPluginManager().getPlugin("Regions");
+				
+		if (regions == null){
+			severe("Cannot Find Regions Plugin");
+			return;
+		}
+		
+		
+		regionsapi = (Regions) regions;
+		info ("Loaded Economy");
+		
+		//set up all the block listeners to prevent distruction
+		
+		//economy is required for buying new chunks
+		//dynmap is required for mapfunctions
+		
+		if (!regions.isEnabled()) {
+			getServer().getPluginManager().registerEvents(new OurServerListener(), this);
+			if (!regions.isEnabled()) {
+				info("Waiting for Regions to be enabled");
+			}
+		}
+		else {
+			activateRegions();
+		}
 		this.logger.info(pluginTitle+ " version " + pdFile.getVersion() +" is enabled");
 	}
 	@Override
@@ -238,6 +276,32 @@ public class Teleport extends JavaPlugin {
 		this.saveConfig();
 		this.logger.info(pluginTitle + " version " + pdFile.getVersion() +" is disabled");
 	}
+  //////////////////////////////////////////////////////////////////////////////
+ /////////////////////////// WAIT FOR OTHER PLUGINS ///////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+		// listener class to wait for the other plugins to enable
+		private class OurServerListener implements Listener {
+			// warnings are suppressed becasue this is called using registerEvents when the 
+			@SuppressWarnings("unused")
+			// this function runs whenever a plugin is enabled
+			@EventHandler (priority = EventPriority.MONITOR)
+	        public void onPluginEnable(PluginEnableEvent event) {
+	            Plugin p = event.getPlugin();
+	            String name = p.getDescription().getName();
+	            if(name.equals("Regions")) {
+	            	activateRegions();
+	            }
+	        }
+	    }
+
+		// funtion to finish activating the plugin once the other plugins are enabled
+		public void activateRegions(){
+			//TODO: make these features not enabled if the plugin is not enabeled
+			info ("New warp creation activated");
+		}
+  //////////////////////////////////////////////////////////////////////////////
+ ////////////////////////////////// COMMANDS //////////////////////////////////
+//////////////////////////////////////////////////////////////////////////////	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = null;
 		if (sender instanceof Player) {
@@ -248,19 +312,36 @@ public class Teleport extends JavaPlugin {
 			this.logger.info("This command can only be run by a player");
 			return false;
 		}
-		
-		//World world = player.getWorld();
-		
+		/********************************* CREATE WARP ********************************\
+		|
+		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("createwarp")){
 			if (player.isOp() || (player.hasPermission("teleport.createwarp"))){
-				ItemStack item = new ItemStack(Material.SIGN);
-				item.addUnsafeEnchantment(Enchantment.DURABILITY, 5);
-				player.getInventory().addItem(item);
+				if (regions.isEnabled()) {
+					ItemStack item = new ItemStack(Material.SIGN);
+					player.getInventory().addItem(item);
+					Position p = new Position(player.getLocation());
+					String name = regionsapi.chunkNames.get(p);
+					if (name == null) {
+						player.sendMessage("You cannot create a warp to the wild");
+						return false;
+					}
+					player.sendMessage("Creating a warp for "+name);
+					tempCityWarpName = name;
+					tempCityWarpLocation = player.getLocation();
+				}
+				else {
+					player.sendMessage("Create Regions broken, regions not enabled. Contact your server admin");
+				}
+				
 			}
 			else {
 				player.sendMessage("Ask an admin to create this warp for you");
 			}
 		}
+		/************************************ WARP ************************************\
+		| The command teleports a player to the location they specified                |
+		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("warp")){
 			if ( args.length == 1) {
 				if (playerActivations.get(player.getName()).contains(args[0])) {
@@ -344,5 +425,14 @@ public class Teleport extends JavaPlugin {
 				}
 			}
 		}, 120L);
+	}
+	//////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////// DISPLAY HELPERS //////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+	public void info(String input) {
+		this.logger.info(pluginTitle + input);
+	}
+	public void severe (String input) {
+		this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");
 	}
 }

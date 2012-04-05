@@ -1,6 +1,6 @@
 name: Teleport
 main: iggy.Teleport.Teleport
-version: 1.36
+version: 1.37
 description: >
              Jumping and Warping
 commands:

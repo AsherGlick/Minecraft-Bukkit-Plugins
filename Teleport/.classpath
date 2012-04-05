@@ -3,5 +3,6 @@
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
 	<classpathentry kind="lib" path="/home/elhim/Code/projects/MinecraftPlugins/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="/home/elhim/Code/projects/MinecraftPlugins/Regions.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
