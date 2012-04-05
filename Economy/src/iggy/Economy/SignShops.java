@@ -93,7 +93,7 @@ public class SignShops implements Listener{
 			Sign clickedSign = (Sign) clickedBlock.getState();
 			if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP]") || clickedSign.getLine(0).equalsIgnoreCase("[SHOP-STACK]")) {
 				
-				int quantity = 0;
+				int quantity = 1;
 				if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP-STACK]")) {
 					quantity = 64;
 				}
