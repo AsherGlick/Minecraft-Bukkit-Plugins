@@ -140,8 +140,16 @@ public class SignShops implements Listener{
 					player.sendMessage("We cannot buy this item");
 				}
 				else {
-					player.sendMessage("You sold "+amount+" "+material.toString()+" for "+ChatColor.GREEN+"$"+amount*blockPrice/2+ChatColor.WHITE);
-					plugin.giveMoney(player, amount*blockPrice/2);
+					//Get the percentage of the durability left in the item
+					long moneyEarned = amount*blockPrice/2;
+					short maxDurability = material.getMaxDurability();
+					short itemDurability = player.getItemInHand().getDurability();
+					double earningPercentage = (double) itemDurability / (double) maxDurability;
+					//Apply the durability fee
+					moneyEarned *= earningPercentage;
+					//Sell the item
+					player.sendMessage("You sold "+amount+" "+material.toString()+ " at "+earningPercentage*100.0+"% durability for "+ChatColor.GREEN+"$"+moneyEarned+ChatColor.WHITE);
+					plugin.giveMoney(player, moneyEarned);
 					ItemStack item = player.getItemInHand();
 					item.setType(Material.AIR);
 					item.setAmount(0);
