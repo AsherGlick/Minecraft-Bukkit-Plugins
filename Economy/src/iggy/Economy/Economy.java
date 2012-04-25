@@ -217,9 +217,17 @@ public class Economy extends JavaPlugin{
 			int amount = 1;
 			Material material;
 			// If no arguments get the item the player is holding
+			// If the player is not holding an item, get the item
+			// the player is pointing at
 			if (args.length == 0) {
 				amount = player.getItemInHand().getAmount();
-				material = player.getItemInHand().getType();
+				if( amount > 0 ){
+					material = player.getItemInHand().getType();
+				}
+				else{
+					material = player.getTargetBlock(null, 16).getType();
+					amount = 1;
+				}
 			}
 			// if one argument try to find the material requested
 			else if (args.length == 1){
