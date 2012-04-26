@@ -46,6 +46,10 @@ public class SignShops implements Listener{
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
+		Player player = event.getPlayer();
+		if (player.getWorld() != Economy.shopworld){
+			return;
+		}
 		//Sign placedSign = (Sign) event.getBlock().getState();
 		if (event.getLine(0).equalsIgnoreCase("[SHOP]") || event.getLine(0).equalsIgnoreCase("[SHOP-STACK]")){
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
@@ -82,6 +86,10 @@ public class SignShops implements Listener{
 	public void clickSign(PlayerInteractEvent event){
 		if (event.getAction() != Action.LEFT_CLICK_BLOCK){
 			return;	
+		}
+		Player player = event.getPlayer();
+		if (player.getWorld() != Economy.shopworld){
+			return;
 		}
 		Block clickedBlock = event.getClickedBlock();
 		if (clickedBlock == null) {
@@ -126,8 +134,6 @@ public class SignShops implements Listener{
 				//[create a global hash table for players and when they last clicked (maybe what item as well)]
 				// check to see when the last click was if it was over 500ms and less then 5000ms then it will sell
 				
-				// get the player clicking the sign
-				Player player = event.getPlayer();
 				// Set the default quantity of the item to be questioned
 				int amount = 1;
 				Material material;
