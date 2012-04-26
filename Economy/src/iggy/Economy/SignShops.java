@@ -46,6 +46,10 @@ public class SignShops implements Listener{
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
+		Player player = event.getPlayer();
+		if (player.getWorld() != Economy.shopworld){
+			return;
+		}
 		//Sign placedSign = (Sign) event.getBlock().getState();
 		if (event.getLine(0).equalsIgnoreCase("[SHOP]") || event.getLine(0).equalsIgnoreCase("[SHOP-STACK]")){
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
@@ -82,6 +86,10 @@ public class SignShops implements Listener{
 	public void clickSign(PlayerInteractEvent event){
 		if (event.getAction() != Action.LEFT_CLICK_BLOCK){
 			return;	
+		}
+		Player player = event.getPlayer();
+		if (player.getWorld() != Economy.shopworld){
+			return;
 		}
 		Block clickedBlock = event.getClickedBlock();
 		if (clickedBlock == null) {
@@ -126,8 +134,6 @@ public class SignShops implements Listener{
 				//[create a global hash table for players and when they last clicked (maybe what item as well)]
 				// check to see when the last click was if it was over 500ms and less then 5000ms then it will sell
 				
-				// get the player clicking the sign
-				Player player = event.getPlayer();
 				// Set the default quantity of the item to be questioned
 				int amount = 1;
 				Material material;
@@ -140,8 +146,19 @@ public class SignShops implements Listener{
 					player.sendMessage("We cannot buy this item");
 				}
 				else {
-					player.sendMessage("You sold "+amount+" "+material.toString()+" for "+ChatColor.GREEN+"$"+amount*blockPrice/2+ChatColor.WHITE);
-					plugin.giveMoney(player, amount*blockPrice/2);
+					//Get the percentage of the durability left in the item
+					long moneyEarned = amount*blockPrice/2;
+					short maxDurability = material.getMaxDurability();
+					double earningPercentage = 1.0;
+					if( maxDurability != 0 ){
+						short itemDurability = (short) (maxDurability - player.getItemInHand().getDurability());
+						earningPercentage = (double) itemDurability / (double) maxDurability;
+						//Apply the durability fee
+						moneyEarned *= earningPercentage;
+					}
+					//Sell the item
+					player.sendMessage("You sold "+amount+" "+material.toString()+ " at "+earningPercentage*100.0+"% durability for "+ChatColor.GREEN+"$"+moneyEarned+ChatColor.WHITE);
+					plugin.giveMoney(player, moneyEarned);
 					ItemStack item = player.getItemInHand();
 					item.setType(Material.AIR);
 					item.setAmount(0);
