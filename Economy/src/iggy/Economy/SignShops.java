@@ -143,10 +143,13 @@ public class SignShops implements Listener{
 					//Get the percentage of the durability left in the item
 					long moneyEarned = amount*blockPrice/2;
 					short maxDurability = material.getMaxDurability();
-					short itemDurability = player.getItemInHand().getDurability();
-					double earningPercentage = (double) itemDurability / (double) maxDurability;
-					//Apply the durability fee
-					moneyEarned *= earningPercentage;
+					double earningPercentage = 1.0;
+					if( maxDurability != 0 ){
+						short itemDurability = (short) (maxDurability - player.getItemInHand().getDurability());
+						earningPercentage = (double) itemDurability / (double) maxDurability;
+						//Apply the durability fee
+						moneyEarned *= earningPercentage;
+					}
 					//Sell the item
 					player.sendMessage("You sold "+amount+" "+material.toString()+ " at "+earningPercentage*100.0+"% durability for "+ChatColor.GREEN+"$"+moneyEarned+ChatColor.WHITE);
 					plugin.giveMoney(player, moneyEarned);
