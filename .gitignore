@@ -1,5 +1,4 @@
-Economy.jar
-dynmap.jar
+*.jar
 Economy/bin/*
 AntiCreeper/bin/*
 NonPlayers/bin/*
