@@ -57,12 +57,14 @@ public class GetMoney implements Listener{
 	GetMoney (Economy instance) {
 		plugin = instance;
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void breakMoney (BlockBreakEvent event) {
-		plugin.giveMoney(event.getPlayer(), 5);
+		if (!event.isCancelled())
+		plugin.giveMoney(event.getPlayer(), 3);
 	}
-	@EventHandler(priority = EventPriority.NORMAL)
+	@EventHandler(priority = EventPriority.MONITOR)
 	public void placeMoney (BlockPlaceEvent event) {
+		if (!event.isCancelled())
 		plugin.giveMoney(event.getPlayer(), 1);
 	}
 	

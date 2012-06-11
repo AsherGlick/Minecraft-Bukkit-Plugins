@@ -74,6 +74,16 @@ public class SignShops implements Listener{
 			}
 		}
 	}
+	
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void BlockProtect (BlockBreakEvent event){
+		Block brokenBlock = event.getBlock();
+		if (brokenBlock != null){
+			if (plugin.shopworld == brokenBlock.getWorld()) {
+				event.setCancelled(true);
+			}
+		}
+	}
 	// click sign
 	/********************************* CLICK SIGN *********************************\
 	| Still debuggin this too
@@ -87,7 +97,7 @@ public class SignShops implements Listener{
 		if (clickedBlock == null) {
 			return;
 		}
-		// this might need to be 'Material.SIGN'
+		// this mightneed to be 'Material.SIGN'
 		if (clickedBlock.getType() == Material.SIGN_POST || clickedBlock.getType() == Material.WALL_SIGN) {
 			plugin.info("player click sign");
 			Sign clickedSign = (Sign) clickedBlock.getState();

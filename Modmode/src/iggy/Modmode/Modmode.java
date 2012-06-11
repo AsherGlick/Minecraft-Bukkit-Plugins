@@ -6,14 +6,14 @@ import java.util.Map.Entry;
 
 import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.World;
+//import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.java.JavaPlugin;
-import org.bukkit.potion.PotionEffect;
-import org.bukkit.potion.PotionEffectType;
+//import org.bukkit.potion.PotionEffect;
+//import org.bukkit.potion.PotionEffectType;
 
 
 public class Modmode extends JavaPlugin{
@@ -29,7 +29,7 @@ public class Modmode extends JavaPlugin{
 					if (deg >= 360) deg -= 360;
 					
 					//player.sendMessage("HI! DEG AT "+deg+" "+Math.sin(Math.PI*deg/180)*distance+":"+Math.cos(Math.PI*deg/180)*distance);
-					World world = player.getWorld();
+					//World world = player.getWorld();
 					
 					Location location = player.getLocation();
 					//location.add(Math.acos(deg)*distance, 0, Math.asin(deg)*distance);
