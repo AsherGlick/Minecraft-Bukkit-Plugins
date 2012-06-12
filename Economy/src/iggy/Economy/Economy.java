@@ -79,17 +79,14 @@ public class Economy extends JavaPlugin{
 	// TODO: make a way of separating the blocks into categories that can be sold by salesNPCs
 	public Map<Material,Long> blockPrices = new HashMap<Material,Long>();
 	
-	// prices of each Mob//// BROKEN
-	//public Map<Class<? extends Entity>,Long> creatureBounties = new HashMap<Class<? extends Entity>,Long>();
-	
 	// Keep a record of where to send the player back to when they leave the shop
-	public Map<Player,Location> returnPoint = new HashMap<Player,Location>();
+	public Map<Player,Location> shopReturnLocations = new HashMap<Player,Location>();
 	
 	// Initialize the clickable items class
 	public ItemSelector itemSelector = new ItemSelector(this);
 	
 	// Initialize income events
-	public GetMoney incomeEvents = new GetMoney(this);
+	public EventBasedIncome incomeEvents = new EventBasedIncome(this);
 	
 	// Initialize sign shop events
 	public SignShops signshops = new SignShops(this);
@@ -182,15 +179,15 @@ public class Economy extends JavaPlugin{
 				if (player.isInsideVehicle()){player.getVehicle().eject();}
 				// teleporting from the main world or the nether
 				if (player.getWorld() == mainworld || player.getWorld() == thenether) {
-					returnPoint.put(player,player.getLocation());
+					shopReturnLocations.put(player,player.getLocation());
 					player.teleport(shopworld.getSpawnLocation());
 					player.sendMessage("Teleported to the shop");
 				}
 				// teleporting back from the shop world
 				else if (player.getWorld() == shopworld){
-					if (returnPoint.containsKey(player)) {
-						player.teleport(returnPoint.get(player));
-						returnPoint.remove(player);
+					if (shopReturnLocations.containsKey(player)) {
+						player.teleport(shopReturnLocations.get(player));
+						shopReturnLocations.remove(player);
 						player.sendMessage("Returned you to your world");
 					}
 					else {
@@ -408,58 +405,6 @@ public class Economy extends JavaPlugin{
 		
 		info(" Block Prices Loaded");
 	}
-  //////////////////////////////////////////////////////////////////////////////
- ////////////////////////////////// Bounties //////////////////////////////////
-//////////////////////////////////////////////////////////////////////////////
-	/*public void saveBounties() {
-		this.getConfig().set("creatures", "");
-		
-		Iterator<Entry<Class<? extends Entity>, Long>> creatureIterator = creatureBounties.entrySet().iterator();
-		while (creatureIterator.hasNext()) {
-			Entry<Class<? extends Entity>, Long> pairs = creatureIterator.next();
-			this.getConfig().set("creatures."+pairs.getKey().getSimpleName(), pairs.getValue());
-		}
-		this.saveConfig();
-		info(" Creature Bounties Saved");
-	}*/
-	/////////////////////////////////////////BROKEN//////////////////////////////////////////////////////////////
-	/*public void loadBounties() {
-		creatureBounties.clear();
-		
-		Map<String,Class<? extends Entity> > creatureLookup = new HashMap<String,Class<? extends Entity>>();
-		
-		for (int i = 0; i < CreatureType.values().length; i++) {
-			long bounty = -1;
-			Class<? extends Entity> clazz = CreatureType.values()[i].getEntityClass();
-			creatureBounties.put(clazz, bounty);
-			
-			creatureLookup.put(clazz.getSimpleName(), clazz);
-			
-		}
-		ConfigurationSection creatureConfig = this.getConfig().getConfigurationSection("creatures");
-		if (creatureConfig == null) {
-			severe(" Failed to load creature bounties from configuration (creature section not found)");
-			return;
-		}
-		Set<String> creatures = creatureConfig.getKeys(false);
-		if (creatures == null){
-			severe(" failed to load creature bounties from configuration (no creatures found)");
-			return;
-		}
-		
-		Iterator<String> it = creatures.iterator();
-		while(it.hasNext()) {
-			String creaturename = it.next();
-			Class<? extends Entity> creature = creatureLookup.get(creaturename);
-			if (creature == null) {
-				severe(" unknown creature found in bounty list ("+creaturename+")");
-				continue;
-			}
-			long price = this.getConfig().getLong("creatures."+creaturename);
-			creatureBounties.put(creature, price);
-		}
-		info (" Creature bounties loaded");
-	}*/
   //////////////////////////////////////////////////////////////////////////////
  ///////////////////////////// Money Modification /////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
