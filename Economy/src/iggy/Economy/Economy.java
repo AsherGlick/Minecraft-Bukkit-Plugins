@@ -106,7 +106,6 @@ public class Economy extends JavaPlugin{
 	@Override
 	public void onDisable() {
 		// save all the configuration info
-		//saveBounties();//BROKEN
 		saveMoney();
 		savePrices();
 		// reporth that the plugin is disabled
@@ -143,7 +142,6 @@ public class Economy extends JavaPlugin{
 		Bukkit.getServer().getPluginManager().registerEvents(signshops, this);
 		
 		// Load all the configuration info
-		//loadBounties();// BROKEN
 		loadMoney();
 		loadPrices();
 		// activate income events
