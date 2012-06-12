@@ -52,9 +52,9 @@ import org.bukkit.event.Listener;
 import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 
-public class GetMoney implements Listener{
+public class EventBasedIncome implements Listener{
 	Economy plugin;
-	GetMoney (Economy instance) {
+	EventBasedIncome (Economy instance) {
 		plugin = instance;
 	}
 	@EventHandler(priority = EventPriority.MONITOR)
@@ -67,29 +67,4 @@ public class GetMoney implements Listener{
 		if (!event.isCancelled())
 		plugin.giveMoney(event.getPlayer(), 1);
 	}
-	
-	
-	/*  //// BROKEN ////
-	@EventHandler(priority = EventPriority.NORMAL)
-	public void killMob (EntityDeathEvent event) {
-		LivingEntity killed = null;
-		if (event.getEntity() instanceof LivingEntity) {
-			killed = (LivingEntity) event.getEntity();
-		}
-		else {
-			//dont fucking care
-			return;
-		}
-		Player killer = killed.getKiller();
-		if (killer == null) {
-			// fuck that!
-			return;
-		}
-		// TODO: get money on entity death
-		long price = plugin.creatureBounties.get((Entity)killed);
-		if (price > 0){
-			plugin.info("Entity has a bounty");
-			plugin.giveMoney(killer, price);
-		}
-	}*/
 }
