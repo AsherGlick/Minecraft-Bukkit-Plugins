@@ -83,7 +83,7 @@ public class SignShops implements Listener{
 	public void BlockProtect (BlockBreakEvent event){
 		Block brokenBlock = event.getBlock();
 		if (brokenBlock != null){
-			if (plugin.shopworld == brokenBlock.getWorld()) {
+			if (plugin.shopworld == brokenBlock.getWorld() && !event.getPlayer().isOp()) {
 				event.setCancelled(true);
 			}
 		}
