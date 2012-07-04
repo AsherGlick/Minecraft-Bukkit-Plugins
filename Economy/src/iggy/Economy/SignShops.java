@@ -1,6 +1,5 @@
 package iggy.Economy;
 
-import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
@@ -17,31 +16,14 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class SignShops implements Listener{
+	
 	static Economy economy;
 	SignShops (Economy instance) {
 		economy = instance;
 	}
-	// this class does two things, allows admins to place shops
-	// and allows players to buy from shops
-	// sell signs and buy signs
-	@EventHandler (priority = EventPriority.NORMAL)
-	public void breakShop(BlockBreakEvent event) {
-		if (event.getBlock().getWorld() == Bukkit.getWorld("shopworld")) {
-			if (!event.getPlayer().isOp() && !event.getPlayer().hasPermission("economy.editshop")) {
-				event.setCancelled(true);
-			}
-		}
-	}
-	@EventHandler (priority = EventPriority.NORMAL)
-	public void placeShop(BlockPlaceEvent event) {
-		if (event.getBlock().getWorld() == Bukkit.getWorld("shopworld")) {
-			if (!event.getPlayer().isOp() && !event.getPlayer().hasPermission("economy.editshop")) {
-				event.setCancelled(true);
-			}
-		}
-	}
+	
 	/******************************* PROTECT BLOCKS *******************************\
-	| This function prevents any blocks from being broken inside of the shop world |
+	| This function prevents any blocks from being BROKEN inside of the shop world |
 	| by anyone other then the server operator                                     |
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
@@ -53,15 +35,16 @@ public class SignShops implements Listener{
 			}
 		}
 	}
+	
 	/******************************* PROTECT BLOCKS *******************************\
-	| This function prevents any blocks from being broken inside of the shop world |
+	| This function prevents any blocks from being PLACED inside of the shop world |
 	| by anyone other then the server operator                                     |
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void BuildProtect (BlockPlaceEvent event){
-		Block brokenBlock = event.getBlock();
-		if (brokenBlock != null){
-			if (economy.shopworld == brokenBlock.getWorld() && !event.getPlayer().isOp()) {
+		Block placedBlock = event.getBlock();
+		if (placedBlock != null){
+			if (economy.shopworld == placedBlock.getWorld() && !event.getPlayer().isOp()) {
 				event.setCancelled(true);
 			}
 		}
@@ -113,7 +96,8 @@ public class SignShops implements Listener{
 	}
 
 	/********************************* CLICK SIGN *********************************\
-	| Still debuggin this too
+	| This function is triggered whenever a sign is clicked. It reacts when a      |
+	| [SELL] or a [SHOP] sign is clicked with the left mouse button
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void clickSign(PlayerInteractEvent event){
@@ -128,10 +112,13 @@ public class SignShops implements Listener{
 		if (clickedBlock == null) {
 			return;
 		}
-		// this mightneed to be 'Material.SIGN'
+
+		
 		if (clickedBlock.getType() == Material.SIGN_POST || clickedBlock.getType() == Material.WALL_SIGN) {
 			economy.info("player click sign");
 			Sign clickedSign = (Sign) clickedBlock.getState();
+			
+			// If the player is trying to buy materials
 			if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP]") || clickedSign.getLine(0).equalsIgnoreCase("[SHOP-STACK]")) {
 				
 				int quantity = 1;
@@ -163,34 +150,44 @@ public class SignShops implements Listener{
 				// cancel the event so nothing else happens
 				event.setCancelled(true);
 			}
-			else if (clickedSign.getLine(0).equalsIgnoreCase("[SELL]")){
-				//[create a global hash table for players and when they last clicked (maybe what item as well)]
-				// check to see when the last click was if it was over 500ms and less then 5000ms then it will sell
-				
+			
+			// If the player is trying to sell materials
+			else if (clickedSign.getLine(0).equalsIgnoreCase("[SELL]")){				
 				// Set the default quantity of the item to be questioned
 				int amount = 1;
 				Material material;
 				
+				String printedAmount = "a";
+				String printedDurability = "";
+				
 				amount = player.getItemInHand().getAmount();
 				material = player.getItemInHand().getType();
+				// If the player is not holding anything dont bother to try to sell it
+				if (material == Material.AIR){return;}
 				
 				long blockPrice = economy.blockPrices.get(material);
 				if (blockPrice == -1) {
 					player.sendMessage("We cannot buy this item");
 				}
 				else {
-					//Get the percentage of the durability left in the item
+					// If the item has durability then modify the price based on how much durability is left
 					long moneyEarned = amount*blockPrice/2;
 					short maxDurability = material.getMaxDurability();
 					double earningPercentage = 1.0;
 					if( maxDurability != 0 ){
 						short itemDurability = (short) (maxDurability - player.getItemInHand().getDurability());
 						earningPercentage = (double) itemDurability / (double) maxDurability;
-						//Apply the durability fee
+						// Apply the durability fee
 						moneyEarned *= earningPercentage;
+						// Include durability modification in the sell notification message
+						printedDurability = " at "+earningPercentage*100.0+"% durability";
 					}
-					//Sell the item
-					player.sendMessage("You sold "+amount+" "+material.toString()+ " at "+earningPercentage*100.0+"% durability for "+ChatColor.GREEN+"$"+moneyEarned+ChatColor.WHITE);
+					// If the user is selling more then one then change displayed amount
+					if (amount > 1) { printedAmount = Integer.toString(amount);}
+					// Display the sell notification to the user
+					player.sendMessage("You sold " + printedAmount + " " + material.toString() + printedDurability + " for " + ChatColor.GREEN + "$" + moneyEarned + ChatColor.WHITE);
+					
+					// Remove the item and give the player money
 					economy.giveMoney(player, moneyEarned);
 					ItemStack item = player.getItemInHand();
 					item.setType(Material.AIR);
@@ -203,6 +200,4 @@ public class SignShops implements Listener{
 			}
 		}
 	}
-	
-	
 }
