@@ -95,7 +95,7 @@ public class Economy extends JavaPlugin{
 	String pluginName;
 	String pluginTitle;
 	
-	// world list
+	// World List
 	static World shopworld;
 	static World mainworld;
 	static World thenether;
@@ -137,7 +137,7 @@ public class Economy extends JavaPlugin{
 		endworld = Bukkit.getServer().getWorld("world_the_end");
 		
 		// TODO:spawn and maintain items
-		  //TODO: spawn items
+		//TODO: spawn items
 		Bukkit.getServer().getPluginManager().registerEvents(itemSelector, this);
 		Bukkit.getServer().getPluginManager().registerEvents(signshops, this);
 		
@@ -157,9 +157,7 @@ public class Economy extends JavaPlugin{
 		if (sender instanceof Player) {
 			player = (Player) sender;
 		}
-		
 		//World world = player.getWorld();
-		
 		/************************************ SHOP ************************************\
 		| This command will teleport the player to and from the shop world. It saves   |
 		| where they are and teleports them to the center of the shop world. If the    |
@@ -169,19 +167,21 @@ public class Economy extends JavaPlugin{
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("shop")){
 			if (player == null) {
-				info(" This command can only be run by a pldayer");
+				info(" This command can only be run by a player");
 				return false;
 			}
 			else {
-				// teleporting when you are in a minecart breaks some stuff
+				// Remove the player from any vehicle to avoid breaking movement code
 				if (player.isInsideVehicle()){player.getVehicle().eject();}
-				// teleporting from the main world or the nether
+				
+				// If the player is in the main world or nether teleport them to the shop
 				if (player.getWorld() == mainworld || player.getWorld() == thenether) {
 					shopReturnLocations.put(player,player.getLocation());
 					player.teleport(shopworld.getSpawnLocation());
 					player.sendMessage("Teleported to the shop");
 				}
-				// teleporting back from the shop world
+				
+				// If the player is in the shop world, return them to where they used to be
 				else if (player.getWorld() == shopworld){
 					if (shopReturnLocations.containsKey(player)) {
 						player.teleport(shopReturnLocations.get(player));
@@ -193,6 +193,8 @@ public class Economy extends JavaPlugin{
 						player.sendMessage("Your old location was corrupted, respawning");
 					}
 				}
+				
+				// If the player is in some other world, prevent them from entering the shop
 				else {
 					player.sendMessage("you cant go to the shop from here");
 				}
@@ -206,8 +208,10 @@ public class Economy extends JavaPlugin{
 		| TODO: allow the console to run this function with one argument as well       |
 		\******************************************************************************/
 		else if (commandLabel.equalsIgnoreCase("price")){
-			// Prevent the console from running this command
-			if (player == null) {info(" This command can only be run by a player");}
+			if (player == null) {
+				info(" This command can only be run by a player");
+				return false;
+			}
 			// Set the default quantity of the item to be questioned
 			int amount = 1;
 			Material material;
