@@ -48,6 +48,7 @@ package iggy.Regions;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -452,10 +453,16 @@ public class Regions extends JavaPlugin{
 		
 		int countID = 0;
 		
+		// Create a map for the new region areas
 		Map<String, AreaMarker> newresareas = new HashMap<String, AreaMarker>();
+		
+		// Create a map for name to region lists
+		Map<String, HashSet <Position> > regions = new HashMap <String, HashSet <Position>>();
 		
 		for (Entry<Position,String> regionIterator : chunkNames.entrySet()) {
 			
+		}
+		for (){
 		    //String wname = areas[i].getWorld().getName();
 		    //if(isVisible(resid, wname) == false) continue;
 		    
@@ -466,6 +473,7 @@ public class Regions extends JavaPlugin{
 			
 			double getx = regionIterator.getKey().getMinimumXCorner();
         	double gety = regionIterator.getKey().getMinimumZCorner();
+        	
         	
         	String wname = regionIterator.getKey()._world;
         	
