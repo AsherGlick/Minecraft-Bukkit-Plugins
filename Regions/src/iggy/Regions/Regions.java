@@ -459,16 +459,20 @@ public class Regions extends JavaPlugin{
 		// Create a map for name to region lists
 		Map<String, HashSet <Position> > regions = new HashMap <String, HashSet <Position>>();
 		
-		for (Entry<Position,String> regionIterator : chunkNames.entrySet()) {
+		for (Entry<Position,String> positionIterator : chunkNames.entrySet()) {
+			Position position = positionIterator.getKey();
+			String name = positionIterator.getValue();
 			
+			HashSet<Position> plotList = regions.get(name);
+			plotList.add(position);
+			
+			regions.put(name, plotList);
 		}
-		for (){
-		    //String wname = areas[i].getWorld().getName();
-		    //if(isVisible(resid, wname) == false) continue;
-		    
-		    //String id = resid + "%" + i; /* Make area ID for cubiod */
+		
+		for (Entry <String, HashSet <Position>> regionIterator : regions.entrySet()){
+
 			String id = "region"+countID;
-			String name = regionIterator.getValue();
+			String name = regionIterator.getKey();
 		    
 			
 			double getx = regionIterator.getKey().getMinimumXCorner();
