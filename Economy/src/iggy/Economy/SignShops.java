@@ -17,9 +17,9 @@ import org.bukkit.event.player.PlayerInteractEvent;
 import org.bukkit.inventory.ItemStack;
 
 public class SignShops implements Listener{
-	Economy plugin;
+	static Economy economy;
 	SignShops (Economy instance) {
-		plugin = instance;
+		economy = instance;
 	}
 	// this class does two things, allows admins to place shops
 	// and allows players to buy from shops
@@ -40,17 +40,48 @@ public class SignShops implements Listener{
 			}
 		}
 	}
-	//
+	/******************************* PROTECT BLOCKS *******************************\
+	| This function prevents any blocks from being broken inside of the shop world |
+	| by anyone other then the server operator                                     |
+	\******************************************************************************/
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void BlockProtect (BlockBreakEvent event){
+		Block brokenBlock = event.getBlock();
+		if (brokenBlock != null){
+			if (economy.shopworld == brokenBlock.getWorld() && !event.getPlayer().isOp()) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	/******************************* PROTECT BLOCKS *******************************\
+	| This function prevents any blocks from being broken inside of the shop world |
+	| by anyone other then the server operator                                     |
+	\******************************************************************************/
+	@EventHandler (priority = EventPriority.NORMAL)
+	public void BuildProtect (BlockPlaceEvent event){
+		Block brokenBlock = event.getBlock();
+		if (brokenBlock != null){
+			if (economy.shopworld == brokenBlock.getWorld() && !event.getPlayer().isOp()) {
+				event.setCancelled(true);
+			}
+		}
+	}
+	
 	/********************************* PLACE SIGN *********************************\
-	| Still debuggin this function
+	| The place sign function handles the placement of the [SHOP] sign as well as  |
+	| the [SELL] sign. When the shop sign is places the function searches for the  |
+	| item number that it is placed with to see if it corrisponds to an actual     |
+	| block, if it does then the name of the block is displayed and the sign is    |
+	| placed.
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
 		Player player = event.getPlayer();
-		if (player.getWorld() != Economy.shopworld){
+		if (player.getWorld() != economy.shopworld){
 			return;
 		}
-		//Sign placedSign = (Sign) event.getBlock().getState();
+		
+		// If the sign is a [SHOP] or a [SHOP-STACK] sign
 		if (event.getLine(0).equalsIgnoreCase("[SHOP]") || event.getLine(0).equalsIgnoreCase("[SHOP-STACK]")){
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
 				Material foundMaterial = Material.matchMaterial(event.getLine(1));
@@ -67,6 +98,8 @@ public class SignShops implements Listener{
 				event.setCancelled(true);
 			}
 		}
+		
+		// If the sign is a [SELL] sign
 		if (event.getLine(0).equalsIgnoreCase("[SELL]")) {
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
 				event.setLine(1, ""+ChatColor.GOLD);
@@ -78,17 +111,7 @@ public class SignShops implements Listener{
 			}
 		}
 	}
-	
-	@EventHandler (priority = EventPriority.NORMAL)
-	public void BlockProtect (BlockBreakEvent event){
-		Block brokenBlock = event.getBlock();
-		if (brokenBlock != null){
-			if (plugin.shopworld == brokenBlock.getWorld() && !event.getPlayer().isOp()) {
-				event.setCancelled(true);
-			}
-		}
-	}
-	// click sign
+
 	/********************************* CLICK SIGN *********************************\
 	| Still debuggin this too
 	\******************************************************************************/
@@ -98,7 +121,7 @@ public class SignShops implements Listener{
 			return;	
 		}
 		Player player = event.getPlayer();
-		if (player.getWorld() != Economy.shopworld){
+		if (player.getWorld() != economy.shopworld){
 			return;
 		}
 		Block clickedBlock = event.getClickedBlock();
@@ -107,7 +130,7 @@ public class SignShops implements Listener{
 		}
 		// this mightneed to be 'Material.SIGN'
 		if (clickedBlock.getType() == Material.SIGN_POST || clickedBlock.getType() == Material.WALL_SIGN) {
-			plugin.info("player click sign");
+			economy.info("player click sign");
 			Sign clickedSign = (Sign) clickedBlock.getState();
 			if (clickedSign.getLine(0).equalsIgnoreCase("[SHOP]") || clickedSign.getLine(0).equalsIgnoreCase("[SHOP-STACK]")) {
 				
@@ -119,8 +142,8 @@ public class SignShops implements Listener{
 				Material purchaceMaterial = Material.matchMaterial(clickedSign.getLine(1));
 				//find price
 				long price;
-				if (plugin.blockPrices.containsKey(purchaceMaterial)){
-					price = plugin.blockPrices.get(purchaceMaterial) * quantity;
+				if (economy.blockPrices.containsKey(purchaceMaterial)){
+					price = economy.blockPrices.get(purchaceMaterial) * quantity;
 				}
 				else {
 					event.getPlayer().sendMessage("There was an error with this sign, contact the administration");
@@ -129,7 +152,7 @@ public class SignShops implements Listener{
 				if (price < 0) {
 					event.getPlayer().sendMessage("This block cannot be bought");
 				}
-				else if (plugin.chargeMoney(event.getPlayer(), price)) {
+				else if (economy.chargeMoney(event.getPlayer(), price)) {
 					ItemStack item = new ItemStack(purchaceMaterial, quantity);
 					event.getPlayer().getInventory().addItem(item);
 					event.getPlayer().sendMessage("You just bought "+ quantity + " " +purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
@@ -151,7 +174,7 @@ public class SignShops implements Listener{
 				amount = player.getItemInHand().getAmount();
 				material = player.getItemInHand().getType();
 				
-				long blockPrice = plugin.blockPrices.get(material);
+				long blockPrice = economy.blockPrices.get(material);
 				if (blockPrice == -1) {
 					player.sendMessage("We cannot buy this item");
 				}
@@ -168,7 +191,7 @@ public class SignShops implements Listener{
 					}
 					//Sell the item
 					player.sendMessage("You sold "+amount+" "+material.toString()+ " at "+earningPercentage*100.0+"% durability for "+ChatColor.GREEN+"$"+moneyEarned+ChatColor.WHITE);
-					plugin.giveMoney(player, moneyEarned);
+					economy.giveMoney(player, moneyEarned);
 					ItemStack item = player.getItemInHand();
 					item.setType(Material.AIR);
 					item.setAmount(0);
