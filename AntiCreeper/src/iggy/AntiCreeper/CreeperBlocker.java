@@ -11,7 +11,7 @@ public class CreeperBlocker implements Listener {
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void onCreatureSpawn (CreatureSpawnEvent event){
 		if (event.getEntityType() == EntityType.CREEPER) {
-			if (event.getSpawnReason() == SpawnReason.BED || event.getSpawnReason() == SpawnReason.NATURAL) {
+			if (event.getSpawnReason() != SpawnReason.EGG) {
 				event.setCancelled(true);
 			}
 		}
