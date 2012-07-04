@@ -389,7 +389,7 @@ public class Regions extends JavaPlugin{
         if(set == null)
             set = markerapi.createMarkerSet("regions.markerset", "regions", null, false);
         else
-            set.setMarkerSetLabel("regions");
+            set.setMarkerSetLabel("Regions");
         if(set == null) {
             severe("Error creating marker set");
             return;
@@ -398,7 +398,7 @@ public class Regions extends JavaPlugin{
         if(minzoom > 0)
         set.setMinZoom(minzoom);
         set.setLayerPriority(10);
-        set.setHideByDefault(false);
+        set.setHideByDefault(true);
         //use3d = cfg.getBoolean("use3dregions", false);
         //infowindow = cfg.getString("infowindow", DEF_INFOWINDOW);
         
