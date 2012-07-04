@@ -55,7 +55,7 @@ public class SignShops implements Listener{
 	| the [SELL] sign. When the shop sign is places the function searches for the  |
 	| item number that it is placed with to see if it corrisponds to an actual     |
 	| block, if it does then the name of the block is displayed and the sign is    |
-	| placed.
+	| placed.                                                                      |
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void placeSign(SignChangeEvent event) {
@@ -67,7 +67,11 @@ public class SignShops implements Listener{
 		// If the sign is a [SHOP] or a [SHOP-STACK] sign
 		if (event.getLine(0).equalsIgnoreCase("[SHOP]") || event.getLine(0).equalsIgnoreCase("[SHOP-STACK]")){
 			if (event.getPlayer().isOp() || event.getPlayer().hasPermission("economy.makeshop")) {
-				Material foundMaterial = Material.matchMaterial(event.getLine(1));
+				
+				String materialName = event.getLine(1);
+				
+				
+				Material foundMaterial = Material.matchMaterial(materialName);
 				if (foundMaterial == null){
 					event.setLine(2, "FOUND");
 					event.setLine(1, "NOT");
@@ -141,6 +145,7 @@ public class SignShops implements Listener{
 				}
 				else if (economy.chargeMoney(event.getPlayer(), price)) {
 					ItemStack item = new ItemStack(purchaceMaterial, quantity);
+
 					event.getPlayer().getInventory().addItem(item);
 					event.getPlayer().sendMessage("You just bought "+ quantity + " " +purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
 				}
