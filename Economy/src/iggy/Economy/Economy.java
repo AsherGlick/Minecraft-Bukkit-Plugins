@@ -82,9 +82,6 @@ public class Economy extends JavaPlugin{
 	// Keep a record of where to send the player back to when they leave the shop
 	public Map<Player,Location> shopReturnLocations = new HashMap<Player,Location>();
 	
-	// Initialize the clickable items class
-	public ItemSelector itemSelector = new ItemSelector(this);
-	
 	// Initialize income events
 	public EventBasedIncome incomeEvents = new EventBasedIncome(this);
 	
@@ -136,9 +133,6 @@ public class Economy extends JavaPlugin{
 		thenether = Bukkit.getServer().getWorld("world_nether");
 		endworld = Bukkit.getServer().getWorld("world_the_end");
 		
-		// TODO:spawn and maintain items
-		//TODO: spawn items
-		Bukkit.getServer().getPluginManager().registerEvents(itemSelector, this);
 		Bukkit.getServer().getPluginManager().registerEvents(signshops, this);
 		
 		// Load all the configuration info
@@ -247,7 +241,6 @@ public class Economy extends JavaPlugin{
 			}
 			else {
 				player.sendMessage(""+amount+" "+material.toString()+" will sell for $"+ChatColor.GREEN+(amount*blockPrice/2)+ChatColor.WHITE+" and can be bought for $"+ChatColor.GREEN+(amount*blockPrice)+ChatColor.WHITE);
-				itemSelector.placeItem(player.getLocation().add(2, 1, 0), material);
 			}
 		}
 		/************************************ MONEY ***********************************\
