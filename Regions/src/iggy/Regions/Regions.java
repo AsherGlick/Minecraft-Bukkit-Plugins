@@ -460,7 +460,14 @@ public class Regions extends JavaPlugin{
 		return a;
 	}
 
-	
+	/******************************* REFRESH REGIONS ******************************\
+	| The refresh regions function takes all of the region data stored by the      |
+	| regions plugin and turns it into the map display data you see on the dynmap  |
+	| It does this by getting all the edges of each region and then pairing up     |
+	| the edges that share end points, that then makes a continuous line around    |
+	| the region. If, once all the end points are paired, there is more then one   |
+	| line a new line is drawn to connect the disconnected regions                 |
+	\******************************************************************************/
 	public void refreshRegions () {
 		int newCount = 0;
 		int replaceCount = 0;
