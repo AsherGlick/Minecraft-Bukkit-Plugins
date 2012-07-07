@@ -469,26 +469,73 @@ public class Regions extends JavaPlugin{
 			regions.put(name, plotList);
 		}
 		
-		for (Entry <String, HashSet <Position>> regionIterator : regions.entrySet()){
+		for (Entry <String, HashSet <Position> > regionIterator : regions.entrySet()){
 
 			String id = "region"+countID;
 			String name = regionIterator.getKey();
 		    
+			// Class for the points on the 
+			class Point {
+				public Point(double x, double z){
+					_x = x;
+					_z = z;
+				}
+				double _x;
+				double _z;
+			}
 			
-			double getx = regionIterator.getKey().getMinimumXCorner();
-        	double gety = regionIterator.getKey().getMinimumZCorner();
-        	
-        	
-        	String wname = regionIterator.getKey()._world;
-        	
+			HashSet <List <Point>> pointLists = new HashSet <List <Point>>();
+			HashSet <Position> plotPositions = regionIterator.getValue();
+			
+			for (Position position : regionIterator.getValue()) {
+				HashSet <List <Point>> thisPlotsPoints = new HashSet <List <Point>>();
+				String thisWorld = position._world;
+				long thisX = position._x;
+				long thisZ = position._z;
+				
+				// Check Left
+				Position left = new Position(thisWorld,thisX-1,thisZ  );
+				if (!plotPositions.contains(left)) {
+					List <Point> edgePoints = new ArrayList <Point>();
+					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
+					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()+8));
+					thisPlotsPoints.add(edgePoints);
+				}
+				
+				// Check Up
+				Position up = new Position(thisWorld,thisX, thisZ +1);
+				if (!plotPositions.contains(up)) {
+					List <Point> edgePoints = new ArrayList <Point>();
+					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()+8));
+					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()+8));
+					thisPlotsPoints.add(edgePoints);
+				}
+				
+				// Check Right
+				Position right = new Position(thisWorld, thisX + 1, thisZ);
+				if (!plotPositions.contains(right)){
+					List <Point> edgePoints = new ArrayList <Point>();
+					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()+8));
+					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()));
+					thisPlotsPoints.add(edgePoints);
+				}
+				
+				// Check down
+				Position down = new Position(thisWorld, thisX,thisZ-1);
+				if (!plotPositions.contains(down)){
+					List <Point> edgePoints = new ArrayList <Point>();
+					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()  ));
+					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
+					thisPlotsPoints.add(edgePoints);
+				}
+				// merge down if left is clear
+			}
+			
+			
         	// draw an outline
     		double[] x = new double[4];
     		double[] z = new double[4];
-    		x[0]=getx+0; z[0]=gety+0;
-    		x[1]=getx+0; z[1]=gety+8;
-    		x[2]=getx+8; z[2]=gety+8;
-    		x[3]=getx+8; z[3]=gety+0;
-			
+    		
 			AreaMarker m = resareas.remove(id); /* Existing area? */
 		    if(m == null) {
 			    m = set.createAreaMarker(id, name, false, wname, x, z, false);
