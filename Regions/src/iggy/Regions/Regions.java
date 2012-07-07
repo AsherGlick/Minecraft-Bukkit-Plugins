@@ -446,7 +446,21 @@ public class Regions extends JavaPlugin{
 	
 	private Map<String, AreaMarker> resareas = new HashMap<String, AreaMarker>();
 
+	// Class for the points on the 
+	class Point {
+		public Point(double x, double z){
+			_x = x;
+			_z = z;
+		}
+		double _x;
+		double _z;
+	}
+	
+	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> a) {
+		return a;
+	}
 
+	
 	public void refreshRegions () {
 		int newCount = 0;
 		int replaceCount = 0;
@@ -473,17 +487,8 @@ public class Regions extends JavaPlugin{
 
 			String id = "region"+countID;
 			String name = regionIterator.getKey();
+			String worldName = regionIterator.getValue().iterator().next()._world;
 		    
-			// Class for the points on the 
-			class Point {
-				public Point(double x, double z){
-					_x = x;
-					_z = z;
-				}
-				double _x;
-				double _z;
-			}
-			
 			HashSet <List <Point>> pointLists = new HashSet <List <Point>>();
 			HashSet <Position> plotPositions = regionIterator.getValue();
 			
@@ -528,7 +533,9 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
 					thisPlotsPoints.add(edgePoints);
 				}
-				// merge down if left is clear
+				
+				// TODO  Sort the edges and connect any that share a point
+				
 			}
 			
 			
@@ -538,7 +545,7 @@ public class Regions extends JavaPlugin{
     		
 			AreaMarker m = resareas.remove(id); /* Existing area? */
 		    if(m == null) {
-			    m = set.createAreaMarker(id, name, false, wname, x, z, false);
+			    m = set.createAreaMarker(id, name, false, worldName, x, z, false);
 		        if(m == null) {info("null region");continue;}
 		        m.setLineStyle(0, 0, 0);
 		        newCount++;
