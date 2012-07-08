@@ -467,15 +467,21 @@ public class Regions extends JavaPlugin{
 		Map<String, HashSet <Position> > regions = new HashMap <String, HashSet <Position>>();
 		
 		for (Entry<Position,String> positionIterator : chunkNames.entrySet()) {
+			info (" Looping Positions ");
 			Position position = positionIterator.getKey();
 			String name = positionIterator.getValue();
 			
-			HashSet<Position> plotList = regions.get(name);
+			HashSet<Position> plotList = new HashSet<Position>();
+			if (regions.containsKey(name)) {
+				plotList = regions.get(name);
+			}
+			info ("Null Position:"+(position == null)); 
+			info ("Null PlotList:"+(plotList == null));
 			plotList.add(position);
 			
 			regions.put(name, plotList);
 		}
-		
+		info ("Finished Looping Positions");
 		for (Entry <String, HashSet <Position> > regionIterator : regions.entrySet()){
 
 			String id = "region"+countID;
