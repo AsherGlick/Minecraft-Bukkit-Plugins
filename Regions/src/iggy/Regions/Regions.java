@@ -422,10 +422,28 @@ public class Regions extends JavaPlugin{
 	}
 	
 	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> a) {
+		// TODO sort and merge the points compleetly
 		return a;
 	}
 	private List <Point> linerizeEdges (HashSet<List<Point>> a){
+		// TODO 
 		return a.iterator().next();
+	}
+	private double [] extractx (List <Point> pointList) {
+		int length = pointList.size();
+		double [] xvalues = new double[length];
+		for (int i = 0; i < length; i++) {
+			xvalues[i] = pointList.get(i)._x;
+		}
+		return xvalues;
+	}
+	private double [] extractz (List <Point> pointList) {
+		int length = pointList.size();
+		double [] zvalues = new double[length];
+		for (int i = 0; i < length; i++) {
+			zvalues[i] = pointList.get(i)._z;
+		}
+		return zvalues;
 	}
 
 	/******************************* REFRESH REGIONS ******************************\
@@ -466,7 +484,7 @@ public class Regions extends JavaPlugin{
 		    
 			HashSet <List <Point>> pointLists = new HashSet <List <Point>>();
 			HashSet <Position> plotPositions = regionIterator.getValue();
-			
+			// For each plot in the region, create edges on all sides that are not shared with another plot of the region
 			for (Position position : regionIterator.getValue()) {
 				HashSet <List <Point>> thisPlotsPoints = new HashSet <List <Point>>();
 				String thisWorld = position._world;
@@ -508,17 +526,17 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
 					thisPlotsPoints.add(edgePoints);
 				}
-				
-				// TODO  Sort the edges and connect any that share a point
+				// add the sorted and merged edges into the entire plot's point list
 				pointLists.addAll(mergeEdges(thisPlotsPoints));
 			}
 			pointLists = mergeEdges(pointLists);
-			List<Point> points = linerizeEdges(pointLists)
+			List<Point> edgepoints = linerizeEdges(pointLists);
 			
         	// draw an outline
-    		double[] x = new double[4];
-    		double[] z = new double[4];
+    		double[] x = extractx(edgepoints);
+    		double[] z = extractz(edgepoints);
     		
+    		// Add the region into the 
 			AreaMarker m = resareas.remove(id); /* Existing area? */
 		    if(m == null) {
 			    m = set.createAreaMarker(id, name, false, worldName, x, z, false);
