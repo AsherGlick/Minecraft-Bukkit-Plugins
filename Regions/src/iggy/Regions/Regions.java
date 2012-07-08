@@ -438,7 +438,6 @@ public class Regions extends JavaPlugin{
         }
         */
         // make the plots show up on the map
-        // TODO: make the plots able to refresh live duing play
         refreshRegions();
 		info("dynmap features (view plots on map) enabled");
 	}
@@ -457,6 +456,7 @@ public class Regions extends JavaPlugin{
 	}
 	
 	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> a) {
+		
 		return a;
 	}
 
@@ -559,8 +559,8 @@ public class Regions extends JavaPlugin{
 		    }
 		    else {
 		        m.setCornerLocations(x, z); /* Replace corner locations */
-		        m.setLabel(name); /* Update label */
 		        replaceCount++;		        
+		        m.setLabel(name); /* Update label */
 		    }
 		    newresareas.put(id, m);
 		    countID += 1;
