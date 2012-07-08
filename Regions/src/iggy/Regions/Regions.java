@@ -109,7 +109,7 @@ public class Regions extends JavaPlugin{
 //////////////////////////////////////////////////////////////////////////////
 	@Override
 	public void onDisable() {
-		// TODO clear the regions so they don't double
+		// TODO clear the regions so they don't double, just reset the server for now instead of reloading plugins
 		saveRegions();
 		info(" Version " + pdFile.getVersion() +" is disabled");
 	}
@@ -249,7 +249,7 @@ public class Regions extends JavaPlugin{
 			if (commandLabel.equalsIgnoreCase("dark-expand") || commandLabel.equalsIgnoreCase("dx")) {
 				dark = true;
 			}
-			// TODO this is not finished yet, it needs to find out the clostest plot to your position
+			// TODO Find the closest plot to your position instead of the first checked
 			// if economy is enabled
 			if (!economy.isEnabled()) {
 				player.sendMessage("Economy plugin is not enabled, contact admin for help");
@@ -343,6 +343,9 @@ public class Regions extends JavaPlugin{
 				refreshRegions ();
 			}
 		}
+		// TODO Add builder to plot
+		// TODO Remove builder from plot
+		// TODO Add owner to plot
 		return false;
 	}
   //////////////////////////////////////////////////////////////////////////////
@@ -456,8 +459,10 @@ public class Regions extends JavaPlugin{
 	}
 	
 	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> a) {
-		
 		return a;
+	}
+	private List <Point> linerizeEdges (HashSet<List<Point>> a){
+		return a.iterator().next();
 	}
 
 	/******************************* REFRESH REGIONS ******************************\
@@ -542,9 +547,10 @@ public class Regions extends JavaPlugin{
 				}
 				
 				// TODO  Sort the edges and connect any that share a point
-				
+				pointLists.addAll(mergeEdges(thisPlotsPoints));
 			}
-			
+			pointLists = mergeEdges(pointLists);
+			List<Point> points = linerizeEdges(pointLists)
 			
         	// draw an outline
     		double[] x = new double[4];
