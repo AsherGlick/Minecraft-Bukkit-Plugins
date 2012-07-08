@@ -390,7 +390,7 @@ public class Regions extends JavaPlugin{
 		/* Now, add marker set for mobs (make it transient) */
         set = markerapi.getMarkerSet("regions.markerset");
         if(set == null)
-            set = markerapi.createMarkerSet("regions.markerset", "regions", null, false);
+            set = markerapi.createMarkerSet("regions.markerset", "Regions", null, false);
         else
             set.setMarkerSetLabel("Regions");
         if(set == null) {
