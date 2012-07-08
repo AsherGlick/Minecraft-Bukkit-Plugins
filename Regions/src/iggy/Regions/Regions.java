@@ -412,6 +412,9 @@ public class Regions extends JavaPlugin{
 	private Map<String, AreaMarker> resareas = new HashMap<String, AreaMarker>();
 
 	// Class for the points on the 
+	/********************************* POINT CLASS ********************************\
+	|
+	\******************************************************************************/
 	class Point {
 		public Point(double x, double z){
 			_x = x;
@@ -422,12 +425,28 @@ public class Regions extends JavaPlugin{
 		public String toString () {
 			return "("+_x+","+_z+")";
 		}
+		public boolean equals(Point two) {
+			if (two._z == _z && two._x == _x) return true;
+			return false;
+		}
 	}
-	
-	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> a) {
+	/********************************* MERGE EDGES ********************************\
+	|
+	\******************************************************************************/
+	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> pointLists) {
 		// TODO sort and merge the points compleetly
-		return a;
+		HashSet <List <Point >> resultingLists = new HashSet <List <Point>>();
+		for (List<Point> pointList: pointLists) {
+			pointLists.remove(pointList);
+			for (List<Point> otherEdges : pointLists) {
+				
+			}
+		}
+		return pointLists;
 	}
+	/******************************* LINERIZE EDGES *******************************\
+	|
+	\******************************************************************************/
 	private List <Point> linerizeEdges (HashSet<List<Point>> pointLists){
 		// TODO 
 		List <Point> fullList = new ArrayList <Point>();
@@ -436,6 +455,9 @@ public class Regions extends JavaPlugin{
 		}
 		return fullList;
 	}
+	/****************************** EXTRACT X POINTS ******************************\
+	|
+	\******************************************************************************/
 	private double [] extractx (List <Point> pointList) {
 		int length = pointList.size();
 		double [] xvalues = new double[length];
@@ -444,6 +466,9 @@ public class Regions extends JavaPlugin{
 		}
 		return xvalues;
 	}
+	/****************************** EXTRACT Z POINTS ******************************\
+	|
+	\******************************************************************************/
 	private double [] extractz (List <Point> pointList) {
 		int length = pointList.size();
 		double [] zvalues = new double[length];
