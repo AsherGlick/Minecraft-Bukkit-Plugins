@@ -419,15 +419,22 @@ public class Regions extends JavaPlugin{
 		}
 		double _x;
 		double _z;
+		public String toString () {
+			return "("+_x+","+_z+")";
+		}
 	}
 	
 	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> a) {
 		// TODO sort and merge the points compleetly
 		return a;
 	}
-	private List <Point> linerizeEdges (HashSet<List<Point>> a){
+	private List <Point> linerizeEdges (HashSet<List<Point>> pointLists){
 		// TODO 
-		return a.iterator().next();
+		List <Point> fullList = new ArrayList <Point>();
+		for (List<Point> pointlist : pointLists) {
+			fullList.addAll(pointlist);
+		}
+		return fullList;
 	}
 	private double [] extractx (List <Point> pointList) {
 		int length = pointList.size();
@@ -467,7 +474,6 @@ public class Regions extends JavaPlugin{
 		Map<String, HashSet <Position> > regions = new HashMap <String, HashSet <Position>>();
 		
 		for (Entry<Position,String> positionIterator : chunkNames.entrySet()) {
-			info (" Looping Positions ");
 			Position position = positionIterator.getKey();
 			String name = positionIterator.getValue();
 			
@@ -475,13 +481,13 @@ public class Regions extends JavaPlugin{
 			if (regions.containsKey(name)) {
 				plotList = regions.get(name);
 			}
-			info ("Null Position:"+(position == null)); 
-			info ("Null PlotList:"+(plotList == null));
 			plotList.add(position);
 			
 			regions.put(name, plotList);
 		}
 		info ("Finished Looping Positions");
+		info ("Total Found Regions:"+regions.size());
+		info ("chunkOwners Regions:"+chunkOwners.size());
 		for (Entry <String, HashSet <Position> > regionIterator : regions.entrySet()){
 
 			String id = "region"+countID;
@@ -496,7 +502,7 @@ public class Regions extends JavaPlugin{
 				String thisWorld = position._world;
 				long thisX = position._x;
 				long thisZ = position._z;
-				
+				info ("PLOT");
 				// Check Left
 				Position left = new Position(thisWorld,thisX-1,thisZ  );
 				if (!plotPositions.contains(left)) {
@@ -504,6 +510,7 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()+8));
 					thisPlotsPoints.add(edgePoints);
+					info ("Found Left");
 				}
 				
 				// Check Up
@@ -513,6 +520,7 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()+8));
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()+8));
 					thisPlotsPoints.add(edgePoints);
+					info ("Found Up");
 				}
 				
 				// Check Right
@@ -522,6 +530,7 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()+8));
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()));
 					thisPlotsPoints.add(edgePoints);
+					info ("Found Right");
 				}
 				
 				// Check down
@@ -531,6 +540,7 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()  ));
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
 					thisPlotsPoints.add(edgePoints);
+					info ("Found Down"+edgePoints.toString());
 				}
 				// add the sorted and merged edges into the entire plot's point list
 				pointLists.addAll(mergeEdges(thisPlotsPoints));
@@ -541,6 +551,8 @@ public class Regions extends JavaPlugin{
         	// draw an outline
     		double[] x = extractx(edgepoints);
     		double[] z = extractz(edgepoints);
+    		info ("Xpoints Length" + x.length);
+    		info ("Zpoints Lenght" + z.length);
     		
     		// Add the region into the 
 			AreaMarker m = resareas.remove(id); /* Existing area? */
