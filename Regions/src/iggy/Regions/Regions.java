@@ -559,7 +559,16 @@ public class Regions extends JavaPlugin{
 		    if(m == null) {
 			    m = set.createAreaMarker(id, name, false, worldName, x, z, false);
 		        if(m == null) {info("null region");continue;}
-		        m.setLineStyle(0, 0, 0);
+		        info ("Int Color for Red" + m.getFillColor());
+		        info ("Opacity"+m.getFillOpacity());
+		        info ("Hex Color for Red" + 0xFF0000);
+		        
+		        info ("Line Weight" + m.getLineWeight());
+		        info ("Line Opacity" + m.getLineOpacity());
+		        // setLineStyle(weight,opacity,color)
+		        m.setLineStyle(3, .8, 0x00FF00);
+		        // set fillStyle (opacity, color)
+		        m.setFillStyle(.35, 0x00FF00);
 		        newCount++;
 		    }
 		    else {
