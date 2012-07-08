@@ -402,44 +402,7 @@ public class Regions extends JavaPlugin{
         set.setMinZoom(minzoom);
         set.setLayerPriority(10);
         set.setHideByDefault(true);
-        //use3d = cfg.getBoolean("use3dregions", false);
-        //infowindow = cfg.getString("infowindow", DEF_INFOWINDOW);
-        
-        // TEST CODE :)
-        /*
-        if(true){
-        	double[] x = new double[10];
-        	double[] z = new double[10];
-        	x[0] = 0*8; z[0] = 0*8;
-        	x[1] = 3*8; z[1] = 0*8;
-        	x[2] = 3*8; z[2] = 3*8;
-        	x[3] = 0*8; z[3] = 3*8;
-        	
-        	x[4] = 1*8; z[4] = 2*8;
-        	x[5] = 2*8; z[5] = 2*8;
-        	x[6] = 2*8; z[6] = 1*8;
-        	x[7] = 1*8; z[7] = 1*8;
-        	
-        	x[8] = 1*8; z[8] = 2*8;
-        	x[9] = 0*8; z[9] = 3*8;
-        			
-        	AreaMarker m = set.createAreaMarker("HOLE IN THE MIDDLE", "", false, "world", x, z, false);
-        	m.setFillStyle(0, 0);
-        	//m.setLineStyle(0, 0, 0);
-        }*/
-        
-        /*
-        for (int i = 0; i < 10; i++){
-        	double[] x = new double[4];
-    		double[] z = new double[4];
-    		x[0]=(i*8)+0; z[0]=0;
-    		x[1]=(i*8)+0; z[1]=8;
-    		x[2]=(i*8)+8; z[2]=8;
-    		x[3]=(i*8)+8; z[3]=0;
-    		AreaMarker m = set.createAreaMarker("Color"+i, "Color"+i, false, "world", x, z, false);
-    		m.setFillStyle(m.getFillOpacity(), 0x00FF00);
-        }
-        */
+
         // make the plots show up on the map
         refreshRegions();
 		info("dynmap features (view plots on map) enabled");
@@ -630,7 +593,7 @@ public class Regions extends JavaPlugin{
 			 List<String> plots = getConfig().getStringList("regions."+region+".plots");
 			 List<String> ownerslist= getConfig().getStringList("regions."+region+".owners");
 			 if (plots == null) {
-				 severe("errot loading configuration (no plots found for this region)");
+				 severe("error loading configuration (no plots found for this region)");
 				 continue;
 			 }
 			 if (ownerslist == null) {
