@@ -14,5 +14,17 @@ commands:
     description: Expand a claim without placing torches
   dx:
     description: alias for dark-expand
-  addowner:
-    description: add another user to edit
+  add-owner:
+    description: add another user to edit the plot
+  ao:
+    description: alias for add owner
+  add-builder:
+    description: add a builder who can build and break the plot
+  ab:
+    description: alias for add builder
+  remove-builder:
+    description: remove a builder who can build and break the plot
+  rb:
+    description: alias for remove builder
+  unclaim-plot:
+    description: admin ability to un-claim a plot
