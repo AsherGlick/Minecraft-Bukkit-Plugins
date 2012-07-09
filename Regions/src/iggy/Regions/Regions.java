@@ -433,9 +433,11 @@ public class Regions extends JavaPlugin{
 	/********************************* MERGE EDGES ********************************\
 	|
 	\******************************************************************************/
-	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> pointLists) {
+	private List <List<Point>> mergeEdges (List <List<Point>> pointLists) {
 		// TODO sort and merge the points compleetly
-		HashSet <List <Point >> resultingLists;
+		//HashSet <List <Point >> resultingLists;
+		
+		/*
 		boolean listChanged = true;
 		while (listChanged){
 			info ("Looping");
@@ -468,9 +470,11 @@ public class Regions extends JavaPlugin{
 					}
 				}
 				resultingLists.add(pointList);
-				/**/
 			}
 			pointLists = resultingLists;
+		}*/
+		while (pointLists.size() > 1) {
+			//pointLists
 		}
 		info ("PointLists Size:"+pointLists.size());
 		return pointLists;
@@ -478,7 +482,7 @@ public class Regions extends JavaPlugin{
 	/******************************* LINERIZE EDGES *******************************\
 	|
 	\******************************************************************************/
-	private List <Point> linerizeEdges (HashSet<List<Point>> pointLists){
+	private List <Point> linerizeEdges (List<List<Point>> pointLists){
 		// TODO 
 		List <Point> fullList = new ArrayList <Point>();
 		for (List<Point> pointlist : pointLists) {
@@ -550,11 +554,11 @@ public class Regions extends JavaPlugin{
 			String name = regionIterator.getKey();
 			String worldName = regionIterator.getValue().iterator().next()._world;
 		    
-			HashSet <List <Point>> pointLists = new HashSet <List <Point>>();
+			List <List <Point>> pointLists = new ArrayList <List <Point>>();
 			HashSet <Position> plotPositions = regionIterator.getValue();
 			// For each plot in the region, create edges on all sides that are not shared with another plot of the region
 			for (Position position : regionIterator.getValue()) {
-				HashSet <List <Point>> thisPlotsPoints = new HashSet <List <Point>>();
+				List <List <Point>> thisPlotsPoints = new ArrayList <List <Point>>();
 				String thisWorld = position._world;
 				long thisX = position._x;
 				long thisZ = position._z;
