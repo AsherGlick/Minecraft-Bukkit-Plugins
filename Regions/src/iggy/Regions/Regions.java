@@ -438,6 +438,7 @@ public class Regions extends JavaPlugin{
 		HashSet <List <Point >> resultingLists;
 		boolean listChanged = true;
 		while (listChanged){
+			info ("Looping");
 			listChanged = false;
 			resultingLists = new HashSet <List <Point>>();
 			//info ("Created variabless");
@@ -452,15 +453,17 @@ public class Regions extends JavaPlugin{
 				for (List<Point> otherEdges : newPointLists) {
 					Point otherBegin = otherEdges.get(0);
 					Point otherEnd = otherEdges.get(otherEdges.size()-1);
-					if (endPoint == otherBegin) {
+					if (endPoint.equals(otherBegin)) {
 						pointList.addAll(otherEdges);
 						listChanged = true;
+						info ("BREAK - 1");
 						break;
 					}
-					else if (beginPoint == otherEnd) {
+					else if (beginPoint.equals(otherEnd)) {
 						otherEdges.addAll(pointList);
 						pointList = otherEdges;
 						listChanged = true;
+						info ("BREAK - 2");
 						break;
 					}
 				}
