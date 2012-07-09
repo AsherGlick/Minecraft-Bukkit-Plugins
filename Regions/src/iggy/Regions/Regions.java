@@ -228,7 +228,7 @@ public class Regions extends JavaPlugin{
 				}
 				
 				else {
-					player.sendMessage("You dont have enough money to buy this plot");
+					player.sendMessage("You dont have enough money to buy this plot ($5000)");
 					return false;
 				}
 			}
@@ -284,7 +284,7 @@ public class Regions extends JavaPlugin{
 					// if the player owns the found chunk
 					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
 					// display an error if there is no owners list
-					else severe("error finding plot owners for "+tempName);
+					else severe("Error finding plot owners for "+tempName);
 				}
 				if (chunkNames.containsKey(plotS)){
 					String tempName = chunkNames.get(plotS);
@@ -292,7 +292,7 @@ public class Regions extends JavaPlugin{
 					// if the player owns the found chunk
 					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
 					// display an error if there is no owners list
-					else severe("error finding plot owners for "+tempName);
+					else severe("Error finding plot owners for "+tempName);
 				}
 				if (chunkNames.containsKey(plotE)){
 					String tempName = chunkNames.get(plotE);
@@ -440,7 +440,7 @@ public class Regions extends JavaPlugin{
 	}
 	
 	/********************************* MERGE EDGES ********************************\
-	| The merge edges function tries to match the begining of certian 
+	| The merge edges function tries to match the begining of certian                ---------------------------------------------
 	\******************************************************************************/
 	private List <List<Point>> mergeEdges (List <List<Point>> pointLists) {
 		List <List <Point >> resultingLists = new ArrayList <List <Point>>();
@@ -482,7 +482,7 @@ public class Regions extends JavaPlugin{
 		return resultingLists;
 	}
 	/******************************* LINERIZE EDGES *******************************\
-	| Linearize edges takes in a list of lists of points, representing the edges,   |
+	| Linearize edges takes in a list of lists of points, representing the edges,   |-------------------------------------
 	| and turns them into a single list of edges.
 	\******************************************************************************/
 	private List <Point> linearizeEdges (List<List<Point>> pointLists){
@@ -677,7 +677,8 @@ public class Regions extends JavaPlugin{
 		Iterator<Entry<String, Owners>> ownerIterator = chunkOwners.entrySet().iterator();
 		while (ownerIterator.hasNext()) {
 			Entry<String, Owners> pairs = ownerIterator.next();
-			this.getConfig().set("regions."+pairs.getKey()+".owners",pairs.getValue().getOwners());
+			this.getConfig().set("regions."+pairs.getKey()+".owners",  pairs.getValue().getOwners());
+			this.getConfig().set("regions."+pairs.getKey()+".builders",pairs.getValue().getBuilders());
 		}
 		this.saveConfig();
 		info("Regions Saved");
@@ -702,6 +703,7 @@ public class Regions extends JavaPlugin{
 		for (String region : regions){
 			 List<String> plots = getConfig().getStringList("regions."+region+".plots");
 			 List<String> ownerslist= getConfig().getStringList("regions."+region+".owners");
+			 List<String> builderslist = getConfig().getStringList("regions."+region+".builders");
 			 if (plots == null) {
 				 severe("error loading configuration (no plots found for this region)");
 				 continue;
@@ -719,6 +721,9 @@ public class Regions extends JavaPlugin{
 			 // add all of the users to the user list
 			 Owners owners = new Owners();
 			 owners.addOwners(ownerslist);
+			 if (builderslist != null) {
+				 owners.addBuilders(builderslist);
+			 }
 			 chunkOwners.put(region, owners);
 		}
 		info ("regions loaded");
