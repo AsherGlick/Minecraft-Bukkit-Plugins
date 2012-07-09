@@ -560,6 +560,7 @@ public class Regions extends JavaPlugin{
 
 			String id = "region"+countID;
 			String name = regionIterator.getKey();
+			
 			String worldName = regionIterator.getValue().iterator().next()._world;
 		    
 			List <List <Point>> pointLists = new ArrayList <List <Point>>();
@@ -626,6 +627,7 @@ public class Regions extends JavaPlugin{
 		        m.setLineStyle(3, .8, 0xFF0000);
 		        // setFillStyle (opacity, color)
 		        m.setFillStyle(.35, 0xFF0000);
+		        //m.setRangeY(60, 70);
 		        newCount++;
 		    }
 		    // If the region did exist just change the data, no need to create a new one
