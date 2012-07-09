@@ -489,7 +489,6 @@ public class Regions extends JavaPlugin{
 		List<List<Point>> newPointLists = new ArrayList<List<Point>>();
 		for (List<Point> pointlist : pointLists) {
 			List<Point> newpointlist = new ArrayList<Point>();
-			newpointlist.add(pointlist.get(0));
 			
 			// if the first point is not a corner do not include it
 			{
@@ -511,6 +510,9 @@ public class Regions extends JavaPlugin{
 					newpointlist.add(pointlist.get(i));
 				}
 			}
+			// add the begining element to the end for areas with more then one edgeline
+			newpointlist.add(newpointlist.get(0));
+			// add the point list to the new set of lists
 			newPointLists.add(newpointlist);
 		}
 		pointLists = newPointLists;
@@ -526,7 +528,8 @@ public class Regions extends JavaPlugin{
 			returnPath.add(pointlist.get(0));
 			fullList.addAll(pointlist);
 		}
-		for (Point point : returnPath){
+		for (int i = returnPath.size()-1; i >= 0; i--){
+			Point point = returnPath.get(i);
 			fullList.add(point);
 		}
 		return fullList;
