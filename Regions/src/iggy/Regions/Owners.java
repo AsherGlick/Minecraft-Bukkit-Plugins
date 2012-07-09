@@ -56,9 +56,15 @@ public class Owners {
 	private Set <String> _owners = new HashSet<String>();
 	private Set <String> _builders = new HashSet<String>();
 	
+	/********************************** ADD OWNER *********************************\
+	|
+	\******************************************************************************/
 	public boolean addOwner(String player){
 		return _owners.add(player);
 	}
+	/********************************* ADD OWNERS *********************************\
+	|
+	\******************************************************************************/
 	public boolean addOwners(List<String> players){
 		boolean sucess = true;
 		for (String player : players){
@@ -66,11 +72,15 @@ public class Owners {
 		}
 		return sucess;
 	}
-	
+	/********************************* ADD BUILDER ********************************\
+	|
+	\******************************************************************************/
 	public boolean addBuilder (String player) {
 		return _builders.add(player);
 	}
-	
+	/******************************** ADD BUILDERS ********************************\
+	|
+	\******************************************************************************/
 	public boolean addBuilders (List <String> players) {
 		boolean sucess = true;
 		for (String player : players) {
@@ -78,38 +88,49 @@ public class Owners {
 		}
 		return sucess;
 	}
-	
+	/******************************* REMOVE BUILDER *******************************\
+	|
+	\******************************************************************************/
 	public boolean removeBuilder (String player) {
 		return _builders.remove(player);
 	}
-	
-	
-	
+	/********************************** HAS OWNER *********************************\
+	|
+	\******************************************************************************/
 	public boolean hasOwner(String player){
 		return _owners.contains(player);
 	}
-	
+	/********************************* HAS BUILDER ********************************\
+	|
+	\******************************************************************************/
 	public boolean hasBuilder (String player) {
 		return _builders.contains(player);
 	}
-	
+	/********************************* HAS PLAYER *********************************\
+	|
+	\******************************************************************************/
 	public boolean hasPlayer (String player) {
 		return (_owners.contains(player) || _builders.contains(player));
 	}
-	
-	
+	/********************************* GET OWNERS *********************************\
+	|
+	\******************************************************************************/
 	public List<String> getOwners() {
 		List<String> owners = new ArrayList<String>();
 		for (String owner : _owners){ owners.add(owner); }
 		return owners;
 	}
-	
+	/******************************** GET BUILDERS ********************************\
+	|
+	\******************************************************************************/
 	public List <String> getBuilders() {
 		List <String> builders = new ArrayList <String>();
 		for (String builder : _builders) { builders.add(builder); }
 		return builders;
 	}
-	
+	/********************************* GET PLAYERS ********************************\
+	|
+	\******************************************************************************/
 	public List <String> getPlayers() {
 		List <String> players = new ArrayList <String> ();
 		for (String owner : _owners) { players.add(owner); }
