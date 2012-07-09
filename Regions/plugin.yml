@@ -28,3 +28,7 @@ commands:
     description: alias for remove builder
   unclaim-plot:
     description: admin ability to un-claim a plot
+  list-owners:
+    description: lists the owners for the plot you specified or the plot you are in
+  list-builders:
+    description: lists the builders for the plot you specified or the plot you are in
