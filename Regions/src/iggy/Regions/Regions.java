@@ -435,13 +435,41 @@ public class Regions extends JavaPlugin{
 	\******************************************************************************/
 	private HashSet<List<Point>> mergeEdges (HashSet<List<Point>> pointLists) {
 		// TODO sort and merge the points compleetly
-		HashSet <List <Point >> resultingLists = new HashSet <List <Point>>();
-		for (List<Point> pointList: pointLists) {
-			pointLists.remove(pointList);
-			for (List<Point> otherEdges : pointLists) {
-				
+		HashSet <List <Point >> resultingLists;
+		boolean listChanged = true;
+		while (listChanged){
+			listChanged = false;
+			resultingLists = new HashSet <List <Point>>();
+			//info ("Created variabless");
+			for (List<Point> point_list : pointLists) {
+				List <Point> pointList = new ArrayList<Point> (point_list);
+				// grab the first and last points
+				Point beginPoint = pointList.get(0);
+				Point endPoint = pointList.get(pointList.size()-1);
+				HashSet <List <Point>> newPointLists = new HashSet<List<Point>> (pointLists);
+				newPointLists.remove(pointList);
+				// after removing this edge, search through all the other edges
+				for (List<Point> otherEdges : newPointLists) {
+					Point otherBegin = otherEdges.get(0);
+					Point otherEnd = otherEdges.get(otherEdges.size()-1);
+					if (endPoint == otherBegin) {
+						pointList.addAll(otherEdges);
+						listChanged = true;
+						break;
+					}
+					else if (beginPoint == otherEnd) {
+						otherEdges.addAll(pointList);
+						pointList = otherEdges;
+						listChanged = true;
+						break;
+					}
+				}
+				resultingLists.add(pointList);
+				/**/
 			}
+			pointLists = resultingLists;
 		}
+		info ("PointLists Size:"+pointLists.size());
 		return pointLists;
 	}
 	/******************************* LINERIZE EDGES *******************************\
