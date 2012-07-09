@@ -99,29 +99,37 @@ public class BlockMonitor implements Listener{
  	} 
  	
  	/******************************** SHOULD CANCEL *******************************\
- 	| this function reads in the situation and desides if the even should be canceld
- 	| or not. It should be canceled if the event is happening inside a plot and the
- 	| player causing the event is not an owner.
+ 	| This function reads in the position of the block event and the player (if    |
+ 	| there is on) and decides if the even should be canceled or if the event      |
+ 	| should continue. It should be canceled if the event is happening inside a    |
+ 	| plot and the player causing the event is not on the plot's player list, or   |
+ 	| if there is no player at all causing the break (fire, enderman, etc.)        |
  	\******************************************************************************/
 
  	public boolean shouldCancel(Location location, Player player){
  		Position chunk = new Position(location);
 		String chunkName = plugin.chunkNames.get(chunk);
+		
 		// if the plot does not exist it does not get canceled
 		if (chunkName == null){return false;}
+		
 		// if code reaches here then the block is in an existing chunk
 		if (player == null) {
 			// if there is no player breaking the block in a plot then they cant be the owners of it
 			plugin.info("Block break event by non player in "+chunkName+" canceled");
 			return true;
 		}
+		
+		// Get the owners object for the region in question
 		Owners owners = plugin.chunkOwners.get(chunkName);
 		if (owners == null) {
 			plugin.severe("Region found but owners not! Check config file");
 			player.sendMessage("[ERROR LOADING CHUNK OWNERS] tell admin");
 			return true;
 		}
-		if (!owners.hasOwner(player.getName())){
+		
+		// Check to see if the player is on the owners list
+		if (!owners.hasPlayer(player.getName())){
 			player.sendMessage("Don't break other people's stuff!");
 			return true;
 		} 

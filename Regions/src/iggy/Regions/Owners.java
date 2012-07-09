@@ -49,7 +49,6 @@ package iggy.Regions;
 
 import java.util.ArrayList;
 import java.util.HashSet;
-import java.util.Iterator;
 import java.util.List;
 import java.util.Set;
 
@@ -69,15 +68,19 @@ public class Owners {
 	}
 	
 	public boolean addBuilder (String player) {
-		return false;
+		return _builders.add(player);
 	}
 	
 	public boolean addBuilders (List <String> players) {
-		return false;
+		boolean sucess = true;
+		for (String player : players) {
+			sucess &= _owners.add(player);
+		}
+		return sucess;
 	}
 	
 	public boolean removeBuilder (String player) {
-		return false;
+		return _builders.remove(player);
 	}
 	
 	
