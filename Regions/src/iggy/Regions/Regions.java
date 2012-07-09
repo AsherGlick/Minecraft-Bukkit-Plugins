@@ -435,7 +435,7 @@ public class Regions extends JavaPlugin{
 	\******************************************************************************/
 	private List <List<Point>> mergeEdges (List <List<Point>> pointLists) {
 		// TODO sort and merge the points compleetly
-		//HashSet <List <Point >> resultingLists;
+		List <List <Point >> resultingLists = new ArrayList <List <Point>>();
 		
 		/*
 		boolean listChanged = true;
@@ -473,11 +473,42 @@ public class Regions extends JavaPlugin{
 			}
 			pointLists = resultingLists;
 		}*/
-		while (pointLists.size() > 1) {
-			//pointLists
+		while (pointLists.size() > 0) {
+			List<Point> first = pointLists.remove(0);
+			Point first_beginPoint = first.get(0);
+			Point first_finalPoint = first.get(first.size()-1);
+			boolean didMergeLines = false;
+			for (int i = 0; i < pointLists.size(); i++){
+				Point second_beginPoint = pointLists.get(i).get(0);
+				Point second_finalPoint = pointLists.get(i).get(pointLists.get(i).size()-1);
+				if (first_beginPoint.equals(second_finalPoint)) {					
+					//Merge the pointlists
+					List <Point> second = pointLists.remove(i);
+					second.addAll(first);
+					first = second;
+					didMergeLines = true;
+					break;
+				}
+				else if (first_finalPoint.equals(second_beginPoint)) {
+					// merge the pointlists
+					List <Point> second = pointLists.remove(i);
+					first.addAll(second);
+					didMergeLines = true;
+					break;
+				}
+			}
+			// if there was a merge, throw it back in to check for another merge
+			if (didMergeLines) {
+				pointLists.add(first);
+			}
+			// if there was no merge add it to the list of finished lists
+			else if (!didMergeLines) {
+				resultingLists.add(first);
+			}
 		}
 		info ("PointLists Size:"+pointLists.size());
-		return pointLists;
+		info ("ResultingLists Size:"+resultingLists.size());
+		return resultingLists;
 	}
 	/******************************* LINERIZE EDGES *******************************\
 	|
