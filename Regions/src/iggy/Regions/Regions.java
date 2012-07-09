@@ -263,6 +263,7 @@ public class Regions extends JavaPlugin{
 			// is plot in the regular world or the nether
 			else if (player.getWorld() != mainworld && player.getWorld() != thenether){
 				player.sendMessage("You can only claim plots in the nether or the main world");
+				return false;
 			}
 
 			// try to claim block
@@ -343,10 +344,14 @@ public class Regions extends JavaPlugin{
 				refreshRegions ();
 			}
 		}
-		// TODO Add builder to plot
+		if (commandLabel.equalsIgnoreCase("add-builder") || commandLabel.equalsIgnoreCase("ab")) {
+			// TODO Add builder to plot
+			// TODO check to see if a player has been specified for this function
+		}
 		// TODO Remove builder from plot
 		// TODO Add owner to plot
-		return false;
+		// TODO Admin Remove Plot
+		return false;		
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////// WAIT FOR OTHER PLUGINS ///////////////////////////
@@ -371,7 +376,6 @@ public class Regions extends JavaPlugin{
 
 	// funtion to finish activating the plugin once the other plugins are enabled
 	public void activateEconomy(){
-		//TODO: make these features not enabled if the plugin is not enabeled
 		info ("Economy features (claim, expand) enabled");
 	}
 	
@@ -408,12 +412,16 @@ public class Regions extends JavaPlugin{
 		info("dynmap features (view plots on map) enabled");
 	}
 	
+  //////////////////////////////////////////////////////////////////////////////
+ ////////////////////////// DYNMAP DISPLAY FUNCTIONS //////////////////////////
+//////////////////////////////////////////////////////////////////////////////
 	
 	private Map<String, AreaMarker> resareas = new HashMap<String, AreaMarker>();
 
-	// Class for the points on the 
 	/********************************* POINT CLASS ********************************\
-	|
+	| The point class is a simple class made for ease of use with sorting the      |
+	| lists that define the borders of plots. It is used in order to display the   |
+	| plots on dynmap. Each point contains a single X and Z point                  |
 	\******************************************************************************/
 	class Point {
 		public Point(double x, double z){
@@ -430,91 +438,56 @@ public class Regions extends JavaPlugin{
 			return false;
 		}
 	}
+	
 	/********************************* MERGE EDGES ********************************\
-	|
+	| The merge edges function tries to match the begining of certian 
 	\******************************************************************************/
 	private List <List<Point>> mergeEdges (List <List<Point>> pointLists) {
-		// TODO sort and merge the points compleetly
 		List <List <Point >> resultingLists = new ArrayList <List <Point>>();
 		
-		/*
-		boolean listChanged = true;
-		while (listChanged){
-			info ("Looping");
-			listChanged = false;
-			resultingLists = new HashSet <List <Point>>();
-			//info ("Created variabless");
-			for (List<Point> point_list : pointLists) {
-				List <Point> pointList = new ArrayList<Point> (point_list);
-				// grab the first and last points
-				Point beginPoint = pointList.get(0);
-				Point endPoint = pointList.get(pointList.size()-1);
-				HashSet <List <Point>> newPointLists = new HashSet<List<Point>> (pointLists);
-				newPointLists.remove(pointList);
-				// after removing this edge, search through all the other edges
-				for (List<Point> otherEdges : newPointLists) {
-					Point otherBegin = otherEdges.get(0);
-					Point otherEnd = otherEdges.get(otherEdges.size()-1);
-					if (endPoint.equals(otherBegin)) {
-						pointList.addAll(otherEdges);
-						listChanged = true;
-						info ("BREAK - 1");
-						break;
-					}
-					else if (beginPoint.equals(otherEnd)) {
-						otherEdges.addAll(pointList);
-						pointList = otherEdges;
-						listChanged = true;
-						info ("BREAK - 2");
-						break;
-					}
-				}
-				resultingLists.add(pointList);
-			}
-			pointLists = resultingLists;
-		}*/
 		while (pointLists.size() > 0) {
 			List<Point> first = pointLists.remove(0);
 			Point first_beginPoint = first.get(0);
 			Point first_finalPoint = first.get(first.size()-1);
 			boolean didMergeLines = false;
+			// Loop through all the other edges to see if there is a match
 			for (int i = 0; i < pointLists.size(); i++){
 				Point second_beginPoint = pointLists.get(i).get(0);
 				Point second_finalPoint = pointLists.get(i).get(pointLists.get(i).size()-1);
 				if (first_beginPoint.equals(second_finalPoint)) {					
-					//Merge the pointlists
+					// Merge the two matching point lists
 					List <Point> second = pointLists.remove(i);
+					first.remove(0); // get rid of the overlapping point
 					second.addAll(first);
 					first = second;
 					didMergeLines = true;
+					// prevent more merges from happening with the outdated point data
 					break;
 				}
 				else if (first_finalPoint.equals(second_beginPoint)) {
-					// merge the pointlists
+					// Merge the two matching point lists
 					List <Point> second = pointLists.remove(i);
+					second.remove(0); // get rid of the overlapping point
 					first.addAll(second);
 					didMergeLines = true;
+					// prevent more merges from happening with the outdated point data
 					break;
 				}
 			}
 			// if there was a merge, throw it back in to check for another merge
-			if (didMergeLines) {
-				pointLists.add(first);
-			}
+			if (didMergeLines) { pointLists.add(first); }
 			// if there was no merge add it to the list of finished lists
-			else if (!didMergeLines) {
-				resultingLists.add(first);
-			}
+			else if (!didMergeLines) { resultingLists.add(first); }
 		}
-		info ("PointLists Size:"+pointLists.size());
-		info ("ResultingLists Size:"+resultingLists.size());
 		return resultingLists;
 	}
 	/******************************* LINERIZE EDGES *******************************\
-	|
+	| Linearize edges takes in a list of lists of points, representing the edges,   |
+	| and turns them into a single list of edges.
 	\******************************************************************************/
-	private List <Point> linerizeEdges (List<List<Point>> pointLists){
-		// TODO 
+	private List <Point> linearizeEdges (List<List<Point>> pointLists){
+		// TODO Optimize the connection line between dijoint edge lists
+		// though it is fine for now
 		List <Point> fullList = new ArrayList <Point>();
 		for (List<Point> pointlist : pointLists) {
 			fullList.addAll(pointlist);
@@ -522,7 +495,9 @@ public class Regions extends JavaPlugin{
 		return fullList;
 	}
 	/****************************** EXTRACT X POINTS ******************************\
-	|
+	| This function goes through a list of points (which contains X and Z values)  | 
+	| Then extracts all of the X points and returns them as an array of doubles.   |
+	| It is virtually identical to the extract z points function                   |
 	\******************************************************************************/
 	private double [] extractx (List <Point> pointList) {
 		int length = pointList.size();
@@ -532,8 +507,11 @@ public class Regions extends JavaPlugin{
 		}
 		return xvalues;
 	}
+	
 	/****************************** EXTRACT Z POINTS ******************************\
-	|
+	| This function goes through a list of points (which contains X and Z values)  | 
+	| Then extracts all of the Z points and returns them as an array of doubles.   |
+	| It is virtually identical to the extract x ponts function
 	\******************************************************************************/
 	private double [] extractz (List <Point> pointList) {
 		int length = pointList.size();
@@ -555,7 +533,6 @@ public class Regions extends JavaPlugin{
 	public void refreshRegions () {
 		int newCount = 0;
 		int replaceCount = 0;
-		
 		int countID = 0;
 		
 		// Create a map for the new region areas
@@ -564,6 +541,7 @@ public class Regions extends JavaPlugin{
 		// Create a map for name to region lists
 		Map<String, HashSet <Position> > regions = new HashMap <String, HashSet <Position>>();
 		
+		// Loop through and create a map of plot names mapped to lists of plots
 		for (Entry<Position,String> positionIterator : chunkNames.entrySet()) {
 			Position position = positionIterator.getKey();
 			String name = positionIterator.getValue();
@@ -576,9 +554,8 @@ public class Regions extends JavaPlugin{
 			
 			regions.put(name, plotList);
 		}
-		info ("Finished Looping Positions");
-		info ("Total Found Regions:"+regions.size());
-		info ("chunkOwners Regions:"+chunkOwners.size());
+		
+		
 		for (Entry <String, HashSet <Position> > regionIterator : regions.entrySet()){
 
 			String id = "region"+countID;
@@ -593,7 +570,6 @@ public class Regions extends JavaPlugin{
 				String thisWorld = position._world;
 				long thisX = position._x;
 				long thisZ = position._z;
-				info ("PLOT");
 				// Check Left
 				Position left = new Position(thisWorld,thisX-1,thisZ  );
 				if (!plotPositions.contains(left)) {
@@ -601,7 +577,6 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()+8));
 					thisPlotsPoints.add(edgePoints);
-					info ("Found Left");
 				}
 				
 				// Check Up
@@ -611,7 +586,6 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()+8));
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()+8));
 					thisPlotsPoints.add(edgePoints);
-					info ("Found Up");
 				}
 				
 				// Check Right
@@ -621,7 +595,6 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()+8));
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()));
 					thisPlotsPoints.add(edgePoints);
-					info ("Found Right");
 				}
 				
 				// Check down
@@ -631,41 +604,36 @@ public class Regions extends JavaPlugin{
 					edgePoints.add(new Point(position.getMinimumXCorner()+8,position.getMinimumZCorner()  ));
 					edgePoints.add(new Point(position.getMinimumXCorner()  ,position.getMinimumZCorner()  ));
 					thisPlotsPoints.add(edgePoints);
-					info ("Found Down"+edgePoints.toString());
 				}
 				// add the sorted and merged edges into the entire plot's point list
 				pointLists.addAll(mergeEdges(thisPlotsPoints));
 			}
 			pointLists = mergeEdges(pointLists);
-			List<Point> edgepoints = linerizeEdges(pointLists);
+			List<Point> edgepoints = linearizeEdges(pointLists);
 			
         	// draw an outline
     		double[] x = extractx(edgepoints);
     		double[] z = extractz(edgepoints);
-    		info ("Xpoints Length" + x.length);
-    		info ("Zpoints Lenght" + z.length);
     		
-    		// Add the region into the 
-			AreaMarker m = resareas.remove(id); /* Existing area? */
+    		// Attempt to remove the region with the same ID
+			AreaMarker m = resareas.remove(id);
+			
+			// If the region did not exist, create a new one
 		    if(m == null) {
 			    m = set.createAreaMarker(id, name, false, worldName, x, z, false);
 		        if(m == null) {info("null region");continue;}
-		        info ("Int Color for Red" + m.getFillColor());
-		        info ("Opacity"+m.getFillOpacity());
-		        info ("Hex Color for Red" + 0xFF0000);
-		        
-		        info ("Line Weight" + m.getLineWeight());
-		        info ("Line Opacity" + m.getLineOpacity());
 		        // setLineStyle(weight,opacity,color)
-		        m.setLineStyle(3, .8, 0x00FF00);
-		        // set fillStyle (opacity, color)
-		        m.setFillStyle(.35, 0x00FF00);
+		        m.setLineStyle(3, .8, 0xFF0000);
+		        // setFillStyle (opacity, color)
+		        m.setFillStyle(.35, 0xFF0000);
 		        newCount++;
 		    }
+		    // If the region did exist just change the data, no need to create a new one
 		    else {
-		        m.setCornerLocations(x, z); /* Replace corner locations */
-		        replaceCount++;		        
-		        m.setLabel(name); /* Update label */
+		        m.setCornerLocations(x, z); // Replace the border points    
+		        m.setLabel(name); // Replace the name of the plot
+		        
+		        replaceCount++; 
 		    }
 		    newresareas.put(id, m);
 		    countID += 1;
@@ -677,6 +645,9 @@ public class Regions extends JavaPlugin{
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// REGION STORAGE ///////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
+	/******************************** SAVE REGIONS ********************************\
+	|
+	\******************************************************************************/
 	public void saveRegions() {
 		getConfig().set("regions", "");
 		
@@ -711,6 +682,9 @@ public class Regions extends JavaPlugin{
 		this.saveConfig();
 		info("Regions Saved");
 	}
+	/******************************** LOAD REGIONS ********************************\
+	|
+	\******************************************************************************/
 	public void loadRegions() {
 		chunkNames.clear();
 		chunkOwners.clear();
@@ -752,9 +726,20 @@ public class Regions extends JavaPlugin{
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
+	/********************************** LOG INFO **********************************\
+	| The log info function is a simple function to display info to the console    |
+	| logger. It also prepends the plugin title (with color) to the message so     |
+	| that the plugin that sent the message can easily be identified               |
+	\******************************************************************************/
 	public void info(String input) {
 		this.logger.info(pluginTitle + input);
 	}
+	
+	/********************************* LOG SEVERE *********************************\
+	| The log severe function is very similar to the log info function in that it  |
+	| displays information to the console, but the severe function sends a SEVERE  |
+	| message instead of an INFO. It also turns the message text red               |
+	\******************************************************************************/
 	public void severe (String input) {
 		this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");
 	}
