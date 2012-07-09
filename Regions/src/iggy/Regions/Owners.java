@@ -55,6 +55,7 @@ import java.util.Set;
 
 public class Owners {
 	private Set <String> _owners = new HashSet<String>();
+	private Set <String> _builders = new HashSet<String>();
 	
 	public boolean addOwner(String player){
 		return _owners.add(player);
@@ -66,16 +67,50 @@ public class Owners {
 		}
 		return sucess;
 	}
+	
+	public boolean addBuilder (String player) {
+		return false;
+	}
+	
+	public boolean addBuilders (List <String> players) {
+		return false;
+	}
+	
+	public boolean removeBuilder (String player) {
+		return false;
+	}
+	
+	
+	
 	public boolean hasOwner(String player){
 		return _owners.contains(player);
 	}
+	
+	public boolean hasBuilder (String player) {
+		return _builders.contains(player);
+	}
+	
+	public boolean hasPlayer (String player) {
+		return (_owners.contains(player) || _builders.contains(player));
+	}
+	
+	
 	public List<String> getOwners() {
 		List<String> owners = new ArrayList<String>();
-		// TODO: fill in the arraylist with the hashset
-		Iterator<String> ownerIterator = _owners.iterator();
-		while (ownerIterator.hasNext()){
-			owners.add(ownerIterator.next());
-		}
+		for (String owner : _owners){ owners.add(owner); }
 		return owners;
+	}
+	
+	public List <String> getBuilders() {
+		List <String> builders = new ArrayList <String>();
+		for (String builder : _builders) { builders.add(builder); }
+		return builders;
+	}
+	
+	public List <String> getPlayers() {
+		List <String> players = new ArrayList <String> ();
+		for (String owner : _owners) { players.add(owner); }
+		for (String builder : _builders) {players.add(builder); }
+		return player;
 	}
 }
