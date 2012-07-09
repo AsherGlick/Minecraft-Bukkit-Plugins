@@ -486,11 +486,48 @@ public class Regions extends JavaPlugin{
 	| and turns them into a single list of edges.
 	\******************************************************************************/
 	private List <Point> linearizeEdges (List<List<Point>> pointLists){
+		List<List<Point>> newPointLists = new ArrayList<List<Point>>();
+		for (List<Point> pointlist : pointLists) {
+			List<Point> newpointlist = new ArrayList<Point>();
+			newpointlist.add(pointlist.get(0));
+			
+			// if the first point is not a corner do not include it
+			{
+				boolean pre_del_x = pointlist.get(0)._x != pointlist.get(pointlist.size()-2)._x;
+				boolean pre_del_z = pointlist.get(0)._z != pointlist.get(pointlist.size()-2)._z;
+				boolean post_del_x= pointlist.get(0)._x != pointlist.get(1)._x;
+				boolean post_del_z= pointlist.get(0)._z != pointlist.get(1)._z;
+				if (!((!pre_del_x && !post_del_x) || (!pre_del_z && !post_del_z))) {
+					newpointlist.add(pointlist.get(0));
+				}
+			}
+			// if every other point is not a corner do not include it
+			for (int i = 1; i < pointlist.size() -1; i ++) {
+				boolean pre_del_x = pointlist.get(i)._x != pointlist.get(i-1)._x;
+				boolean pre_del_z = pointlist.get(i)._z != pointlist.get(i-1)._z;
+				boolean post_del_x= pointlist.get(i)._x != pointlist.get(i+1)._x;
+				boolean post_del_z= pointlist.get(i)._z != pointlist.get(i+1)._z;
+				if (!((!pre_del_x && !post_del_x) || (!pre_del_z && !post_del_z))) {
+					newpointlist.add(pointlist.get(i));
+				}
+			}
+			newPointLists.add(newpointlist);
+		}
+		pointLists = newPointLists;
+		
+		
 		// TODO Optimize the connection line between dijoint edge lists
 		// though it is fine for now
+		
+		List <Point> returnPath = new ArrayList <Point>();
+		
 		List <Point> fullList = new ArrayList <Point>();
 		for (List<Point> pointlist : pointLists) {
+			returnPath.add(pointlist.get(0));
 			fullList.addAll(pointlist);
+		}
+		for (Point point : returnPath){
+			fullList.add(point);
 		}
 		return fullList;
 	}
@@ -627,7 +664,7 @@ public class Regions extends JavaPlugin{
 		        m.setLineStyle(3, .8, 0xFF0000);
 		        // setFillStyle (opacity, color)
 		        m.setFillStyle(.35, 0xFF0000);
-		        //m.setRangeY(60, 70);
+		        m.setRangeY(60, 70);
 		        newCount++;
 		    }
 		    // If the region did exist just change the data, no need to create a new one
