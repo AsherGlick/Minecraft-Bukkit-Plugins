@@ -111,6 +111,6 @@ public class Owners {
 		List <String> players = new ArrayList <String> ();
 		for (String owner : _owners) { players.add(owner); }
 		for (String builder : _builders) {players.add(builder); }
-		return player;
+		return players;
 	}
 }
