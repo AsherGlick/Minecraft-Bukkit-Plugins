@@ -12,3 +12,5 @@ commands:
     description: reloads the world
   re:
     description: alias for refresh
+  forcewarp:
+    description: warps a player to a region even if a warp point does not exist
