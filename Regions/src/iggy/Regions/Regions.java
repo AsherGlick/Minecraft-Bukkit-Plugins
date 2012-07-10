@@ -396,7 +396,6 @@ public class Regions extends JavaPlugin{
 			
 						
 		}
-		// TODO Remove builder from plot
 		/******************************* REMOVE BUILDER *******************************\
 		|
 		\******************************************************************************/
@@ -449,7 +448,6 @@ public class Regions extends JavaPlugin{
 			
 						
 		}
-		// TODO Add owner to plot
 		/********************************** ADD OWNER *********************************\
 		|
 		\******************************************************************************/
@@ -500,11 +498,28 @@ public class Regions extends JavaPlugin{
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
 		}
-		// TODO Admin Remove Plot
 		/********************************* REMOVE PLOT ********************************\
 		| ### THIS FUNCTION SHOULD ONLY BE USED BY ADMINS, IT WILL DELETE ENTIRE PLOTS |
 		| ### IF USED ON THE LAST REMAINING PLOT, IT CAN ALSO CREATE DISJOINT PLOTS##  |
 		\******************************************************************************/
+		if (commandLabel.equalsIgnoreCase("unclaim-plot")) {
+			if (player == null) {
+				info ("This command can only be used by a player");
+				return false;
+			}
+			if (!player.isOp()) {
+				info ("This command can only be used by and admin");
+			}
+			
+			String plotName = chunkNames.remove(new Position(player.getLocation()));
+			if (plotName == null) {
+				player.sendMessage("You are not standing in a region that can be removed");
+				return false;
+			}
+			else {
+				player.sendMessage("Plot from "+plotName+" removed sucessfully");
+			}
+		}
 		// TODO List Owners
 		/********************************* LIST OWNERS ********************************\
 		|
@@ -538,7 +553,7 @@ public class Regions extends JavaPlugin{
 				else player.sendMessage("The plot "+plotName+" was not found");
 				return false;
 			}
-			if (player == null) info ("Owners: "+ owners.getOwners().toString()+"\nBuilders:"+owners.getBuilders().toString());
+			if (player == null) info ("Owners: "+ owners.getOwners().toString());
 			else player.sendMessage(owners.getOwners().toString());
 			
 		}
@@ -546,7 +561,39 @@ public class Regions extends JavaPlugin{
 		/******************************** LIST BUILDERS *******************************\
 		|
 		\******************************************************************************/
-		
+		if (commandLabel.equalsIgnoreCase("list-builders")) {
+			String plotName;
+			if (args.length == 0) {
+				if (player == null) {
+					info ("You need to specify a plot to check");
+					return false;
+				}
+				
+				plotName = chunkNames.get(new Position(player.getLocation()));
+				if (plotName == null) {
+					player.sendMessage("You are not standing in a region");
+					return false;
+				}
+			}
+			else if (args.length == 1) {
+				plotName = args[0];
+			}
+			else {
+				if (player == null) info ("Use list-owner <plotname>");
+				else player.sendMessage("Use /list-owner <plotname>");
+				return false;
+			}
+			
+			Owners owners = chunkOwners.get(plotName);
+			if (owners == null){
+				if (player == null) info ("The plot "+plotName+" was not found");
+				else player.sendMessage("The plot "+plotName+" was not found");
+				return false;
+			}
+			if (player == null) info ("Builders:"+owners.getBuilders().toString());
+			else player.sendMessage(owners.getBuilders().toString());
+			
+		}
 		return false;		
 	}
   //////////////////////////////////////////////////////////////////////////////
