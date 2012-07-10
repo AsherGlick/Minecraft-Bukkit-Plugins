@@ -344,13 +344,78 @@ public class Regions extends JavaPlugin{
 				refreshRegions ();
 			}
 		}
+		/********************************* ADD BUILDER ********************************\
+		|
+		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("add-builder") || commandLabel.equalsIgnoreCase("ab")) {
 			// TODO Add builder to plot
 			// TODO check to see if a player has been specified for this function
+			String newOwner;
+			String plotName;
+			
+			// Get the user attempted to be added and the plot name
+			if (args.length == 1){
+				if (player == null) {
+					info ("This command needs two arguments to be run by the console <player> <plot>");
+					return false;
+				}
+				newOwner = args[0];
+				plotName = chunkNames.get(new Position(player.getLocation()));
+				if (plotName == null) {
+					player.sendMessage("You are not standing in a region");
+					return false;
+				}				
+			}
+			else if (args.length == 2) {
+				newOwner = args[0];
+				plotName = args[1];
+			}
+			// If any other number of arguments are displayed
+			else {
+				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
+				else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
+				return false;
+			}
+			
+			// Make sure the user adding the builder is allowed to do so
+			Owners owners = chunkOwners.get(plotName);
+			if (owners == null) {
+				if (player == null) info ("The plot requested does not exist");
+				else player.sendMessage("The plot requested does not exist");
+				return false;
+			}
+			
+			if (player == null || owners.hasOwner(player.getName())) {
+				// Add the builder to the plot
+				owners.addBuilder(newOwner);
+				// Save the owners list to the global variable
+				chunkOwners.put(plotName, owners);
+			}
+			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
+			
+						
 		}
 		// TODO Remove builder from plot
 		// TODO Add owner to plot
 		// TODO Admin Remove Plot
+		// TODO List Owners
+		if (commandLabel.equalsIgnoreCase("list-owner")) {
+			if (args.length == 0) {
+				if (player == null) {
+					info ("You need to specify a plot to check");
+					return false;
+				}
+			}
+			else if (args.length == 1) {
+				
+			}
+			else {
+				if (player == null) info ("Use list-owner <plotname>");
+				else player.sendMessage("Use /list-owner <plotname>");
+			}
+		}
+		// TODO List Builders
+		
 		return false;		
 	}
   //////////////////////////////////////////////////////////////////////////////
@@ -517,10 +582,7 @@ public class Regions extends JavaPlugin{
 		}
 		pointLists = newPointLists;
 		
-		
-		// TODO Optimize the connection line between dijoint edge lists
-		// though it is fine for now
-		
+		// Create a list of 
 		List <Point> returnPath = new ArrayList <Point>();
 		
 		List <Point> fullList = new ArrayList <Point>();
@@ -688,7 +750,9 @@ public class Regions extends JavaPlugin{
  /////////////////////////////// REGION STORAGE ///////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 	/******************************** SAVE REGIONS ********************************\
-	|
+	| The save regions function save the three components of each region. The      |
+	| plots contained within the region, the owners of the plot, and the builders  |
+	| assigned to the plot. These pieces of data are saved to the config file      |
 	\******************************************************************************/
 	public void saveRegions() {
 		getConfig().set("regions", "");
@@ -725,8 +789,11 @@ public class Regions extends JavaPlugin{
 		this.saveConfig();
 		info("Regions Saved");
 	}
+	
 	/******************************** LOAD REGIONS ********************************\
-	|
+	| The load regions function does the opposite of the save region function. It  |
+	| loads the plots contained in the region, the owners, and the builders into   |
+	| memory for use during the game                                               |
 	\******************************************************************************/
 	public void loadRegions() {
 		chunkNames.clear();
