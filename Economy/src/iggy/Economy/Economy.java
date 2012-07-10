@@ -315,7 +315,7 @@ public class Economy extends JavaPlugin{
 		Player findplayer = Bukkit.getServer().getPlayer(name);
 		if (findplayer == null){
 			info(" No online player found by that name");
-			return null;
+			//return null;
 		}
 		else {
 			playername = findplayer.getName();
