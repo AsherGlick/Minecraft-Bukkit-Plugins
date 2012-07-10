@@ -348,8 +348,112 @@ public class Regions extends JavaPlugin{
 		|
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("add-builder") || commandLabel.equalsIgnoreCase("ab")) {
-			// TODO Add builder to plot
-			// TODO check to see if a player has been specified for this function
+			String newBuilder;
+			String plotName;
+			
+			// Get the user attempted to be added and the region name
+			if (args.length == 1){
+				if (player == null) {
+					info ("This command needs two arguments to be run by the console <player> <plot>");
+					return false;
+				}
+				newBuilder = args[0];
+				plotName = chunkNames.get(new Position(player.getLocation()));
+				if (plotName == null) {
+					player.sendMessage("You are not standing in a region");
+					return false;
+				}				
+			}
+			// If the player and the region is specified
+			else if (args.length == 2) {
+				newBuilder = args[0];
+				plotName = args[1];
+			}
+			// If any other number of arguments are entered
+			else {
+				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
+				else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
+				return false;
+			}
+			
+			// Make sure the user adding the builder is allowed to do so
+			Owners owners = chunkOwners.get(plotName);
+			if (owners == null) {
+				if (player == null) info ("The plot "+plotName+" does not exist");
+				else player.sendMessage("The plot "+plotName+" does not exist");
+				return false;
+			}
+			if (player == null || owners.hasOwner(player.getName())) {
+				// Add the builder to the plot
+				owners.addBuilder(newOwner);
+				// Save the owners list to the global variable
+				chunkOwners.put(plotName, owners);
+				
+				if (player == null) info ("Added "+newBuilder+" to "+plotName);
+				else player.sendMessage("Added "+newBuilder+" to "+plotName);
+			}
+			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
+			
+						
+		}
+		// TODO Remove builder from plot
+		/******************************* REMOVE BUILDER *******************************\
+		|
+		\******************************************************************************/
+		if (commandLabel.equalsIgnoreCase("remove-builder") || commandLabel.equalsIgnoreCase("rb")) {
+			String oldBuilder;
+			String plotName;
+			
+			// Get the user attempted to be added and the region name
+			if (args.length == 1){
+				if (player == null) {
+					info ("This command needs two arguments to be run by the console <player> <plot>");
+					return false;
+				}
+				oldBuilder = args[0];
+				plotName = chunkNames.get(new Position(player.getLocation()));
+				if (plotName == null) {
+					player.sendMessage("You are not standing in a region");
+					return false;
+				}				
+			}
+			// If the player and the region is specified
+			else if (args.length == 2) {
+				oldBuilder = args[0];
+				plotName = args[1];
+			}
+			// If any other number of arguments are entered
+			else {
+				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
+				else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
+				return false;
+			}
+			
+			// Make sure the user adding the builder is allowed to do so
+			Owners owners = chunkOwners.get(plotName);
+			if (owners == null) {
+				if (player == null) info ("The plot "+plotName+" does not exist");
+				else player.sendMessage("The plot "+plotName+" does not exist");
+				return false;
+			}
+			if (player == null || owners.hasOwner(player.getName())) {
+				// Add the builder to the plot
+				owners.removeBuilder(oldBuilder);
+				// Save the owners list to the global variable
+				chunkOwners.put(plotName, owners);
+				
+				if (player == null) info ("Removed "+oldBuilder+" from "+plotName);
+				else player.sendMessage("Removed "+oldBuilder+" from "+plotName);
+			}
+			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
+			
+						
+		}
+		// TODO Add owner to plot
+		/********************************** ADD OWNER *********************************\
+		|
+		\******************************************************************************/
+		if (commandLabel.equalsIgnoreCase("add-builder") || commandLabel.equalsIgnoreCase("ab")) {
 			String newOwner;
 			String plotName;
 			
@@ -381,8 +485,8 @@ public class Regions extends JavaPlugin{
 			// Make sure the user adding the builder is allowed to do so
 			Owners owners = chunkOwners.get(plotName);
 			if (owners == null) {
-				if (player == null) info ("The plot requested does not exist");
-				else player.sendMessage("The plot requested does not exist");
+				if (player == null) info ("The plot "+plotName+" does not exist");
+				else player.sendMessage("The plot "+plotName+" does not exist");
 				return false;
 			}
 			if (player == null || owners.hasOwner(player.getName())) {
@@ -390,19 +494,14 @@ public class Regions extends JavaPlugin{
 				owners.addBuilder(newOwner);
 				// Save the owners list to the global variable
 				chunkOwners.put(plotName, owners);
+				
+				if (player == null) info ("Added "+newOwner+" to "+plotName);
+				else player.sendMessage("Added "+newOwner+" to "+plotName);
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
 			
 						
 		}
-		// TODO Remove builder from plot
-		/******************************* REMOVE BUILDER *******************************\
-		|
-		\******************************************************************************/
-		// TODO Add owner to plot
-		/********************************** ADD OWNER *********************************\
-		|
-		\******************************************************************************/
 		// TODO Admin Remove Plot
 		/********************************* REMOVE PLOT ********************************\
 		|
@@ -411,7 +510,7 @@ public class Regions extends JavaPlugin{
 		/********************************* LIST OWNERS ********************************\
 		|
 		\******************************************************************************/
-		if (commandLabel.equalsIgnoreCase("list-owner")) {
+		if (commandLabel.equalsIgnoreCase("list-owners")) {
 			String plotName;
 			if (args.length == 0) {
 				if (player == null) {
@@ -436,11 +535,11 @@ public class Regions extends JavaPlugin{
 			
 			Owners owners = chunkOwners.get(plotName);
 			if (owners == null){
-				if (player == null) info ("The plot was not found");
-				else player.sendMessage("The plot was not found");
+				if (player == null) info ("The plot "+plotName+" was not found");
+				else player.sendMessage("The plot "+plotName+" was not found");
 				return false;
 			}
-			if (player == null) info (owners.getOwners().toString());
+			if (player == null) info ("Owners: "+ owners.getOwners().toString()+"\nBuilders:"+owners.getBuilders().toString());
 			else player.sendMessage(owners.getOwners().toString());
 			
 		}
