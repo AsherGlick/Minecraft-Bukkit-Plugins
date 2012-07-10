@@ -84,7 +84,7 @@ public class Owners {
 	public boolean addBuilders (List <String> players) {
 		boolean sucess = true;
 		for (String player : players) {
-			sucess &= _owners.add(player);
+			sucess &= _builders.add(player);
 		}
 		return sucess;
 	}
