@@ -353,7 +353,7 @@ public class Regions extends JavaPlugin{
 			String newOwner;
 			String plotName;
 			
-			// Get the user attempted to be added and the plot name
+			// Get the user attempted to be added and the region name
 			if (args.length == 1){
 				if (player == null) {
 					info ("This command needs two arguments to be run by the console <player> <plot>");
@@ -366,11 +366,12 @@ public class Regions extends JavaPlugin{
 					return false;
 				}				
 			}
+			// If the player and the region is specified
 			else if (args.length == 2) {
 				newOwner = args[0];
 				plotName = args[1];
 			}
-			// If any other number of arguments are displayed
+			// If any other number of arguments are entered
 			else {
 				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
 				else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
@@ -384,7 +385,6 @@ public class Regions extends JavaPlugin{
 				else player.sendMessage("The plot requested does not exist");
 				return false;
 			}
-			
 			if (player == null || owners.hasOwner(player.getName())) {
 				// Add the builder to the plot
 				owners.addBuilder(newOwner);
@@ -396,25 +396,58 @@ public class Regions extends JavaPlugin{
 						
 		}
 		// TODO Remove builder from plot
+		/******************************* REMOVE BUILDER *******************************\
+		|
+		\******************************************************************************/
 		// TODO Add owner to plot
+		/********************************** ADD OWNER *********************************\
+		|
+		\******************************************************************************/
 		// TODO Admin Remove Plot
+		/********************************* REMOVE PLOT ********************************\
+		|
+		\******************************************************************************/
 		// TODO List Owners
+		/********************************* LIST OWNERS ********************************\
+		|
+		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("list-owner")) {
+			String plotName;
 			if (args.length == 0) {
 				if (player == null) {
 					info ("You need to specify a plot to check");
 					return false;
 				}
+				
+				plotName = chunkNames.get(new Position(player.getLocation()));
+				if (plotName == null) {
+					player.sendMessage("You are not standing in a region");
+					return false;
+				}
 			}
 			else if (args.length == 1) {
-				
+				plotName = args[0];
 			}
 			else {
 				if (player == null) info ("Use list-owner <plotname>");
 				else player.sendMessage("Use /list-owner <plotname>");
+				return false;
 			}
+			
+			Owners owners = chunkOwners.get(plotName);
+			if (owners == null){
+				if (player == null) info ("The plot was not found");
+				else player.sendMessage("The plot was not found");
+				return false;
+			}
+			if (player == null) info (owners.getOwners().toString());
+			else player.sendMessage(owners.getOwners().toString());
+			
 		}
 		// TODO List Builders
+		/******************************** LIST BUILDERS *******************************\
+		|
+		\******************************************************************************/
 		
 		return false;		
 	}
