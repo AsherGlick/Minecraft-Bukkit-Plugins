@@ -48,7 +48,9 @@ public class Teleport extends JavaPlugin {
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
-	
+	/********************************* LOAD CITIES ********************************\
+	|
+	\******************************************************************************/
 	public void loadCities () {
 		cityTeleports.clear();
 		cityActivators.clear();
@@ -106,6 +108,9 @@ public class Teleport extends JavaPlugin {
 	    }
 		this.logger.info(pluginTitle+" Loaded \033[0;32m" + String.valueOf(cities.size()) + "\033[0m Cities \033[0;35m"+cities.toString() + "\033[0m");
 	}
+	/********************************* SAVE CITIES ********************************\
+	|
+	\******************************************************************************/
 	public void saveCities() {
 		// clear the current listing of cities
 		this.getConfig().set("city","");
@@ -156,7 +161,9 @@ public class Teleport extends JavaPlugin {
 		this.saveConfig();
 		this.logger.info(pluginTitle + " "+city+" was created");
 	}
-	
+	/****************************** LOAD ACTIVATIONS ******************************\
+	|
+	\******************************************************************************/
 	public void loadActivations() {
 		playerActivations.clear();
 		
@@ -181,6 +188,9 @@ public class Teleport extends JavaPlugin {
 		}
 		this.logger.info(pluginTitle+" Loaded \033[0;32m" + String.valueOf(players.size()) + "\033[0m Players \033[0;35m"+players.toString() + "\033[0m");
 	}
+	/****************************** SAVE ACTIVATIONS ******************************\
+	|
+	\******************************************************************************/
 	public void saveActivations() {
 		this.getConfig().set("player", "");
 		
@@ -229,7 +239,9 @@ public class Teleport extends JavaPlugin {
 	
 	Plugin regions;
 	Regions regionsapi;
-	
+	/********************************** ON ENABLE *********************************\
+	|
+	\******************************************************************************/
 	@Override
 	public void onEnable() {
 		pdFile = this.getDescription();
@@ -269,6 +281,9 @@ public class Teleport extends JavaPlugin {
 		}
 		this.logger.info(pluginTitle+ " version " + pdFile.getVersion() +" is enabled");
 	}
+	/********************************* ON DISABLE *********************************\
+	|
+	\******************************************************************************/
 	@Override
 	public void onDisable() {
 		saveCities();
@@ -313,7 +328,7 @@ public class Teleport extends JavaPlugin {
 			return false;
 		}
 		/********************************* CREATE WARP ********************************\
-		|
+		| 
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("createwarp")){
 			if (player.isOp() || (player.hasPermission("teleport.createwarp"))){
@@ -357,6 +372,9 @@ public class Teleport extends JavaPlugin {
 			}
 			
 		}
+		/****************************** REFRESH / RELOAD ******************************\
+		|
+		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("refresh")||commandLabel.equalsIgnoreCase("re")) {
 			Location myLocation = player.getLocation();
 			
@@ -364,6 +382,18 @@ public class Teleport extends JavaPlugin {
 			player.teleport(otherworld);
 			
 			player.teleport(myLocation);
+		}
+		
+		if (commandLabel.equalsIgnoreCase("forcewarp")) {
+			if (!player.isOp()) {
+				player.sendMessage("Stop trying to cheat");
+				return false;
+			}
+			if (!regions.isEnabled()) {
+				player.sendMessage("The regions plugin is not enabled, it must be enabled to forcewarp");
+				return false;
+			}
+			//regions.
 		}
 		return false;
 	}
