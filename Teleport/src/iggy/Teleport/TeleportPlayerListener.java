@@ -178,11 +178,17 @@ public class TeleportPlayerListener implements Listener {
 		Player player = event.getPlayer();
 		if (plugin.teleportingPlayers.containsKey(player)) {
 			Location oldPosition = event.getFrom();
-			plugin.teleportingPlayers.remove(player);
-			
-			Block block = player.getWorld().getBlockAt(oldPosition);
-			player.sendBlockChange(oldPosition, block.getType(), block.getData());
-			player.sendMessage("Teleport Interrupted");
+			Location newPosition = event.getTo();
+			// only cancel the Teleport of the player actually moves, not just if they look around
+			if (oldPosition.getX() != newPosition.getX() || 
+				oldPosition.getZ() != newPosition.getZ() ||
+				oldPosition.getY() != newPosition.getY()){
+				plugin.teleportingPlayers.remove(player);
+				
+				Block block = player.getWorld().getBlockAt(oldPosition);
+				player.sendBlockChange(oldPosition, block.getType(), block.getData());
+				player.sendMessage("Teleport Interrupted, you cannot move while you are teleporting");
+			}
 		}
 	}
 }
