@@ -385,7 +385,7 @@ public class Regions extends JavaPlugin{
 			}
 			if (player == null || owners.hasOwner(player.getName())) {
 				// Add the builder to the plot
-				owners.addBuilder(newOwner);
+				owners.addBuilder(newBuilder);
 				// Save the owners list to the global variable
 				chunkOwners.put(plotName, owners);
 				
