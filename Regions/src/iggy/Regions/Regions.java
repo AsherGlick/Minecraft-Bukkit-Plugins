@@ -425,7 +425,7 @@ public class Regions extends JavaPlugin{
 			// If any other number of arguments are entered
 			else {
 				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
-				else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
+				else player.sendMessage("Correct usage /remove-builder <player> [<plot>]");
 				return false;
 			}
 			
@@ -453,7 +453,7 @@ public class Regions extends JavaPlugin{
 		/********************************** ADD OWNER *********************************\
 		|
 		\******************************************************************************/
-		if (commandLabel.equalsIgnoreCase("add-builder") || commandLabel.equalsIgnoreCase("ab")) {
+		if (commandLabel.equalsIgnoreCase("add-owner") || commandLabel.equalsIgnoreCase("ao")) {
 			String newOwner;
 			String plotName;
 			
@@ -478,7 +478,7 @@ public class Regions extends JavaPlugin{
 			// If any other number of arguments are entered
 			else {
 				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
-				else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
+				else player.sendMessage("Correct usage /add-owner <player> [<plot>]");
 				return false;
 			}
 			
@@ -491,20 +491,19 @@ public class Regions extends JavaPlugin{
 			}
 			if (player == null || owners.hasOwner(player.getName())) {
 				// Add the builder to the plot
-				owners.addBuilder(newOwner);
+				owners.addOwner(newOwner);
 				// Save the owners list to the global variable
 				chunkOwners.put(plotName, owners);
 				
-				if (player == null) info ("Added "+newOwner+" to "+plotName);
-				else player.sendMessage("Added "+newOwner+" to "+plotName);
+				if (player == null) info ("Added "+newOwner+" as a owner to "+plotName);
+				else player.sendMessage("Added "+newOwner+" as a owner to "+plotName);
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
-			
-						
 		}
 		// TODO Admin Remove Plot
 		/********************************* REMOVE PLOT ********************************\
-		|
+		| ### THIS FUNCTION SHOULD ONLY BE USED BY ADMINS, IT WILL DELETE ENTIRE PLOTS |
+		| ### IF USED ON THE LAST REMAINING PLOT, IT CAN ALSO CREATE DISJOINT PLOTS##  |
 		\******************************************************************************/
 		// TODO List Owners
 		/********************************* LIST OWNERS ********************************\
