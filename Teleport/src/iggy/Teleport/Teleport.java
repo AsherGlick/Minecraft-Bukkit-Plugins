@@ -16,6 +16,7 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.World;
@@ -76,7 +77,7 @@ public class Teleport extends JavaPlugin {
 	        World warpWorld = this.getServer().getWorld(this.getConfig().getString("city."+cityName+".warp.world"));
 	        
 	        if (warpWorld == null) {
-	        	this.logger.severe("["+pluginName+"] Failed to find the world for "+cityName+"'s warp on the server");
+	        	severe(" Failed to find the world for "+cityName+"'s warp on the server");
 	        	continue;
 	        }
 	        
@@ -92,7 +93,7 @@ public class Teleport extends JavaPlugin {
 	        World activatorWorld = this.getServer().getWorld(this.getConfig().getString("city."+cityName+".activator.world"));
 	        
 	        if (activatorWorld == null){
-	        	this.logger.severe(pluginTitle+" Failed to find the world for "+cityName+"'s activator on the server");
+	        	severe(" Failed to find the world for "+cityName+"'s activator on the server");
 	        	continue;
 	        }
 	        
@@ -106,7 +107,7 @@ public class Teleport extends JavaPlugin {
 	        
 	        
 	    }
-		this.logger.info(pluginTitle+" Loaded \033[0;32m" + String.valueOf(cities.size()) + "\033[0m Cities \033[0;35m"+cities.toString() + "\033[0m");
+		info(" Loaded \033[0;32m" + String.valueOf(cities.size()) + "\033[0m Cities \033[0;35m"+cities.toString() + "\033[0m");
 	}
 	/********************************* SAVE CITIES ********************************\
 	|
@@ -118,7 +119,7 @@ public class Teleport extends JavaPlugin {
 		// add the new cities warp
 		Iterator<Entry<String, Location>> teleportIterator =  cityTeleports.entrySet().iterator();
 		while (teleportIterator.hasNext()) {
-			Entry<String,Location> pairs = (Entry<String,Location>)teleportIterator.next();
+			Entry<String,Location> pairs = teleportIterator.next();
 			
 			String cityName = pairs.getKey();
 			
@@ -136,7 +137,7 @@ public class Teleport extends JavaPlugin {
 		// add the new cities activators
 		Iterator<Entry<Location, String>> activatorIterator = this.cityActivators.entrySet().iterator();
 		while (activatorIterator.hasNext()) {
-			Entry<Location, String> pairs = (Entry<Location,String>)activatorIterator.next();
+			Entry<Location, String> pairs = activatorIterator.next();
 			
 			String cityName = pairs.getValue();
 			
@@ -202,7 +203,7 @@ public class Teleport extends JavaPlugin {
 		}
 		
 		while(it.hasNext()) {
-			Entry<String,List<String>> pairs = (Entry<String,List<String>>) it.next();
+			Entry<String,List<String>> pairs = it.next();
 			
 			String playerName = pairs.getKey();
 			
@@ -323,6 +324,26 @@ public class Teleport extends JavaPlugin {
 			player = (Player) sender;
 		}
 		
+		
+		if (commandLabel.equalsIgnoreCase("globalWarpList")) {
+			String output = new String();
+			String differentColor = new String();
+			String defaultColor = new String();
+			if (player == null) {
+				differentColor = "\033[0;35m";
+				defaultColor = "\033[0m";
+			}
+			else {
+				differentColor = ChatColor.DARK_PURPLE.toString();
+				defaultColor = ChatColor.WHITE.toString();
+			}
+			for (Entry<String, Location> warpPlace : cityTeleports.entrySet()) {
+				output += differentColor + warpPlace.getKey() + defaultColor + ", ";
+			}
+			if (player == null) { info (output); }
+			else { player.sendMessage(output); }
+		}
+		
 		if (player == null) {
 			this.logger.info("This command can only be run by a player");
 			return false;
@@ -373,7 +394,7 @@ public class Teleport extends JavaPlugin {
 			
 		}
 		/****************************** REFRESH / RELOAD ******************************\
-		|
+		| 
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("refresh")||commandLabel.equalsIgnoreCase("re")) {
 			Location myLocation = player.getLocation();
@@ -393,7 +414,39 @@ public class Teleport extends JavaPlugin {
 				player.sendMessage("The regions plugin is not enabled, it must be enabled to forcewarp");
 				return false;
 			}
-			//regions.
+			if (args.length != 1) {
+				player.sendMessage("You need to pick one region to force warp to");
+				return false;
+			}
+			String warpDestination = args[0];
+			if (!regionsapi.chunkOwners.containsKey(warpDestination)) {
+				player.sendMessage("Cannot find the plot "+warpDestination);
+				return false;
+			}
+			Location warpLocation = null;
+			for (Entry<Position, String> testLocation : regionsapi.chunkNames.entrySet()) {
+				if (testLocation.getValue().equals(warpDestination)) {
+					Position position = testLocation.getKey();
+					World world = Bukkit.getServer().getWorld(position._world);
+					warpLocation = new Location (world,position.getMinimumXCorner(), 257, position.getMinimumZCorner());				
+				}
+			}
+			if (warpLocation == null) {
+				player.sendMessage("Cannot find a valid warp point in " + warpDestination);
+				return false;
+			}
+			player.teleport(warpLocation);
+			
+		}
+		
+		if (commandLabel.equalsIgnoreCase("warplist")) {
+			String output = new String();
+			
+			List <String> warpLocations = playerActivations.get(player.getName());
+			for (String warpPlace : warpLocations) {
+				output += warpPlace+", ";
+			}
+			player.sendMessage(output);
 		}
 		return false;
 	}
