@@ -1,0 +1,8 @@
+name: Flight
+main: iggy.Flight.Flight
+version: 1.00
+description: >
+             Flying
+commands:
+  fly:
+    description: do some shit
