@@ -203,11 +203,11 @@ public class Regions extends JavaPlugin{
 				return false;
 			}
 			// try to claim block
-			else {
+			else if (args.length == 1){
 				String plotName = args[0];
-				for (int i = 1; i < args.length; i++) {
+				/*for (int i = 1; i < args.length; i++) {
 					plotName += " "+args[i];
-				}
+				}*/
 				// check to see if the name has already been taken
 				if (chunkOwners.containsKey(plotName)) {
 					player.sendMessage("This plot name has allready been taken");
@@ -231,6 +231,9 @@ public class Regions extends JavaPlugin{
 					player.sendMessage("You dont have enough money to buy this plot ($5000)");
 					return false;
 				}
+			}
+			else {
+				player.sendMessage("correct usage is /claim <plotname>");
 			}
 			saveRegions();
 			

@@ -86,7 +86,7 @@ public class DisplayPlotTitles implements Listener{
 		if (playerSpot == null){playerSpot = "The Wild";}
 		if (plotName != playerSpot){
 			lastLocation.put(event.getPlayer(), plotName);
-			event.getPlayer().sendMessage("You have entered :"+ChatColor.LIGHT_PURPLE +plotName+ ChatColor.WHITE);
+			event.getPlayer().sendMessage("You have entered: "+ChatColor.LIGHT_PURPLE +plotName+ ChatColor.WHITE);
 		}
 	}
 }
