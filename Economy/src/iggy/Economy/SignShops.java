@@ -26,7 +26,7 @@ public class SignShops implements Listener{
 	| This function prevents any blocks from being BROKEN inside of the shop world |
 	| by anyone other then the server operator                                     |
 	\******************************************************************************/
-	@EventHandler (priority = EventPriority.NORMAL)
+	@EventHandler (priority = EventPriority.HIGHEST)
 	public void BlockProtect (BlockBreakEvent event){
 		Block brokenBlock = event.getBlock();
 		if (brokenBlock != null){
@@ -40,7 +40,7 @@ public class SignShops implements Listener{
 	| This function prevents any blocks from being PLACED inside of the shop world |
 	| by anyone other then the server operator                                     |
 	\******************************************************************************/
-	@EventHandler (priority = EventPriority.NORMAL)
+	@EventHandler (priority = EventPriority.HIGHEST)
 	public void BuildProtect (BlockPlaceEvent event){
 		Block placedBlock = event.getBlock();
 		if (placedBlock != null){
@@ -105,9 +105,6 @@ public class SignShops implements Listener{
 	\******************************************************************************/
 	@EventHandler (priority = EventPriority.NORMAL)
 	public void clickSign(PlayerInteractEvent event){
-		if (event.getAction() != Action.LEFT_CLICK_BLOCK){
-			return;	
-		}
 		Player player = event.getPlayer();
 		if (player.getWorld() != economy.shopworld){
 			return;
@@ -140,17 +137,28 @@ public class SignShops implements Listener{
 					event.getPlayer().sendMessage("There was an error with this sign, contact the administration");
 					return;
 				}
-				if (price < 0) {
-					event.getPlayer().sendMessage("This block cannot be bought");
+				
+				if (event.getAction() == Action.RIGHT_CLICK_BLOCK){
+					if (price < 0) {
+						event.getPlayer().sendMessage("This block cannot be bought");
+					}
+					else if (economy.chargeMoney(event.getPlayer(), price)) {
+						ItemStack item = new ItemStack(purchaceMaterial, quantity);
+	
+						event.getPlayer().getInventory().addItem(item);
+						event.getPlayer().sendMessage("You just bought "+ quantity + " " +purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
+					}
+					else {
+						event.getPlayer().sendMessage("You need "+ChatColor.GREEN+"$"+price+ChatColor.WHITE+" to buy "+quantity+" "+purchaceMaterial.name());
+					}
 				}
-				else if (economy.chargeMoney(event.getPlayer(), price)) {
-					ItemStack item = new ItemStack(purchaceMaterial, quantity);
-
-					event.getPlayer().getInventory().addItem(item);
-					event.getPlayer().sendMessage("You just bought "+ quantity + " " +purchaceMaterial.name()+" for "+ChatColor.GREEN+"$"+price+ChatColor.WHITE);
-				}
-				else {
-					event.getPlayer().sendMessage("You need "+ChatColor.GREEN+"$"+price+ChatColor.WHITE+" to buy "+quantity+" "+purchaceMaterial.name());
+				else if (event.getAction() == Action.LEFT_CLICK_BLOCK) {
+					if (price > 0) {
+						event.getPlayer().sendMessage("" + quantity + " " + purchaceMaterial.name() + " costs " + ChatColor.GREEN + "$" + price + ChatColor.WHITE);
+					}
+					else {
+						event.getPlayer().sendMessage(purchaceMaterial.name() + " cannot be bought");
+					}
 				}
 				// cancel the event so nothing else happens
 				event.setCancelled(true);

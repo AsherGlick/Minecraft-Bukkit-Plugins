@@ -278,24 +278,61 @@ public class Economy extends JavaPlugin{
 		else if (commandLabel.equalsIgnoreCase("grant")) {
 			if (args.length != 2) {
 				if (player == null) {
-					info(" Correct usage is /grant <money> <player>");
+					info(" Correct usage is /grant <player> <money>");
 				}
 				else {
-					player.sendMessage(" Correct usage is /grant <money> <player>");
+					player.sendMessage(" Correct usage is /grant <player> <money>");
 				}
 			}
 			
 			else if (args.length == 2) {
+				
+				// Get Player Name
+				String target = getFullPlayerName(args[0]);
+				if (target == null) {
+					if (player == null) info ("Player " + args[0] + " not found");
+					else player.sendMessage("Player " + args[0] + " not found");
+					return false;
+				}
+				// Get money to be charged
+				
+				long money = 0;
+				
+				
+				try {
+					money = (long)Long.parseLong(args[1]);
+				}
+				catch (Exception e) {
+					player.sendMessage("Could not compute the number " + args[1]);
+					return false;
+				}
+				
+				
+				// attempt to charge money
 				if (player != null) {
-					if (!player.isOp() && !player.hasPermission("economy.moneygive")) {
-						return false;
+					if (!player.isOp()) {
+						if (!chargeMoney(player.getName(), money)) {
+							player.sendMessage("You do not have "+ChatColor.GREEN+"$" + money + ChatColor.WHITE +" to give to " + target);
+							return false;
+						}
+						else {
+							player.sendMessage("You gave "+ChatColor.GREEN+"$" + money + ChatColor.WHITE + " to give to " + target);
+						}
 					}
 				}
-				String target = getFullPlayerName(args[1]);
-				if (target == null) return false;
-				long money = (long)Long.parseLong(args[0]);
+				
+				
+				
 				giveMoney(target, money);
 				
+				Player recipient = getServer().getPlayer(target);
+				if (recipient != null) {
+					String donersName = "";
+					if (player == null) donersName = "The Server";
+					else donersName = player.getName();
+					
+					recipient.sendMessage("You recieved "+ChatColor.GREEN+"$"+money+ChatColor.WHITE+" from "+ donersName);
+				}			
 			}
 		}
 		else if (commandLabel.equalsIgnoreCase("")){
@@ -307,14 +344,12 @@ public class Economy extends JavaPlugin{
 	/**************************** GET FULL PLAYER NAME ****************************\
 	| This is a helper function for the commands when trying to find a player.     |
 	| if a player is not found it returns null                                     |
-	|                                                                              |
-	| TODO: find offline players as well as online players                         |
 	\******************************************************************************/
 	public String getFullPlayerName (String name) {
-		String playername = "";
+		String playername = name;
 		Player findplayer = Bukkit.getServer().getPlayer(name);
 		if (findplayer == null){
-			info(" No online player found by that name");
+			info(" No online player found by the name " + name);
 			//return null;
 		}
 		else {
@@ -459,7 +494,7 @@ public class Economy extends JavaPlugin{
 		
 		if (playerMoney >= money) {
 			playerBanks.put(player, playerMoney-money);
-			info (player+" was charged $"+money);
+			info (" "+	player+" was charged $"+money);
 			if (money > moneyDeadZone){
 				saveMoney();
 			}
@@ -474,6 +509,7 @@ public class Economy extends JavaPlugin{
 	\******************************************************************************/
 	public boolean giveMoney (Player player,long money) {return giveMoney(player.getName(),money);}
 	public boolean giveMoney (String player,long money) {
+		info (" "+	player+" was given $"+money);
 		setMoney(player,getMoney(player)+money);
 		if (money > moneyDeadZone){
 			saveMoney();
