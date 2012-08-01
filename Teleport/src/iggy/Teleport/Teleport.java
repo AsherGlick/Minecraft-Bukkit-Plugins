@@ -49,6 +49,11 @@ public class Teleport extends JavaPlugin {
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
+	
+	
+	
+	ChatColor deactivatedWarpColor = ChatColor.DARK_PURPLE; 
+	ChatColor activatedWarpColor = ChatColor.LIGHT_PURPLE;
 	/********************************* LOAD CITIES ********************************\
 	|
 	\******************************************************************************/
@@ -316,7 +321,7 @@ public class Teleport extends JavaPlugin {
 			info ("New warp creation activated");
 		}
   //////////////////////////////////////////////////////////////////////////////
- ////////////////////////////////// COMMANDS //////////////////////////////////
+ ////////////////////////////////// COMMANDS ////////////////////////////////// 
 //////////////////////////////////////////////////////////////////////////////	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = null;
@@ -324,8 +329,10 @@ public class Teleport extends JavaPlugin {
 			player = (Player) sender;
 		}
 		
-		
-		if (commandLabel.equalsIgnoreCase("globalWarpList")) {
+		/******************************* LIST ALL WARPS *******************************\
+		| This command lists all of the warps that the server has regestered           |
+		\******************************************************************************/
+		if (commandLabel.equalsIgnoreCase("warplist")) {
 			String output = new String();
 			String differentColor = new String();
 			String defaultColor = new String();
@@ -334,19 +341,44 @@ public class Teleport extends JavaPlugin {
 				defaultColor = "\033[0m";
 			}
 			else {
-				differentColor = ChatColor.DARK_PURPLE.toString();
+				differentColor = deactivatedWarpColor.toString();
 				defaultColor = ChatColor.WHITE.toString();
 			}
 			for (Entry<String, Location> warpPlace : cityTeleports.entrySet()) {
-				output += differentColor + warpPlace.getKey() + defaultColor + ", ";
+				if (player == null) {
+					output += differentColor + warpPlace.getKey() + defaultColor + ", ";
+				}
+				else {
+					if ( playerActivations.get(player.getName()).contains(warpPlace.getKey()) ) {
+						output += activatedWarpColor + warpPlace.getKey() + defaultColor + ", ";
+					}
+					else {
+						output += differentColor + warpPlace.getKey() + defaultColor + ", ";
+					}
+				}
 			}
 			if (player == null) { info (output); }
 			else { player.sendMessage(output); }
 		}
 		
+		/// past here only players can enter commands ///
 		if (player == null) {
 			this.logger.info("This command can only be run by a player");
 			return false;
+		}
+		/******************************** LIST MY WARPS *******************************\
+		| This function will list all of the warps that you have activated, but not    |
+		| the ones that you have not activated.                                        |
+		\******************************************************************************/
+		if (commandLabel.equalsIgnoreCase("mywarps")) {
+			List<String> activations = playerActivations.get(player.getName());
+			String warpOutput = "Activated Warps: ";
+			for (String warpName : activations) {
+				warpOutput += activatedWarpColor + warpName + ", ";
+			}
+			player.sendMessage(warpOutput);
+			
+			
 		}
 		/********************************* CREATE WARP ********************************\
 		| 
@@ -379,13 +411,46 @@ public class Teleport extends JavaPlugin {
 		| The command teleports a player to the location they specified                |
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("warp")){
+			World currentWorld = player.getWorld();
+			if (!(currentWorld == getServer().getWorld("world") || currentWorld == getServer().getWorld("world_nether"))) {
+				player.sendMessage("You can only warp from the overworld and the nether");
+				return false;
+			}
+			
 			if ( args.length == 1) {
-				if (playerActivations.get(player.getName()).contains(args[0])) {
-					//attempt to teleport the player
-					warp(player,args[0]);
-					player.sendMessage("Warping to "+args[0]);
-				} else {
-					player.sendMessage("You have not visited this warp, or this warp does not exist");
+				List<String> matches = findMatch (args[0]);
+				
+				// if there is only one match: warp there
+				if (matches.size() == 1) {
+					String match = matches.get(0);
+					if (playerActivations.get(player.getName()).contains(match)) {
+						//attempt to teleport the player
+						warp(player,match);
+					} else {
+						player.sendMessage("You have not activated the "+match+"  warp");
+					}
+				}
+				
+				// if there are no matches 
+				else if (matches.size() == 0) {
+					player.sendMessage("Cannot find the " + deactivatedWarpColor + args[0] + ChatColor.WHITE +" warp");
+				}
+				
+				// Otherwise there are many warps
+				else {
+					String warpOutput = "Found Multiple Warps: ";
+					for (String match : matches) {
+						if (playerActivations.get(player.getName()).contains(match)) {
+							warpOutput += activatedWarpColor + match;
+						}
+						else {
+							warpOutput += deactivatedWarpColor + match;
+						}
+						warpOutput += ChatColor.WHITE;
+						warpOutput += ", ";
+					
+					}
+					player.sendMessage(warpOutput);
 				}
 			}
 			else {
@@ -395,7 +460,7 @@ public class Teleport extends JavaPlugin {
 		}
 		/****************************** REFRESH / RELOAD ******************************\
 		| 
-		\******************************************************************************/
+		\*****************************************************************************
 		if (commandLabel.equalsIgnoreCase("refresh")||commandLabel.equalsIgnoreCase("re")) {
 			Location myLocation = player.getLocation();
 			
@@ -404,7 +469,7 @@ public class Teleport extends JavaPlugin {
 			
 			player.teleport(myLocation);
 		}
-		
+		*/
 		if (commandLabel.equalsIgnoreCase("forcewarp")) {
 			if (!player.isOp()) {
 				player.sendMessage("Stop trying to cheat");
@@ -436,20 +501,25 @@ public class Teleport extends JavaPlugin {
 				return false;
 			}
 			player.teleport(warpLocation);
-			
-		}
-		
-		if (commandLabel.equalsIgnoreCase("warplist")) {
-			String output = new String();
-			
-			List <String> warpLocations = playerActivations.get(player.getName());
-			for (String warpPlace : warpLocations) {
-				output += warpPlace+", ";
-			}
-			player.sendMessage(output);
 		}
 		return false;
 	}
+	
+	
+	public List<String> findMatch (String cityname) {
+		
+		List<String> matches =  new ArrayList<String>();
+		
+		// 
+		for (Entry<String, Location> warpPlace : cityTeleports.entrySet()) {
+			if (warpPlace.getKey().substring(0, cityname.length()).equals(cityname)) {
+				matches.add(warpPlace.getKey());
+			}
+		}
+
+		return matches;
+	}
+	
 	// queue for teleporters
 	public Queue<Player>   teleportingPlayerQueue = new LinkedList<Player>();
 	public Queue<Location> teleportingDestinationQueue = new LinkedList<Location>();
@@ -459,7 +529,7 @@ public class Teleport extends JavaPlugin {
 	//
 	public void warp (Player player, String cityname){
 		Date nowdate = new Date();
-		Date thendate = lastWarpTime.put(player, nowdate);
+		Date thendate = lastWarpTime.get(player);
 		
 		
 		
@@ -471,9 +541,22 @@ public class Teleport extends JavaPlugin {
 		}
 			
 		if ((nowtime - thentime) < 6000) {
-			player.sendMessage("You must wait to teleport");
+			int secondsRemaining = (int) (6-(nowtime - thentime)/1000);
+			String s = "";
+			
+			if (secondsRemaining != 1) {
+				s = "s";
+			}
+			
+			player.sendMessage("You must wait " + ChatColor.AQUA + secondsRemaining + ChatColor.WHITE + " second"+s+" to "+ChatColor.AQUA+"teleport" + ChatColor.WHITE);
 			return;
 		}
+		
+		else {
+			player.sendMessage(ChatColor.AQUA + "Now warping to " + activatedWarpColor + cityname + ChatColor.WHITE);
+		}
+		
+		lastWarpTime.put(player, nowdate);
 		
 		teleportingPlayerQueue.offer(player);
 		teleportingDestinationQueue.offer(cityTeleports.get(cityname));

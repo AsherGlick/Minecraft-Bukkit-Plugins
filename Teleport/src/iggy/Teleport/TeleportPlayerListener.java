@@ -187,7 +187,7 @@ public class TeleportPlayerListener implements Listener {
 				
 				Block block = player.getWorld().getBlockAt(oldPosition);
 				player.sendBlockChange(oldPosition, block.getType(), block.getData());
-				player.sendMessage("Teleport Interrupted, you cannot move while you are teleporting");
+				player.sendMessage(ChatColor.AQUA+"Teleport Interrupted"+ChatColor.WHITE+", you cannot move while you are teleporting");
 			}
 		}
 	}
