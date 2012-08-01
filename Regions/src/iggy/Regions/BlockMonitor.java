@@ -69,33 +69,33 @@ public class BlockMonitor implements Listener{
 	//Called when a block is broken by a player. 
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void stopBreak (BlockBreakEvent event){
-		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
+		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer())); }
 	}
 	//Called when a block is destroyed as a result of being burnt by fire. 
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void stopBurn (BlockBurnEvent event){
-		event.setCancelled(shouldCancel(event.getBlock().getLocation(),null));
+		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlock().getLocation(),null)); }
 	}
 	//Called when a block is ignited
 	@EventHandler (priority = EventPriority.HIGHEST)
 	public void stopFire (BlockIgniteEvent event){
-		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
+		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer())); }
 	}
  	//Called when a block is placed by a player. 
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void stopBuild (BlockPlaceEvent event) {
- 		event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer()));
+ 		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlock().getLocation(),event.getPlayer())); }
 	}
  	
  	//Called when a bucket is placed
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void stopEmptyBuckets (PlayerBucketEmptyEvent event){
- 		event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer()));
+ 		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer())); }
  	}
  	
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void stopFillBuckets (PlayerBucketFillEvent event){
- 		event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer()));
+ 		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer())); }
  	} 
  	
  	/******************************** SHOULD CANCEL *******************************\
