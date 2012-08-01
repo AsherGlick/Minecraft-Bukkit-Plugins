@@ -41,20 +41,20 @@ public class Flight extends JavaPlugin{
 					Player player = getServer().getPlayer(entry.getKey());
 					Integer timeLeft = entry.getValue();
 					timeLeft--;
-					if ((timeLeft % 6) == 0) {
+					if ((timeLeft % 6) == 0 && timeLeft != 0) {
 						Integer minutesLeft = timeLeft/6;
 						player.sendMessage("" + minutesLeft + " minutes remaining in flight");
 					}
 					
-					//if (timeLeft <= 5 && timeLeft > 0) {
+					if (timeLeft <= 5 && timeLeft > 0) {
 						player.sendMessage(""+(timeLeft*10)+" seconds remaining in flight");
-					//}
+					}
 					
 					if (timeLeft == 0) {
 						player.sendMessage("Flight Time Up");
 						player.setAllowFlight(false);
+						flightTimeRemaining.remove(entry.getKey());
 					}
-					
 					else {
 						flightTimeRemaining.put(entry.getKey(), timeLeft);
 					}
@@ -90,14 +90,17 @@ public class Flight extends JavaPlugin{
 			
 			if (boots == null) {
 				player.sendMessage(errorMessage);
+				return false;
 			}
 			
 			if (boots.containsEnchantment(Enchantment.PROTECTION_FALL)) {
-				player.sendMessage("Flying Enabled for " + "2" + " minutes");
+					
+				int durration = 10;
+				player.sendMessage("Flying Enabled for " + durration + " minutes");
 				
 				player.setAllowFlight(true);
 				
-				flightTimeRemaining.put(player.getName(), 120);
+				flightTimeRemaining.put(player.getName(), (durration*6) + 1);
 				
 			}
 			else {
