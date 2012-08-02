@@ -360,7 +360,7 @@ public class Teleport extends JavaPlugin {
 		| This command lists all of the warps that the server has regestered           |
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("warplist")) {
-			String output = new String();
+			String output = "";
 			String differentColor = new String();
 			String defaultColor = new String();
 			if (player == null) {
@@ -399,6 +399,10 @@ public class Teleport extends JavaPlugin {
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("mywarps")) {
 			List<String> activations = playerActivations.get(player.getName());
+			if (activations == null) {
+				player.sendMessage("You have no "+ChatColor.AQUA+"warps" + ChatColor.WHITE);
+				return false;
+			}
 			String warpOutput = "Activated Warps: ";
 			for (String warpName : activations) {
 				warpOutput += activatedWarpColor + warpName + ", ";
@@ -412,7 +416,7 @@ public class Teleport extends JavaPlugin {
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("createwarp")){
 			if (player.isOp() || (player.hasPermission("teleport.createwarp"))){
-				if (regions.isEnabled()) {
+				if (regions != null && regions.isEnabled()) {
 					ItemStack item = new ItemStack(Material.SIGN);
 					player.getInventory().addItem(item);
 					Position p = new Position(player.getLocation());
@@ -619,7 +623,7 @@ public class Teleport extends JavaPlugin {
 			}
 		}, 120L);
 	}
-	//////////////////////////////////////////////////////////////////////////////
+  //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 	public void info(String input) {
