@@ -5,6 +5,7 @@ import java.util.Map;
 import java.util.Map.Entry;
 import java.util.logging.Logger;
 
+import org.bukkit.ChatColor;
 import org.bukkit.Location;
 import org.bukkit.Material;
 //import org.bukkit.World;
@@ -80,7 +81,7 @@ public class Modmode extends JavaPlugin{
 		}
 		
 		if (!player.isOp()) {
-			player.sendMessage("Stop trying to cheat!");
+			player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
 		}
 		
 		//World world = player.getWorld();
@@ -109,9 +110,21 @@ public class Modmode extends JavaPlugin{
 				location.add(Math.sin(Math.PI*deg/180)*distance, 0, Math.cos(Math.PI*deg/180)*distance);
 				location.setY(player.getWorld().getHighestBlockYAt(location));
 				
-				
 				player.getWorld().strikeLightningEffect(location);
 			}
+		}
+		
+		if (commandLabel.equalsIgnoreCase("OPEN")) {
+			if (args.length != 1) {
+				player.sendMessage("Correct usage /open <playername>");
+				return false;
+			}
+			Player target = getServer().getPlayer(args[0]);
+			if (target == null) {
+				player.sendMessage(args[0] + " not found online");
+				return false;
+			}
+			player.openInventory(target.getInventory());
 		}
 		return false;
 	}

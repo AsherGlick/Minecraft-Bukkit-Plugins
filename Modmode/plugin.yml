@@ -7,5 +7,8 @@ commands:
   godmode:
     description: become strong enough to deal with your enemies 
   rage:
-    description: call fourth the power of the hevans
-
+    description: call fourth the power of the heavens
+  open:
+    description: opens a players inventory
+  walker:
+    description: disapear blocks
