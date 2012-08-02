@@ -2,8 +2,8 @@
 <classpath>
 	<classpathentry kind="src" path="src"/>
 	<classpathentry kind="con" path="org.eclipse.jdt.launching.JRE_CONTAINER"/>
-	<classpathentry kind="lib" path="/home/elhim/Code/projects/MinecraftPlugins/dynmap.jar"/>
-	<classpathentry kind="lib" path="/home/elhim/Code/projects/MinecraftPlugins/craftbukkit.jar"/>
 	<classpathentry combineaccessrules="false" kind="src" path="/Minecraft-Economy"/>
+	<classpathentry kind="lib" path="/Minecraft-Jars/craftbukkit.jar"/>
+	<classpathentry kind="lib" path="/Minecraft-Jars/dynmap.jar"/>
 	<classpathentry kind="output" path="bin"/>
 </classpath>
