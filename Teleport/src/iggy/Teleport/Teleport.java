@@ -6,6 +6,7 @@ import iggy.Regions.Regions;
 import java.util.ArrayList;
 import java.util.Date;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.LinkedList;
 import java.util.List;
@@ -23,6 +24,7 @@ import org.bukkit.World;
 import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -61,10 +63,21 @@ public class Teleport extends JavaPlugin {
 		cityTeleports.clear();
 		cityActivators.clear();
 		//Load all the city names
-		Set <String> cities = this.getConfig().getConfigurationSection("city").getKeys(false);
+		ConfigurationSection cityconfiguration = this.getConfig().getConfigurationSection("city");
+		
+		Set <String> cities = null;
+		
+		if (cityconfiguration == null) {
+			severe("The list of teleport citys is missing or corrupted: recreating list");
+			severe("If this is the first time runing this plugin do not worry about this error");
+			cities = new HashSet<String>();
+		}
+		else {
+			cities = cityconfiguration.getKeys(false);
+		}
 		
 		if (cities == null) {
-			this.logger.severe(pluginTitle+" Failed to read the Configuration File");
+			severe("Failed to read the Configuration File");
 			return;
 		}
 		
@@ -79,10 +92,11 @@ public class Teleport extends JavaPlugin {
 	        
 	        
 	        // LOAD TELEPORT
+	        
 	        World warpWorld = this.getServer().getWorld(this.getConfig().getString("city."+cityName+".warp.world"));
 	        
 	        if (warpWorld == null) {
-	        	severe(" Failed to find the world for "+cityName+"'s warp on the server");
+	        	severe("Failed to find the world for "+cityName+"'s warp on the server");
 	        	continue;
 	        }
 	        
@@ -98,7 +112,7 @@ public class Teleport extends JavaPlugin {
 	        World activatorWorld = this.getServer().getWorld(this.getConfig().getString("city."+cityName+".activator.world"));
 	        
 	        if (activatorWorld == null){
-	        	severe(" Failed to find the world for "+cityName+"'s activator on the server");
+	        	severe("Failed to find the world for "+cityName+"'s activator on the server");
 	        	continue;
 	        }
 	        
@@ -112,7 +126,7 @@ public class Teleport extends JavaPlugin {
 	        
 	        
 	    }
-		info(" Loaded \033[0;32m" + String.valueOf(cities.size()) + "\033[0m Cities \033[0;35m"+cities.toString() + "\033[0m");
+		info("Loaded \033[0;32m" + String.valueOf(cities.size()) + "\033[0m Cities \033[0;35m"+cities.toString() + "\033[0m");
 	}
 	/********************************* SAVE CITIES ********************************\
 	|
@@ -128,7 +142,7 @@ public class Teleport extends JavaPlugin {
 			
 			String cityName = pairs.getKey();
 			
-			logger.info("Saving warps for :"+cityName);
+			info("Saving warps for :"+cityName);
 			
 			
 			// Set warp
@@ -146,7 +160,7 @@ public class Teleport extends JavaPlugin {
 			
 			String cityName = pairs.getValue();
 			
-			logger.info("Saving activators for :"+cityName);
+			info("Saving activators for :"+cityName);
 			
 			// Set Activator
 			this.getConfig().set("city."+cityName+".activator.world", pairs.getKey().getWorld().getName());
@@ -165,7 +179,7 @@ public class Teleport extends JavaPlugin {
 		cityTeleports.put(city, warp);
 		saveCities();
 		this.saveConfig();
-		this.logger.info(pluginTitle + " "+city+" was created");
+		info(city+" was created");
 	}
 	/****************************** LOAD ACTIVATIONS ******************************\
 	|
@@ -173,10 +187,23 @@ public class Teleport extends JavaPlugin {
 	public void loadActivations() {
 		playerActivations.clear();
 		
-		Set <String> players = this.getConfig().getConfigurationSection("player").getKeys(false);
+		Set <String> players = null;
+		
+		ConfigurationSection playersconfiguration = this.getConfig().getConfigurationSection("player");
+		if (playersconfiguration == null) {
+			severe("The list of players and activations is missing or corrupted: recreating list");
+			severe("If this is the first time runing this plugin do not worry about this error");
+			players = new HashSet<String>();
+		}
+		else {
+			players = playersconfiguration.getKeys(false);
+		}
+		
+		
+		
 		
 		if (players == null) {
-			this.logger.severe(pluginTitle + " Failed to read the Configuration File");
+			severe("Failed to read the Configuration File");
 		}
 		
 		// iterate through the players
@@ -187,12 +214,12 @@ public class Teleport extends JavaPlugin {
 			List<String> activations = this.getConfig().getStringList("player."+playerName);
 			
 			if (activations == null) {
-				this.logger.severe(pluginTitle + " \033[0;31mFailed to read the Configuration File\033[0m");
+				severe("Failed to read the Configuration File for " + playerName);
 			}
 			
 			playerActivations.put(playerName, activations);
 		}
-		this.logger.info(pluginTitle+" Loaded \033[0;32m" + String.valueOf(players.size()) + "\033[0m Players \033[0;35m"+players.toString() + "\033[0m");
+		info("Loaded \033[0;32m" + String.valueOf(players.size()) + "\033[0m Players \033[0;35m"+players.toString() + "\033[0m");
 	}
 	/****************************** SAVE ACTIVATIONS ******************************\
 	|
@@ -203,7 +230,7 @@ public class Teleport extends JavaPlugin {
 		Iterator<Entry<String, List<String>>> it = playerActivations.entrySet().iterator();
 		
 		if (it == null){
-			this.logger.severe(pluginTitle + "\033[0;32mFailed to save configuration file \033[0m(playerActivations iterator is null)");
+			severe("Failed to save configuration file (playerActivations iterator is null)");
 			return;
 		}
 		
@@ -212,7 +239,7 @@ public class Teleport extends JavaPlugin {
 			
 			String playerName = pairs.getKey();
 			
-			logger.info(pluginTitle+"Saving player activations for \033[0;32m"+playerName+"\033[0m");
+			info("Saving player activations for \033[0;32m"+playerName+"\033[0m");
 			
 			this.getConfig().set("player."+playerName,pairs.getValue());
 		}
@@ -239,7 +266,7 @@ public class Teleport extends JavaPlugin {
 		
 		saveActivations();
 		this.saveConfig();
-		this.logger.info(pluginTitle + player + " activated " + city);
+		info(player + " activated " + city);
 		return true;
 	}
 	
@@ -285,7 +312,7 @@ public class Teleport extends JavaPlugin {
 		else {
 			activateRegions();
 		}
-		this.logger.info(pluginTitle+ " version " + pdFile.getVersion() +" is enabled");
+		info("version " + pdFile.getVersion() +" is enabled");
 	}
 	/********************************* ON DISABLE *********************************\
 	|
@@ -295,7 +322,7 @@ public class Teleport extends JavaPlugin {
 		saveCities();
 		saveActivations();
 		this.saveConfig();
-		this.logger.info(pluginTitle + " version " + pdFile.getVersion() +" is disabled");
+		info("version " + pdFile.getVersion() +" is disabled");
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////// WAIT FOR OTHER PLUGINS ///////////////////////////
@@ -363,7 +390,7 @@ public class Teleport extends JavaPlugin {
 		
 		/// past here only players can enter commands ///
 		if (player == null) {
-			this.logger.info("This command can only be run by a player");
+			info("This command can only be run by a player");
 			return false;
 		}
 		/******************************** LIST MY WARPS *******************************\
@@ -596,9 +623,9 @@ public class Teleport extends JavaPlugin {
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
 	public void info(String input) {
-		this.logger.info(pluginTitle + input);
+		this.logger.info("  "+pluginTitle + " " +input);
 	}
 	public void severe (String input) {
-		this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");
+		this.logger.severe(pluginTitle+" \033[31m"+input+"\033[0m");
 	}
 }
