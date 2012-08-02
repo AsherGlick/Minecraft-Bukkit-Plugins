@@ -11,9 +11,13 @@ public class AntiCreeper extends JavaPlugin{
 	public final Logger logger = Logger.getLogger("Minecraft");
 	public final CreeperBlocker creeperBlocker = new CreeperBlocker();
 	
+	PluginDescriptionFile pdFile;
+	String pluginName;
+	String pluginTitle;
+	
+	
 	public void onDisable() {
-		PluginDescriptionFile pdFile = this.getDescription();
-		this.logger.info(pdFile.getName() + " is now disabled");
+		info(" is now disabled");
 	}
 		
 	@Override
@@ -21,7 +25,25 @@ public class AntiCreeper extends JavaPlugin{
 		PluginManager pm = getServer().getPluginManager();
 		pm.registerEvents(this.creeperBlocker, this);
 		
-		PluginDescriptionFile pdFile = this.getDescription();
-		this.logger.info(pdFile.getName() + " version " + pdFile.getVersion() +" is enabled");
+		
+		pdFile = this.getDescription();
+		pluginName = pdFile.getName();
+		pluginTitle = "[\033[0;32m"+pluginName+"\033[0m]";
+		
+		
+		
+		info(" version " + pdFile.getVersion() +" is enabled");
 	}
+	
+	
+  //////////////////////////////////////////////////////////////////////////////
+ /////////////////////////////// DISPLAY HELPERS //////////////////////////////
+//////////////////////////////////////////////////////////////////////////////
+	public void info(String input) {
+		this.logger.info("  "+pluginTitle + input);
+	}
+	public void severe (String input) {
+		this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");
+	}
+	
 }
