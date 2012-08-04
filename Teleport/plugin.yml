@@ -1,6 +1,6 @@
 name: Transport
 main: iggy.Transport.Transport
-version: 1.70
+version: 2.9
 description: >
              Different modes of transportation
 commands:

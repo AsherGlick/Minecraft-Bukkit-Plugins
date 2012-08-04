@@ -1,6 +1,6 @@
 name: ModMode
 main: iggy.Modmode.Modmode
-version: 2.00
+version: 2.9
 description: >
              admin carnage
 commands:
@@ -10,5 +10,4 @@ commands:
     description: call fourth the power of the heavens
   open:
     description: opens a players inventory
-  walker:
-    description: disapear blocks
+
