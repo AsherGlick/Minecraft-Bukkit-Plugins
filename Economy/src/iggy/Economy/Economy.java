@@ -324,15 +324,19 @@ public class Economy extends JavaPlugin{
 				
 				
 				giveMoney(target, money);
-				player.sendMessage("You gave "+ChatColor.GREEN+"$" + money + ChatColor.WHITE + " to give to " + target);
+				
+				//TODO make this able to send to the server or the player depending on who typed it
+				if (player != null) {
+					player.sendMessage("You gave "+ChatColor.GREEN+"$" + money + ChatColor.WHITE + " to give to " + target);
+				}
 				
 				
 				
 				Player recipient = getServer().getPlayer(target);
 				if (recipient != null) {
 					String donersName = "";
-					if (player == null) donersName = "The Server";
-					else donersName = player.getName();
+					if (player == null) {donersName = "The Server";}
+					else {donersName = player.getName();}
 					
 					recipient.sendMessage("You recieved "+ChatColor.GREEN+"$"+money+ChatColor.WHITE+" from "+ donersName);
 				}			
