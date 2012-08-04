@@ -111,7 +111,7 @@ public class Regions extends JavaPlugin{
 	public void onDisable() {
 		// TODO clear the regions so they don't double, just reset the server for now instead of reloading plugins
 		saveRegions();
-		info(" Version " + pdFile.getVersion() +" is disabled");
+		info("Version " + pdFile.getVersion() +" is disabled");
 	}
 
 	@Override
@@ -167,7 +167,7 @@ public class Regions extends JavaPlugin{
 		if (dynmap.isEnabled()){
 			activatedynmap();
 		}
-		info (" Version " + pdFile.getVersion() +" is enabled");
+		info ("Version " + pdFile.getVersion() +" is enabled");
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// INPUT COMMANDS ///////////////////////////////
@@ -1027,7 +1027,7 @@ public class Regions extends JavaPlugin{
 	| that the plugin that sent the message can easily be identified               |
 	\******************************************************************************/
 	public void info(String input) {
-		this.logger.info(pluginTitle + input);
+		this.logger.info("  "+pluginTitle + " " + input);
 	}
 	
 	/********************************* LOG SEVERE *********************************\
@@ -1036,7 +1036,7 @@ public class Regions extends JavaPlugin{
 	| message instead of an INFO. It also turns the message text red               |
 	\******************************************************************************/
 	public void severe (String input) {
-		this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");
+		this.logger.severe(pluginTitle+" \033[31m"+input+"\033[0m");
 	}
 	
 }
