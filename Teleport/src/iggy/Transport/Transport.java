@@ -723,6 +723,7 @@ public class Transport extends JavaPlugin {
 						flightTimeRemaining.remove(entry.getKey());
 					}
 					else {
+						player.setAllowFlight(true);
 						flightTimeRemaining.put(entry.getKey(), timeLeft);
 					}
 				}
