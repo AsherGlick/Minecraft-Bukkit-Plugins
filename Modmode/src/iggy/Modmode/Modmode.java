@@ -87,6 +87,7 @@ public class Modmode extends JavaPlugin{
 		
 		if (!player.isOp()) {
 			player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
+			return false;
 		}
 		
 		//World world = player.getWorld();
