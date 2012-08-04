@@ -106,7 +106,7 @@ public class Economy extends JavaPlugin{
 		saveMoney();
 		savePrices();
 		// reporth that the plugin is disabled
-		info(" version " + pdFile.getVersion() +" is disabled");
+		info("Version " + pdFile.getVersion() +" is disabled");
 	}
 
 	@Override
@@ -118,7 +118,7 @@ public class Economy extends JavaPlugin{
 		// create shop world
 		shopworld = Bukkit.getServer().getWorld("shopworld");
 		if (shopworld == null){
-			info(" Shopworld not found, creating shopworld");
+			info("Shopworld not found, creating shopworld");
 			WorldCreator worldCreator = new WorldCreator("shopworld");
 			worldCreator.generator(new ShopGenerator());
 			shopworld = worldCreator.createWorld();
@@ -126,7 +126,7 @@ public class Economy extends JavaPlugin{
 			shopworld.setPVP(false);
 			shopworld.setTime(0);
 			shopworld.setSpawnLocation(0, 65, 0);
-			info(" Created shopworld");
+			info("Created shopworld");
 		}
 		// set world variables
 		mainworld = Bukkit.getServer().getWorld("world");
@@ -141,7 +141,7 @@ public class Economy extends JavaPlugin{
 		// activate income events
 		Bukkit.getServer().getPluginManager().registerEvents(incomeEvents, this);
 		// report that the plugin is enabled
-		info(" version " + pdFile.getVersion() +" is enabled");
+		info("Version " + pdFile.getVersion() +" is enabled");
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// INPUT COMMANDS ///////////////////////////////
@@ -161,7 +161,7 @@ public class Economy extends JavaPlugin{
 		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("shop")){
 			if (player == null) {
-				info(" This command can only be run by a player");
+				info("This command can only be run by a player");
 				return false;
 			}
 			else {
@@ -203,7 +203,7 @@ public class Economy extends JavaPlugin{
 		\******************************************************************************/
 		else if (commandLabel.equalsIgnoreCase("price")){
 			if (player == null) {
-				info(" This command can only be run by a player");
+				info("This command can only be run by a player");
 				return false;
 			}
 			// Set the default quantity of the item to be questioned
@@ -252,7 +252,7 @@ public class Economy extends JavaPlugin{
 			// if no player is specified return the caller's balance
 			if (args.length == 0){
 				if (player == null){
-					info(" You need to type in a player name");
+					info("You need to type in a player name");
 				}
 				else {
 					long money = getMoney(player.getName());
@@ -265,7 +265,7 @@ public class Economy extends JavaPlugin{
 					String playername = getFullPlayerName(args[0]);
 					if (playername == null) return false;
 					long money = getMoney(playername);
-					info(" "+playername+" has $"+money);
+					info(playername+" has $"+money);
 				}
 				else if (player.hasPermission("economy.moneymonitor")||player.isOp()) {
 					String playername = getFullPlayerName(args[0]);
@@ -278,7 +278,7 @@ public class Economy extends JavaPlugin{
 		else if (commandLabel.equalsIgnoreCase("grant")) {
 			if (args.length != 2) {
 				if (player == null) {
-					info(" Correct usage is /grant <player> <money>");
+					info("Correct usage is /grant <player> <money>");
 				}
 				else {
 					player.sendMessage(" Correct usage is /grant <player> <money>");
@@ -349,7 +349,7 @@ public class Economy extends JavaPlugin{
 		String playername = name;
 		Player findplayer = Bukkit.getServer().getPlayer(name);
 		if (findplayer == null){
-			info(" No online player found by the name " + name);
+			info("No online player found by the name " + name);
 			//return null;
 		}
 		else {
@@ -368,7 +368,7 @@ public class Economy extends JavaPlugin{
 			this.getConfig().set("banks."+pairs.getKey(), pairs.getValue());
 		}
 		this.saveConfig();
-		info(" Players' accounts saved");
+		info("Players' accounts saved");
 	}
 	public void loadMoney() {
 		playerBanks.clear();
@@ -393,7 +393,7 @@ public class Economy extends JavaPlugin{
 			long money = this.getConfig().getLong("banks."+player);
 			playerBanks.put(player, money);
 		}
-		info(" Players' accounts loaded");
+		info("Players' accounts loaded");
 	}
 	
   //////////////////////////////////////////////////////////////////////////////
@@ -407,7 +407,7 @@ public class Economy extends JavaPlugin{
 			this.getConfig().set("blocks."+pairs.getKey().toString(), pairs.getValue());
 		}
 		this.saveConfig();
-		info(" Block Prices Saved");
+		info("Block Prices Saved");
 	}
 	public void loadPrices() {
 		blockPrices.clear();
@@ -441,7 +441,7 @@ public class Economy extends JavaPlugin{
 		}
 		
 		
-		info(" Block Prices Loaded");
+		info("Block Prices Loaded");
 	}
   //////////////////////////////////////////////////////////////////////////////
  ///////////////////////////// Money Modification /////////////////////////////
@@ -494,7 +494,7 @@ public class Economy extends JavaPlugin{
 		
 		if (playerMoney >= money) {
 			playerBanks.put(player, playerMoney-money);
-			info (" "+	player+" was charged $"+money);
+			info (player+" was charged $"+money);
 			if (money > moneyDeadZone){
 				saveMoney();
 			}
@@ -509,7 +509,7 @@ public class Economy extends JavaPlugin{
 	\******************************************************************************/
 	public boolean giveMoney (Player player,long money) {return giveMoney(player.getName(),money);}
 	public boolean giveMoney (String player,long money) {
-		info (" "+	player+" was given $"+money);
+		info (player+" was given $"+money);
 		setMoney(player,getMoney(player)+money);
 		if (money > moneyDeadZone){
 			saveMoney();
@@ -522,9 +522,9 @@ public class Economy extends JavaPlugin{
 	/************************************ INFO ************************************\
 	| Info will display to the terminal prefacing it with the colored plugin title |
 	\******************************************************************************/
-	public void info(String input) {this.logger.info(pluginTitle + input);}
+	public void info(String input) {this.logger.info("  " + pluginTitle + " " + input);}
 	/*********************************** SEVERE ***********************************\
 	| Severe will display a severe message to the terminal window and color it red |
 	\******************************************************************************/
-	public void severe (String input) {this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");}
+	public void severe (String input) {this.logger.severe(pluginTitle+" \033[31m"+input+"\033[0m");}
 }
