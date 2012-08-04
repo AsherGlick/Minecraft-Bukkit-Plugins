@@ -311,12 +311,12 @@ public class Economy extends JavaPlugin{
 				// attempt to charge money
 				if (player != null) {
 					if (!player.isOp()) {
+						if (money < 0) {
+							player.sendMessage("You cannot steal money from other players");
+						}
 						if (!chargeMoney(player.getName(), money)) {
 							player.sendMessage("You do not have "+ChatColor.GREEN+"$" + money + ChatColor.WHITE +" to give to " + target);
 							return false;
-						}
-						else {
-							player.sendMessage("You gave "+ChatColor.GREEN+"$" + money + ChatColor.WHITE + " to give to " + target);
 						}
 					}
 				}
@@ -324,6 +324,9 @@ public class Economy extends JavaPlugin{
 				
 				
 				giveMoney(target, money);
+				player.sendMessage("You gave "+ChatColor.GREEN+"$" + money + ChatColor.WHITE + " to give to " + target);
+				
+				
 				
 				Player recipient = getServer().getPlayer(target);
 				if (recipient != null) {
