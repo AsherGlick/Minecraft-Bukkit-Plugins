@@ -6,6 +6,8 @@ description: >
 commands:
   warp:
     description: warp to a city you have visited
+  spawn:
+    description: warp to your bed spawn
   createwarp:
     description: Lets an admin create a warp
   forcewarp:

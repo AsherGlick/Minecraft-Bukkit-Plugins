@@ -25,6 +25,7 @@ import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.configuration.ConfigurationSection;
+import org.bukkit.enchantments.Enchantment;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -326,6 +327,9 @@ public class Transport extends JavaPlugin {
 		else {
 			activateRegions();
 		}
+		
+		startFlyerCounter();
+		
 		info("version " + pdFile.getVersion() +" is enabled");
 	}
 	/********************************* ON DISABLE *********************************\
@@ -511,7 +515,7 @@ public class Transport extends JavaPlugin {
 				player.sendMessage("You can only warp from the overworld and the nether");
 				return false;
 			}
-			
+			warp(player,"spawn");
 		}
 		/****************************** REFRESH / RELOAD ******************************\
 		| 
@@ -525,6 +529,43 @@ public class Transport extends JavaPlugin {
 			player.teleport(myLocation);
 		}
 		*/
+		
+		if (commandLabel.equalsIgnoreCase("fly")) {
+			
+			ItemStack boots = player.getInventory().getBoots();
+			
+			String errorMessage = "You are not wearing boots with featherfall";
+			
+			if (boots == null) {
+				player.sendMessage(errorMessage);
+				return false;
+			}
+			
+			if (boots.containsEnchantment(Enchantment.PROTECTION_FALL)) {
+					
+				// durration is the number of minutes the player can fly for
+				int durration = 5;
+				// change the durration depending on what type of boots the player is wearing
+				if (boots.getType() == Material.DIAMOND_BOOTS)      { durration = 30;}
+				else if (boots.getType() == Material.GOLD_BOOTS)    { durration = 20;}
+				else if (boots.getType() == Material.IRON_BOOTS)    { durration = 15;}
+				else if (boots.getType() == Material.LEATHER_BOOTS) { durration = 5;}
+				
+				// Display
+				player.sendMessage("You can now fly for the next " + durration + " minutes");
+				
+				player.setAllowFlight(true);
+				
+				flightTimeRemaining.put(player.getName(), (durration*6) + 1);				
+				// remove the boots from the game
+				player.getInventory().setBoots(new ItemStack(Material.AIR,0));
+				
+			}
+			else {
+				player.sendMessage(errorMessage);
+			}
+		}
+		
 		if (commandLabel.equalsIgnoreCase("forcewarp")) {
 			if (!player.isOp()) {
 				player.sendMessage("Stop trying to cheat");
