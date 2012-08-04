@@ -46,6 +46,9 @@ public class Modmode extends JavaPlugin{
 			public void run() {
 				for (Entry<Player,Double> p : lightningDegree.entrySet()) {
 					Player player = p.getKey();
+					
+					info (player.getName() + " is in GODMODE at x=" + player.getLocation().getBlockX() + " z="+player.getLocation().getBlockZ());
+					
 					double deg = (double)p.getValue();
 					if (deg >= 360) deg -= 360;
 					
@@ -64,7 +67,7 @@ public class Modmode extends JavaPlugin{
 			}
 		}, 2L, 2L);
 		
-		info (" Version " + pdFile.getVersion() +" is enabled");
+		info ("Version " + pdFile.getVersion() +" is enabled");
 	}
 	
 
@@ -80,6 +83,8 @@ public class Modmode extends JavaPlugin{
 			return false;
 		}
 		
+		info (player.getName() + " tried to run the command " + commandLabel);
+		
 		if (!player.isOp()) {
 			player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
 		}
@@ -90,11 +95,14 @@ public class Modmode extends JavaPlugin{
 			if (lightningDegree.containsKey(player)){
 				lightningDegree.remove(player);
 				player.sendMessage("Godmode deactivated");
+				info (player.getName() + "Left Godmode at x=" + player.getLocation().getBlockX() + " z="+player.getLocation().getBlockZ());
 			}
 			else {
+				info (player.getName() + "Entered Godmode at x=" + player.getLocation().getBlockX() + " z="+player.getLocation().getBlockZ());
 				player.sendMessage("Godmode activated");
 				lightningDegree.put(player, 0D);
 				if (player.getItemInHand().getType() == Material.DIAMOND_SWORD) {
+					info (player.getName() + " recieved the admin sword");
 					player.getItemInHand().addUnsafeEnchantment(Enchantment.DAMAGE_ALL, 999);
 					player.getItemInHand().addUnsafeEnchantment(Enchantment.DURABILITY, 999);
 					player.getItemInHand().setType(Material.WOOD_SWORD);
@@ -104,6 +112,7 @@ public class Modmode extends JavaPlugin{
 		}
 		
 		if (commandLabel.equalsIgnoreCase("RAGE")) {
+			info (player.getName() + " lighnign raged at x=" + player.getLocation().getBlockX() + " z="+player.getLocation().getBlockZ());
 			for (double deg = 0; deg < 360; deg += 10){
 				Location location = player.getLocation();
 				//location.add(Math.acos(deg)*distance, 0, Math.asin(deg)*distance);
@@ -137,7 +146,7 @@ public class Modmode extends JavaPlugin{
 	| that the plugin that sent the message can easily be identified               |
 	\******************************************************************************/
 	public void info(String input) {
-		this.logger.info(pluginTitle + input);
+		this.logger.info("  " + pluginTitle + " " + input);
 	}
 	
 	/********************************* LOG SEVERE *********************************\
@@ -146,6 +155,6 @@ public class Modmode extends JavaPlugin{
 	| message instead of an INFO. It also turns the message text red               |
 	\******************************************************************************/
 	public void severe (String input) {
-		this.logger.severe(pluginTitle+"\033[31m"+input+"\033[0m");
+		this.logger.severe(pluginTitle+" \033[31m"+input+"\033[0m");
 	}
 }
