@@ -37,25 +37,39 @@ import org.bukkit.plugin.java.JavaPlugin;
 
 public class Transport extends JavaPlugin {
 	public static Transport plugin;
-	public final Logger logger = Logger.getLogger("Minecraft");
 	public final TransportPlayerListener playerListen = new TransportPlayerListener(this);
+	
+	
+	////////////////////////////////// Variables for compass jumping ////////////
 	public Map<Player, Date> lastJump = new HashMap<Player, Date>();
 	
+	
+	
+	////////////////////////////////// Variables for warping ////////////////////
 	public Map<String,Location> cityTeleports = new HashMap<String,Location>();
 	public Map<Location,String> cityActivators = new HashMap<Location,String>();
 	public Map<String,List<String>> playerActivations = new HashMap<String,List<String>>();
-	
 	public String tempCityWarpName = "";
 	public Location tempCityWarpLocation = null;
 	
+	
+	///////////////////////// Variables for flying ////////////////////////////////
+	Map<String, Integer> flightTimeRemaining = new HashMap<String, Integer>();
+	
+	////////////////////////////// File data and IO variables /////////////////////
+	public final Logger logger = Logger.getLogger("Minecraft");
 	PluginDescriptionFile pdFile;
 	String pluginName;
 	String pluginTitle;
-	
-	
-	
 	ChatColor deactivatedWarpColor = ChatColor.DARK_PURPLE; 
 	ChatColor activatedWarpColor = ChatColor.LIGHT_PURPLE;
+	
+	
+	///////////////////////////////////////////////////////////////////////
+	//////////////////////////// Plugins functions ///////////////////////////
+	///////////////////////////////////////////////////////////////
+	
+	
 	/********************************* LOAD CITIES ********************************\
 	|
 	\******************************************************************************/
@@ -489,6 +503,16 @@ public class Transport extends JavaPlugin {
 			}
 			
 		}
+		
+		
+		if (commandLabel.equalsIgnoreCase("spawn")){
+			World currentWorld = player.getWorld();
+			if (!(currentWorld == getServer().getWorld("world") || currentWorld == getServer().getWorld("world_nether"))) {
+				player.sendMessage("You can only warp from the overworld and the nether");
+				return false;
+			}
+			
+		}
 		/****************************** REFRESH / RELOAD ******************************\
 		| 
 		\*****************************************************************************
@@ -589,8 +613,17 @@ public class Transport extends JavaPlugin {
 		
 		lastWarpTime.put(player, nowdate);
 		
+		
+		Location teleportLocation;
+		if (cityname.equals("spawn")) {
+			teleportLocation = player.getBedSpawnLocation();
+		}
+		else {
+			teleportLocation = cityTeleports.get(cityname);
+		}
+		
 		teleportingPlayerQueue.offer(player);
-		teleportingDestinationQueue.offer(cityTeleports.get(cityname));
+		teleportingDestinationQueue.offer(teleportLocation);
 		teleportingPlayers.put(player, player.getLocation());
 		
 		
@@ -622,6 +655,38 @@ public class Transport extends JavaPlugin {
 				}
 			}
 		}, 120L);
+	}
+	
+	////////////////////////////////////////////////////////////////////////////
+	///////////////////////////////////////////////////////////////////////////
+	////////////////////////////////////////////////////////////////////////////
+	public void startFlyerCounter() {
+		getServer().getScheduler().scheduleSyncRepeatingTask(this, new Runnable() {
+			public void run() {
+				for (Entry<String, Integer> entry : flightTimeRemaining.entrySet()) {
+					Player player = getServer().getPlayer(entry.getKey());
+					Integer timeLeft = entry.getValue();
+					timeLeft--;
+					if ((timeLeft % 6) == 0 && timeLeft != 0) {
+						Integer minutesLeft = timeLeft/6;
+						player.sendMessage("" + minutesLeft + " minutes remaining in flight");
+					}
+					
+					if (timeLeft <= 5 && timeLeft > 0) {
+						player.sendMessage(""+(timeLeft*10)+" seconds remaining in flight");
+					}
+					
+					if (timeLeft == 0) {
+						player.sendMessage("Flight Time Up");
+						player.setAllowFlight(false);
+						flightTimeRemaining.remove(entry.getKey());
+					}
+					else {
+						flightTimeRemaining.put(entry.getKey(), timeLeft);
+					}
+				}
+			}
+		}, 0L, 200L);
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
