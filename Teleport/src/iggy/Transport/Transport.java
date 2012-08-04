@@ -1,4 +1,4 @@
-package iggy.Teleport;
+package iggy.Transport;
 
 import iggy.Regions.Position;
 import iggy.Regions.Regions;
@@ -35,10 +35,10 @@ import org.bukkit.plugin.Plugin;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
-public class Teleport extends JavaPlugin {
-	public static Teleport plugin;
+public class Transport extends JavaPlugin {
+	public static Transport plugin;
 	public final Logger logger = Logger.getLogger("Minecraft");
-	public final TeleportPlayerListener playerListen = new TeleportPlayerListener(this);
+	public final TransportPlayerListener playerListen = new TransportPlayerListener(this);
 	public Map<Player, Date> lastJump = new HashMap<Player, Date>();
 	
 	public Map<String,Location> cityTeleports = new HashMap<String,Location>();

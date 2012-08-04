@@ -1,8 +1,8 @@
-name: Teleport
-main: iggy.Teleport.Teleport
-version: 1.37
+name: Transport
+main: iggy.Transport.Transport
+version: 1.70
 description: >
-             Jumping and Warping
+             Different modes of transportation
 commands:
   warp:
     description: warp to a city you have visited
@@ -14,3 +14,5 @@ commands:
     description: alias for globalWarpList 
   mywarps:
     description: Lists all the warps you have activated
+  fly:
+    description: Allows the user to fly for a period of time by sacrificing an item

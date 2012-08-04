@@ -1,4 +1,4 @@
-package iggy.Teleport;
+package iggy.Transport;
 
 import java.util.Date;
 import java.util.List;
@@ -21,10 +21,10 @@ import org.bukkit.event.player.PlayerMoveEvent;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.PlayerInventory;
 
-public class TeleportPlayerListener implements Listener {
-	public static Teleport plugin;
+public class TransportPlayerListener implements Listener {
+	public static Transport plugin;
 	
-	public TeleportPlayerListener (Teleport instance) {
+	public TransportPlayerListener (Transport instance) {
 		plugin = instance;
 		
 	}
