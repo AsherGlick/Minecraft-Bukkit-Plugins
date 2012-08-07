@@ -313,6 +313,7 @@ public class Economy extends JavaPlugin{
 					if (!player.isOp()) {
 						if (money < 0) {
 							player.sendMessage("You cannot steal money from other players");
+							return false;
 						}
 						if (!chargeMoney(player.getName(), money)) {
 							player.sendMessage("You do not have "+ChatColor.GREEN+"$" + money + ChatColor.WHITE +" to give to " + target);
@@ -327,7 +328,7 @@ public class Economy extends JavaPlugin{
 				
 				//TODO make this able to send to the server or the player depending on who typed it
 				if (player != null) {
-					player.sendMessage("You gave "+ChatColor.GREEN+"$" + money + ChatColor.WHITE + " to give to " + target);
+					player.sendMessage("You gave "+ChatColor.GREEN+"$" + money + ChatColor.WHITE + " to " + target);
 				}
 				
 				
