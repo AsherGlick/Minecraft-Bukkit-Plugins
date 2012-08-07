@@ -510,12 +510,13 @@ public class Transport extends JavaPlugin {
 		
 		
 		if (commandLabel.equalsIgnoreCase("spawn")){
-			World currentWorld = player.getWorld();
+			player.sendMessage("This function is disabled until writable books get an API");
+			/*World currentWorld = player.getWorld();
 			if (!(currentWorld == getServer().getWorld("world") || currentWorld == getServer().getWorld("world_nether"))) {
 				player.sendMessage("You can only warp from the overworld and the nether");
 				return false;
 			}
-			warp(player,"spawn");
+			warp(player,"spawn");*/
 		}
 		/****************************** REFRESH / RELOAD ******************************\
 		| 
@@ -608,7 +609,9 @@ public class Transport extends JavaPlugin {
 		
 		// 
 		for (Entry<String, Location> warpPlace : cityTeleports.entrySet()) {
-			if (warpPlace.getKey().substring(0, cityname.length()).equals(cityname)) {
+			int maxLength = cityname.length();
+			if (warpPlace.getKey().length() < maxLength) maxLength = warpPlace.getKey().length();
+			if (warpPlace.getKey().substring(0, maxLength).equals(cityname)) {
 				matches.add(warpPlace.getKey());
 			}
 		}
@@ -658,6 +661,7 @@ public class Transport extends JavaPlugin {
 		Location teleportLocation;
 		if (cityname.equals("spawn")) {
 			teleportLocation = player.getBedSpawnLocation();
+			//player.get
 		}
 		else {
 			teleportLocation = cityTeleports.get(cityname);
