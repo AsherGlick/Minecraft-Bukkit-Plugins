@@ -50,6 +50,7 @@ package iggy.Regions;
 import org.bukkit.Bukkit;
 import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.Material;
 import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -109,8 +110,10 @@ public class BlockMonitor implements Listener{
 		//explosionLocation.getWorld().createExplosion(explosionLocation, 0.0F, false);
 		explosionLocation.getWorld().playEffect(explosionLocation, Effect.SMOKE, 100);
 		for (Block block : event.blockList() ){
-			if (!shouldCancel(block.getLocation(),null)) {
-				block.breakNaturally();
+			Position chunk = new Position(block.getLocation());
+			String chunkName = plugin.chunkNames.get(chunk);
+			if (chunkName != null){
+				block.setType(Material.AIR);
 			}
 		}
  	}
