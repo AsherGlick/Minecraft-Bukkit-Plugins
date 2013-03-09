@@ -48,7 +48,9 @@
 package iggy.Regions;
 
 import org.bukkit.Bukkit;
+import org.bukkit.Effect;
 import org.bukkit.Location;
+import org.bukkit.block.Block;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -57,6 +59,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
  
@@ -96,7 +99,21 @@ public class BlockMonitor implements Listener{
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void stopFillBuckets (PlayerBucketFillEvent event){
  		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer())); }
- 	} 
+ 	}
+ 	
+ 	@EventHandler (priority = EventPriority.HIGHEST)
+ 	public void catchExplosions (EntityExplodeEvent event) { 			
+		plugin.info("Explodesion Detected");
+		event.setCancelled(true);
+		Location explosionLocation = event.getLocation();
+		//explosionLocation.getWorld().createExplosion(explosionLocation, 0.0F, false);
+		explosionLocation.getWorld().playEffect(explosionLocation, Effect.SMOKE, 100);
+		for (Block block : event.blockList() ){
+			if (!shouldCancel(block.getLocation(),null)) {
+				block.breakNaturally();
+			}
+		}
+ 	}
  	
  	/******************************** SHOULD CANCEL *******************************\
  	| This function reads in the position of the block event and the player (if    |
