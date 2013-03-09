@@ -54,8 +54,8 @@ public class Quester extends JavaPlugin{
 		
 		//World world = player.getWorld();
 		
-		if (commandLabel.equalsIgnoreCase("GODMODE")){
-			
+		if (commandLabel.equalsIgnoreCase("completeQuest")){
+			// THis function will check to see if a player has completed a quest
 		}
 		return false;
 	}
