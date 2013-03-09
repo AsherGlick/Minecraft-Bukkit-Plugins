@@ -62,7 +62,6 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
-import org.bukkit.event.entity.EntityEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -125,10 +124,16 @@ public class BlockMonitor implements Listener{
  	}
  	
  	// Protect signs and item frames from damage if they are in plots
- 	
+ 	@EventHandler (priority = EventPriority.HIGHEST)
+ 	public void protectEntities (EntityDamageEvent event) {
+ 		
+ 	}
  	// Protect Item Frames from damage in a plot
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void protectEntities (HangingBreakByEntityEvent event) {
+ 		
+
+ 		
  		// check to see if the item is an item frame? or will it allways be
  		
  		// check to see if the destroyer is a human
@@ -136,9 +141,11 @@ public class BlockMonitor implements Listener{
  			plugin.info("Player Trying to break item frame");
  		}
  		
- 		//shouldCancel(event.getEntity().getLocation(),event.getRemover().getType()
+ 		
+ 		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getEntity().getLocation(),(Player)event.getRemover())); }
+ 		
  		plugin.info("Entity Hanging Event");
- 		event.setCancelled(true);
+ 		//event.setCancelled(true);
  	}
  	
  	/******************************** SHOULD CANCEL *******************************\
