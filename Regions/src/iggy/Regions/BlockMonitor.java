@@ -60,6 +60,7 @@ import org.bukkit.event.block.BlockBreakEvent;
 import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
+import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
@@ -102,6 +103,8 @@ public class BlockMonitor implements Listener{
  		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getBlockClicked().getLocation(),event.getPlayer())); }
  	}
  	
+ 	
+ 	// Handle explosions destroying blocks on claimed area
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void catchExplosions (EntityExplodeEvent event) { 			
 		plugin.info("Explodesion Detected");
@@ -116,6 +119,13 @@ public class BlockMonitor implements Listener{
 				block.setType(Material.AIR);
 			}
 		}
+ 	}
+ 	
+ 	// Protect signs and item frames from damage if they are in plots
+ 	@EventHandler (priority = EventPriority.HIGHEST)
+ 	public void protectEntities (EntityDamageEvent event) {
+ 		plugin.info("Entity Damage Event");
+ 		event.setCancelled(true);
  	}
  	
  	/******************************** SHOULD CANCEL *******************************\
