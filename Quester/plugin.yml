@@ -1,0 +1,8 @@
+name: Quester
+main: iggy.Quester.Quester
+version: 0.1
+description: >
+             Quests and powers for the players
+commands:
+  completequest:
+    description: check to see if a player has completed the given quest before
