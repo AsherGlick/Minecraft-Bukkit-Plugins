@@ -52,6 +52,7 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
 import org.bukkit.event.EventPriority;
@@ -124,8 +125,18 @@ public class BlockMonitor implements Listener{
  	}
  	
  	// Protect signs and item frames from damage if they are in plots
+ 	
+ 	// Protect Item Frames from damage in a plot
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void protectEntities (HangingBreakByEntityEvent event) {
+ 		// check to see if the item is an item frame? or will it allways be
+ 		
+ 		// check to see if the destroyer is a human
+ 		if (event.getRemover().getType() == EntityType.PLAYER) {
+ 			plugin.info("Player Trying to break item frame");
+ 		}
+ 		
+ 		//shouldCancel(event.getEntity().getLocation(),event.getRemover().getType()
  		plugin.info("Entity Hanging Event");
  		event.setCancelled(true);
  	}
