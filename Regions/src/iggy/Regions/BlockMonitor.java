@@ -112,7 +112,7 @@ public class BlockMonitor implements Listener{
 		for (Block block : event.blockList() ){
 			Position chunk = new Position(block.getLocation());
 			String chunkName = plugin.chunkNames.get(chunk);
-			if (chunkName != null){
+			if (chunkName == null){
 				block.setType(Material.AIR);
 			}
 		}
