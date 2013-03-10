@@ -1,5 +1,15 @@
 package iggy.Quester;
 
+import iggy.Regions.Owners;
+import iggy.Regions.Position;
+
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Iterator;
+import java.util.List;
+import java.util.Map;
+import java.util.Map.Entry;
+import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
@@ -47,11 +57,7 @@ public class Quester extends JavaPlugin{
 		if (sender instanceof Player) {
 			player = (Player) sender;
 		}
-		
-		//if (sender instanceof Block) {
-			block = (CraftBlock) sender;
-			//info("Block message");
-		//}
+
 		
 		info(block.getLocation().toString());		
 		info("RAN COMMAND"+sender.getClass().toString()+":"+sender.getName()+":"+sender.toString()+":");
@@ -67,9 +73,43 @@ public class Quester extends JavaPlugin{
 		//World world = player.getWorld();
 		
 		if (commandLabel.equalsIgnoreCase("completeQuest")){
-			// THis function will check to see if a player has completed a quest
+			// This function will check to see if a player has completed a quest
 		}
 		return false;
+	}
+	
+	// A map containing StringQuestList PlayerCompleteSet
+	private Map<String, Set<String>> questList = new HashMap<String,Set<String>>();
+	
+	public void saveQuests() {
+		getConfig().set("quests", "");
+		
+		Map<String,List<String> > formattedQuestList = new HashMap<String,List<String>>();
+		
+		// Format the quest data into an easily saveable format
+		Iterator<Entry<String, Set<String>>> questIterator = questList.entrySet().iterator();
+		while (questIterator.hasNext()){
+			
+			Entry<String, Set<String>> pair = questIterator.next();
+			List <String> completedList = new ArrayList<String>();
+			for (String user : pair.getValue()) {
+				completedList.add(user);
+			}			
+			
+			formattedQuestList.put(pair.getKey(), completedList);
+		}
+		
+		
+		// write the plots by their plotnames at regions.plotname.plots
+		Iterator<Entry<String, List<String>>> formattedQuestIterator = formattedQuestList.entrySet().iterator();
+		while (formattedQuestIterator.hasNext()) {
+			Entry<String, List<String>> pair = formattedQuestIterator.next();
+			
+			getConfig().set("quest."+pair.getKey()+".completed", pair.getValue());
+		}
+		
+		this.saveConfig();
+		info("Quests Saved");
 	}
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
