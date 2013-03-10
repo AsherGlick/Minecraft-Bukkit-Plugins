@@ -3,8 +3,10 @@ package iggy.Quester;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.craftbukkit.v1_4_R1.block.CraftBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -41,16 +43,26 @@ public class Quester extends JavaPlugin{
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = null;
+		CraftBlock block = null;
 		if (sender instanceof Player) {
 			player = (Player) sender;
 		}
 		
-		info (player.getName() + " tried to run the command " + commandLabel);
+		//if (sender instanceof Block) {
+			block = (CraftBlock) sender;
+			//info("Block message");
+		//}
 		
-		if (!player.isOp()) {
-			player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
-			return false;
-		}
+		info(block.getLocation().toString());		
+		info("RAN COMMAND"+sender.getClass().toString()+":"+sender.getName()+":"+sender.toString()+":");
+		//info (player.getName() + " tried to run the command " + commandLabel);
+		
+		//if (!player.isOp()) {
+		//	player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
+		//	return false;
+		//}
+		
+		//player.
 		
 		//World world = player.getWorld();
 		
