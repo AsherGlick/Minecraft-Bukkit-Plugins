@@ -66,8 +66,8 @@ public class Quester extends JavaPlugin{
 		// The complete quest function
 		if (commandLabel.equalsIgnoreCase("completeQuest")){
 			// completeQuest player questname redstonex redstoney restonez
-			if (args.length != 5) {
-				String output = "Correct Usage: /completeQuest <player> <questname> <red stone x> <red stone y> <red stone z>";
+			if (args.length != 5 && args.length != 6) {
+				String output = "Correct Usage: /completeQuest <player> <questname> <red stone x> <red stone y> <red stone z> [repeatable]";
 				if (player != null) player.sendMessage(output);
 				else info(output);
 				return false;
@@ -78,8 +78,14 @@ public class Quester extends JavaPlugin{
 			final int redstonex = Integer.parseInt(args[2]);
 			final int redstoney = Integer.parseInt(args[3]);
 			final int redstonez = Integer.parseInt(args[4]);
+			boolean repeatable = false;
+			if (args.length == 6) {
+				if (args[5] == "yes" || args[5] == "true") {
+					repeatable = true;
+				}
+			}
 			
-			if (completeQuest(playername, questname)) {
+			if (completeQuest(playername, questname) || repeatable) {
 				// Create the restone torch
 				Bukkit.getWorld("world").getBlockAt(redstonex, redstoney, redstonez).setType(Material.REDSTONE_TORCH_ON);
 				
