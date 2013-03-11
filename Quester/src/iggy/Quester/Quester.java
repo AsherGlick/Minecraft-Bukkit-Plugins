@@ -1,8 +1,5 @@
 package iggy.Quester;
 
-import iggy.Regions.Owners;
-import iggy.Regions.Position;
-
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.Iterator;
@@ -13,7 +10,6 @@ import java.util.Set;
 import java.util.logging.Logger;
 
 import org.bukkit.ChatColor;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_4_R1.block.CraftBlock;
@@ -44,8 +40,10 @@ public class Quester extends JavaPlugin{
 		String pluginName = pdFile.getName();
 		pluginTitle = "[\033[2;35m"+pluginName+"\033[0m]";
 		
+		// Activate the on death listener class
 		deathListener = new DeathListener(this);
 		
+		// Output that the plugin has been enabled
 		info ("Version " + pdFile.getVersion() +" is enabled");
 	}
 	
@@ -53,29 +51,26 @@ public class Quester extends JavaPlugin{
 	
 	public boolean onCommand(CommandSender sender, Command cmd, String commandLabel, String[] args) {
 		Player player = null;
-		CraftBlock block = null;
+
+		// Stop non-opped players from running these commands
 		if (sender instanceof Player) {
 			player = (Player) sender;
+			if (!player.isOp()) {
+				player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
+				return false;
+			}
 		}
-
 		
-		info(block.getLocation().toString());		
-		info("RAN COMMAND"+sender.getClass().toString()+":"+sender.getName()+":"+sender.toString()+":");
-		//info (player.getName() + " tried to run the command " + commandLabel);
-		
-		//if (!player.isOp()) {
-		//	player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
-		//	return false;
-		//}
-		
-		//player.
-		
-		//World world = player.getWorld();
-		
+		// The complete quest function
 		if (commandLabel.equalsIgnoreCase("completeQuest")){
 			// This function will check to see if a player has completed a quest
 		}
 		return false;
+	}
+	
+	
+	public boolean completeQuest(String playername, String questname) {
+		return true;
 	}
 	
 	// A map containing StringQuestList PlayerCompleteSet
