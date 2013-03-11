@@ -9,7 +9,9 @@ import java.util.Map.Entry;
 import java.util.Set;
 import java.util.logging.Logger;
 
+import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_4_R1.block.CraftBlock;
@@ -63,7 +65,24 @@ public class Quester extends JavaPlugin{
 		
 		// The complete quest function
 		if (commandLabel.equalsIgnoreCase("completeQuest")){
-			// This function will check to see if a player has completed a quest
+			// completeQuest player questname redstonex redstoney restonez
+			if (args.length != 5) {
+				String output = "Correct Usage: /completeQuest <player> <questname> <red stone x> <red stone y> <red stone z>";
+				if (player != null) player.sendMessage(output);
+				else info(output);
+				return false;
+			}
+			
+			String playername = args[0];
+			String questname = args[1];
+			int redstonex = Integer.parseInt(args[2]);
+			int redstoney = Integer.parseInt(args[3]);
+			int redstonez = Integer.parseInt(args[4]);
+			
+			if (completeQuest(playername, questname)) {
+				Bukkit.getWorld("world").getBlockAt(redstonex, redstoney, redstonez).setType(Material.REDSTONE_TORCH_ON);
+			}
+			
 		}
 		return false;
 	}
@@ -106,6 +125,8 @@ public class Quester extends JavaPlugin{
 		this.saveConfig();
 		info("Quests Saved");
 	}
+	
+	
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////////// DISPLAY HELPERS //////////////////////////////
 //////////////////////////////////////////////////////////////////////////////
