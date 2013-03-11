@@ -2,6 +2,7 @@ package iggy.Quester;
 
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.HashSet;
 import java.util.Iterator;
 import java.util.List;
 import java.util.Map;
@@ -11,12 +12,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
-import org.bukkit.Location;
 import org.bukkit.Material;
-import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
-import org.bukkit.craftbukkit.v1_4_R1.block.CraftBlock;
 import org.bukkit.entity.Player;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
@@ -101,6 +99,18 @@ public class Quester extends JavaPlugin{
 	
 	
 	public boolean completeQuest(String playername, String questname) {
+		Set<String> finishedPlayers = questList.get(questname);
+		if (finishedPlayers == null) {
+			finishedPlayers = new HashSet<String>();
+		}
+		
+		// If the player has already completed the quest
+		if (finishedPlayers.contains(playername)) {
+			return false;
+		}
+		// Otherwise add their name to the list of people who have completed the quest
+		finishedPlayers.add(playername);
+		questList.put(questname, finishedPlayers);
 		return true;
 	}
 	
