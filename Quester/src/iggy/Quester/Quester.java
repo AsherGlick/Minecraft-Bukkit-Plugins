@@ -11,7 +11,9 @@ import java.util.logging.Logger;
 
 import org.bukkit.Bukkit;
 import org.bukkit.ChatColor;
+import org.bukkit.Location;
 import org.bukkit.Material;
+import org.bukkit.block.Block;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.craftbukkit.v1_4_R1.block.CraftBlock;
@@ -75,12 +77,22 @@ public class Quester extends JavaPlugin{
 			
 			String playername = args[0];
 			String questname = args[1];
-			int redstonex = Integer.parseInt(args[2]);
-			int redstoney = Integer.parseInt(args[3]);
-			int redstonez = Integer.parseInt(args[4]);
+			final int redstonex = Integer.parseInt(args[2]);
+			final int redstoney = Integer.parseInt(args[3]);
+			final int redstonez = Integer.parseInt(args[4]);
 			
 			if (completeQuest(playername, questname)) {
+				// Create the restone torch
 				Bukkit.getWorld("world").getBlockAt(redstonex, redstoney, redstonez).setType(Material.REDSTONE_TORCH_ON);
+				
+				// Remove the redstone torch
+				getServer().getScheduler().scheduleSyncDelayedTask(this, new Runnable() {
+					
+					public void run() {
+						Bukkit.getWorld("world").getBlockAt(redstonex, redstoney, redstonez).setType(Material.AIR);
+					}
+				}, 20L);
+				
 			}
 			
 		}
