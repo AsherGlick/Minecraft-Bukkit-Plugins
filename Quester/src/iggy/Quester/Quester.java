@@ -80,7 +80,7 @@ public class Quester extends JavaPlugin{
 			final int redstonez = Integer.parseInt(args[4]);
 			boolean repeatable = false;
 			if (args.length == 6) {
-				if (args[5] == "yes" || args[5] == "true") {
+				if (args[5].equals("yes") || args[5].equals("true")) {
 					repeatable = true;
 				}
 			}
