@@ -394,7 +394,9 @@ public class Transport extends JavaPlugin {
 					output += differentColor + warpPlace.getKey() + defaultColor + ", ";
 				}
 				else {
-					if ( playerActivations.get(player.getName()).contains(warpPlace.getKey()) ) {
+					List<String> playerWarps = playerActivations.get(player.getName());
+					if (playerWarps == null) playerWarps = new ArrayList<String>();
+					if ( playerWarps.contains(warpPlace.getKey()) ) {
 						output += activatedWarpColor + warpPlace.getKey() + defaultColor + ", ";
 					}
 					else {
