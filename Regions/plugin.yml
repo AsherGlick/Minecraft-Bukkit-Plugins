@@ -8,27 +8,32 @@ commands:
     description: claim a plot of land for your own use
   expand:
     description: Expand a claim to another block
-  ex:
-    description: alias for expand
+    aliases: [ex]
+    usage: /<command>
   dark-expand:
     description: Expand a claim without placing torches
-  dx:
-    description: alias for dark-expand
+    aliases: [dx]
+    usage: /<command>
   add-owner:
-    description: add another user to edit the plot
-  ao:
-    description: alias for add owner
+    description: Make another player a co-owner of the plot.
+    aliases: [ao]
+    usage: /<command> [newOwner]
   add-builder:
-    description: add a builder who can build and break the plot
-  ab:
-    description: alias for add builder
+    description: Add a builder who can build and break blocks on the plot
+    aliases: [ab]
+    usage: /<command> [newBuilder]
   remove-builder:
-    description: remove a builder who can build and break the plot
-  rb:
-    description: alias for remove builder
+    description: Remove a builder who can build and break blocks on the plot
+    aliases: [rb]
+    usage: /<command> [builder]
   unclaim-plot:
-    description: admin ability to un-claim a plot
-  list-owners:
+    description: ADMIN ONLY Unclaim a plot without changing the plot config file
+    usage: /<command> 
+  listowners:
     description: lists the owners for the plot you specified or the plot you are in
-  list-builders:
+    aliases: [owners,list-owners]
+    usage: /<command> [plotName]
+  listbuilders:
     description: lists the builders for the plot you specified or the plot you are in
+    aliases: [builders,list-builders]
+    usage: /<command> [plotName]
