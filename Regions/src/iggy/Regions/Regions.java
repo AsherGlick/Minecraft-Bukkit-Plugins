@@ -522,6 +522,10 @@ public class Regions extends JavaPlugin{
 			else {
 				player.sendMessage("Plot from "+plotName+" removed sucessfully");
 			}
+			// dynmap overlay
+			if (dynmap.isEnabled()){
+				refreshRegions ();
+			}
 		}
 		// TODO List Owners
 		/********************************* LIST OWNERS ********************************\
