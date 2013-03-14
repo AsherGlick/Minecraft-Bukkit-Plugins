@@ -59,6 +59,7 @@ import java.util.logging.Logger;
 import iggy.Economy.Economy;
 
 import org.bukkit.Bukkit;
+import org.bukkit.ChatColor;
 import org.bukkit.World;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
@@ -268,6 +269,8 @@ public class Regions extends JavaPlugin{
 				player.sendMessage("You can only claim plots in the nether or the main world");
 				return false;
 			}
+			
+			
 
 			// try to claim block
 			else {
@@ -386,6 +389,7 @@ public class Regions extends JavaPlugin{
 				else player.sendMessage("The plot "+plotName+" does not exist");
 				return false;
 			}
+			// Check to see if the server or the owner of a plot is running the command
 			if (player == null || owners.hasOwner(player.getName())) {
 				// Add the builder to the plot
 				owners.addBuilder(newBuilder);
@@ -393,7 +397,12 @@ public class Regions extends JavaPlugin{
 				chunkOwners.put(plotName, owners);
 				
 				if (player == null) info ("Added "+newBuilder+" to "+plotName);
-				else player.sendMessage("Added "+newBuilder+" to "+plotName);
+				else player.sendMessage("Added "+ChatColor.GOLD+newBuilder+ChatColor.WHITE+" to "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+				
+				Player builderPlayer = Bukkit.getPlayer(newBuilder);
+				if (builderPlayer != null) {
+					builderPlayer.sendMessage(ChatColor.GOLD+player.getName()+ ChatColor.WHITE +" added you as a builder for " + ChatColor.LIGHT_PURPLE +plotName+ChatColor.WHITE);
+				}
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
 			
@@ -435,7 +444,7 @@ public class Regions extends JavaPlugin{
 			Owners owners = chunkOwners.get(plotName);
 			if (owners == null) {
 				if (player == null) info ("The plot "+plotName+" does not exist");
-				else player.sendMessage("The plot "+plotName+" does not exist");
+				else player.sendMessage("The plot "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" does not exist");
 				return false;
 			}
 			if (player == null || owners.hasOwner(player.getName())) {
@@ -445,7 +454,7 @@ public class Regions extends JavaPlugin{
 				chunkOwners.put(plotName, owners);
 				
 				if (player == null) info ("Removed "+oldBuilder+" from "+plotName);
-				else player.sendMessage("Removed "+oldBuilder+" from "+plotName);
+				else player.sendMessage("Removed "+ChatColor.GOLD+oldBuilder+ChatColor.WHITE+" from "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
 			
@@ -496,8 +505,11 @@ public class Regions extends JavaPlugin{
 				// Save the owners list to the global variable
 				chunkOwners.put(plotName, owners);
 				
+				// Notify the command sender that the player has been added to the plot
 				if (player == null) info ("Added "+newOwner+" as a owner to "+plotName);
 				else player.sendMessage("Added "+newOwner+" as a owner to "+plotName);
+				
+				
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
 		}
