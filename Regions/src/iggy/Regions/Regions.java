@@ -541,89 +541,97 @@ public class Regions extends JavaPlugin{
 			}
 			return true;
 		}
-		// TODO List Owners
-		/********************************* LIST OWNERS ********************************\
-		|
-		\******************************************************************************/
 		if (commandLabel.equalsIgnoreCase("list-owners")) {
-			String plotName;
-			if (args.length == 0) {
-				if (player == null) {
-					info ("You need to specify a plot to check");
-					return false;
-				}
-				
-				plotName = chunkNames.get(new Position(player.getLocation()));
-				if (plotName == null) {
-					player.sendMessage("You are not standing in a region");
-					return false;
-				}
-			}
-			else if (args.length == 1) {
-				plotName = args[0];
-			}
-			else {
-				if (player == null) info ("Use list-owner <plotname>");
-				else player.sendMessage("Use /list-owner <plotname>");
-				return false;
-			}
-			
-			Owners owners = chunkOwners.get(plotName);
-			if (owners == null){
-				if (player == null) info ("The plot "+plotName+" was not found");
-				else player.sendMessage("The plot "+plotName+" was not found");
-				return false;
-			}
-			if (player == null) info ("Owners: "+ owners.getOwners().toString());
-			else player.sendMessage(owners.getOwners().toString());
-			
+			listOwners(args,player);
 		}
-		/******************************** LIST BUILDERS *******************************\
-		| The list builders command takes the plot a player is standing in, or the     |
-		| plot specified as an argument, and displays all of the builders that are     |
-		| assigned to that plot                                                        |
-		\******************************************************************************/
+		
 		if (commandLabel.equalsIgnoreCase("listbuilders") || 
 			commandLabel.equalsIgnoreCase("builders") || 
 			commandLabel.equalsIgnoreCase("list-builders")) {
-			String usage = "list-owner [plotname]";
-			String plotName;
-			// If the user did not specify a plot
-			if (args.length == 0) {
-				// If the console is using this command force them to specify a plot name
-				if (player == null) {
-					info ("You need to specify a plot to check");
-					info ("Correct Usage: "+usage);
-					return false;
-				}
-				// If the player is using this command and they did not specify a plot use the plot they are standing in
-				plotName = chunkNames.get(new Position(player.getLocation()));
-				if (plotName == null) {
-					player.sendMessage("You are not standing in a region");
-					player.sendMessage("Correct Usage: "+usage);
-					return false;
-				}
+			listBuilders(args, player);
+		}
+		return true;		
+	}
+
+	// TODO update list owners to a nice function
+	void listOwners (String[] args, Player player) {
+		String plotName;
+		if (args.length == 0) {
+			if (player == null) {
+				info ("You need to specify a plot to check");
+				return;
 			}
-			// If the user did specify a plot argument save that value to plotName
-			else if (args.length == 1) {
-				plotName = args[0];
+			
+			plotName = chunkNames.get(new Position(player.getLocation()));
+			if (plotName == null) {
+				player.sendMessage("You are not standing in a region");
+				return;
 			}
-			// The user entered a different number of arguments
-			else {
-				if (player == null) info ("Correct Usage: "+usage);
-				else player.sendMessage("Correct Usage: "+usage);
-				return false;
+		}
+		else if (args.length == 1) {
+			plotName = args[0];
+		}
+		else {
+			if (player == null) info ("Use list-owner <plotname>");
+			else player.sendMessage("Use /list-owner <plotname>");
+			return;
+		}
+		
+		Owners owners = chunkOwners.get(plotName);
+		if (owners == null){
+			if (player == null) info ("The plot "+plotName+" was not found");
+			else player.sendMessage("The plot "+plotName+" was not found");
+			return;
+		}
+		if (player == null) info ("Owners: "+ owners.getOwners().toString());
+		else player.sendMessage(owners.getOwners().toString());
+	}
+	/******************************** LIST BUILDERS *******************************\
+	| The list builders command takes the plot a player is standing in, or the     |
+	| plot specified as an argument, and displays all of the builders that are     |
+	| assigned to that plot                                                        |
+	\******************************************************************************/
+	void listBuilders (String[] args, Player player) {
+		String usage = "list-owner [plotname]";
+		String plotName;
+		// If the user did not specify a plot
+		if (args.length == 0) {
+			// If the console is using this command force them to specify a plot name
+			if (player == null) {
+				info ("You need to specify a plot to check");
+				info ("Correct Usage: "+usage);
+				return;
 			}
-			// Find the specified plot
-			Owners owners = chunkOwners.get(plotName);
-			if (owners == null){
-				if (player == null) info ("The plot "+plotName+" was not found");
-				else player.sendMessage("The plot "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" was not found");
-				return false;
+			// If the player is using this command and they did not specify a plot use the plot they are standing in
+			plotName = chunkNames.get(new Position(player.getLocation()));
+			if (plotName == null) {
+				player.sendMessage("You are not standing in a region");
+				player.sendMessage("Correct Usage: "+usage);
+				return;
 			}
-			// Display a list of the builders
-			if (player == null) info ("Builders:"+owners.getBuilders().toString());
-			else {
+		}
+		// If the user did specify a plot argument save that value to plotName
+		else if (args.length == 1) {
+			plotName = args[0];
+		}
+		// The user entered a different number of arguments
+		else {
+			if (player == null) info ("Correct Usage: "+usage);
+			else player.sendMessage("Correct Usage: "+usage);
+			return;
+		}
+		// Find the specified plot
+		Owners owners = chunkOwners.get(plotName);
+		if (owners == null){
+			if (player == null) info ("The plot "+plotName+" was not found");
+			else player.sendMessage("The plot "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" was not found");
+			return;
+		}
+		// Display a list of the builders
+		if (player == null) info ("Builders:"+owners.getBuilders().toString());
+		else {
+			// Only create a formatted list if there are builders in the list to format
+			if (!owners.getBuilders().isEmpty()) {
 				String output = " ";
 				for (String playerString : owners.getBuilders()) {
 					String playerName = ChatColor.GOLD+playerString+ChatColor.WHITE+", ";//String.format("%1$-" + 16 + "s", playerString);
@@ -633,10 +641,11 @@ public class Regions extends JavaPlugin{
 				player.sendMessage("Builders for " + ChatColor.LIGHT_PURPLE + plotName + ChatColor.WHITE + ":");
 				player.sendMessage(output);
 			}
-			return true;
+			else {
+				player.sendMessage("There are no builders for " + ChatColor.LIGHT_PURPLE + plotName + ChatColor.WHITE);
+			}
 		}
-		return false;		
-	}
+	}							
   //////////////////////////////////////////////////////////////////////////////
  /////////////////////////// WAIT FOR OTHER PLUGINS ///////////////////////////
 //////////////////////////////////////////////////////////////////////////////
@@ -1065,7 +1074,7 @@ public class Regions extends JavaPlugin{
 	| that the plugin that sent the message can easily be identified               |
 	\******************************************************************************/
 	public void info(String input) {
-		this.logger.info("  "+pluginTitle + " " + input);
+		this.logger.info(pluginTitle + " " + input);
 	}
 	
 	/********************************* LOG SEVERE *********************************\
