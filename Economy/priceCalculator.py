@@ -7,6 +7,7 @@ ratio_between_diamond_ore_and_gold_ore
 ratio_between_diamond_ore_and_redstone_ore
 ratio_between_diamond_ore_and_emerald_ore
 ratio_between_diamond_ore_and_nether_quartz_ore
+
 coal_per_ore
 iron_per_ore
 lapis_lazuli_per_ore
@@ -15,80 +16,93 @@ redstone_per_ore
 diamond_per_ore
 emerald_per_ore
 buketlessMilk = 20 # Base Object
-chainMailIngot = # the arbitrary price of a imaginary chainmail ingot
+chainMailIngot = IRON_INGOT # the arbitrary price of a imaginary chainmail ingot
+recordPrice = 200
+smeltingCost = 50
 
 # Item Prices
 SUGAR_CANE = 2 # Base Object
-WOODEN_DOOR = WOOD * 6
-REDSTONE = 1000*ratio_between_diamond_ore_and_redstone_ore/redstone_per_ore
+WOODEN_DOOR = -1 # Invalid Object, correct object is WOOD_DOOR
+REDSTONE = REDSTONE_ORE / redstone_per_ore
 DIODE = REDSTONE+(2*REDSTONE_TORCH_ON)+(3*STONE)
 PAPER = (3*SUGAR_CANE) / 3
 NETHER_BRICK_STAIRS: 10
 BOW = (3*STICK) + (3*STRING)
 DIAMOND_BLOCK = (9*DIAMOND)
 MILK_BUCKET = BUCKET + buketlessMilk
-REDSTONE_TORCH_OFF: -1 # Invalid Object
-CHAINMAIL_CHESTPLATE: 100
-WOOD_HOE: 10
-RECORD_10: 200
-COCOA: -1
-ENDER_STONE: 100
-LONG_GRASS: -1
-POTION: 100
-WRITTEN_BOOK: -1
-NOTE_BLOCK: 10
-MONSTER_EGGS: -1
-FLINT_AND_STEEL: 20
-GOLD_AXE: 90
-GLOWSTONE_DUST: 10
-MAGMA_CREAM: 20
-FLOWER_POT: -1
-DIAMOND: 1000
-MUSHROOM_SOUP: 30
-BOOK_AND_QUILL: -1
-SIGN: 30
-GOLD_ORE: 30
-SUGAR: 3
-RAILS: 3
-TNT: -1
-GOLD_NUGGET: 20
-WOOD: 2
-LEATHER_HELMET: 50
-PISTON_MOVING_PIECE: -1
-WOOD_STEP: -1
-RECORD_12: -1
-SLIME_BALL: 10
-DIAMOND_ORE: 900
-GLOWING_REDSTONE_ORE: -1
-LEATHER: 4
-EMERALD_ORE: -1
-WHEAT: 3
-AIR: 0
-NETHER_STAR: -1
-MAP: 1
-WOOD_STAIRS: 10
-PUMPKIN: 10
-JUNGLE_WOOD_STAIRS: -1
-PORTAL: -1
-GOLD_PICKAXE: 100
-STONE_PICKAXE: 2
-CACTUS: 10
-RECORD_11: 200
-LAPIS_ORE: 40
-SMOOTH_BRICK: 4
-LEAVES: 30
-NETHER_BRICK: 5
-SNOW_BLOCK: 10
-LOCKED_CHEST: -1
-WALL_SIGN: -1
-YELLOW_FLOWER: 3
-STONE_SPADE: 10
-STEP: 20
-GRASS: 5000
-GOLDEN_CARROT: -1
-WOOD_DOOR: 30
-GOLD_SWORD: 60
-IRON_HELMET: 100
+REDSTONE_TORCH_OFF = -1 # Invalid Object
+CHAINMAIL_CHESTPLATE = (8*chainMailIngot)
+WOOD_HOE: (2*STICK)+(2*WOOD)
+RECORD_10: recordPrice # Base Object
+COCOA: 20 # Base Object
+ENDER_STONE: 100 # Base Object
+LONG_GRASS: -1 # Invalad Object
+POTION: 100 # Value only used for selling to the shop
+WRITTEN_BOOK: -1 # Will not buy written books
+NOTE_BLOCK: (8*WOOD)+(REDSTONE)
+MONSTER_EGGS: -1 # Value only used for selling to the shop
+FLINT_AND_STEEL: IRON_INGOT + FLINT
+GOLD_AXE: (3*GOLD_INGOT)+(2*STICK)
+GLOWSTONE_DUST: (GLOWSTONE) / 4
+MAGMA_CREAM: SLIME_BALL + BLAZE_POWDER
+FLOWER_POT: (3*BRICK)
+DIAMOND: plotPrice # Base Object
+MUSHROOM_SOUP: BOWL + RED_MUSHROOM + BROWN_MUSHROOM
+BOOK_AND_QUILL: BOOK + INK_SACK + FEATHER
+SIGN: ((6*WOOD) + STICK) / 3
+GOLD_ORE: (DIAMOND_ORE * ratio_between_diamond_ore_and_gold_ore)
+SUGAR = SUGAR_CANE
+RAILS = ((6*IRON_INGOT) + STICK) / 16
+TNT = (4*SAND) + (5*GUNPOWDER)
+GOLD_NUGGET = GOLD_INGOT / 9
+WOOD = LOG / 4
+LEATHER_HELMET = (5*LEATHER)
+PISTON_MOVING_PIECE: -1 # Invalid Object
+WOOD_STEP = []
+WOOD_STEP[0] = (3*WOOD[0]) / 6 # Oak Wood Step
+WOOD_STEP[1] = (3*WOOD[1]) / 6 # Spruce Wood Step
+WOOD_STEP[2] = (3*WOOD[2]) / 6 # Birch Wood Step
+WOOD_STEP[3] = (3*WOOD[3]) / 6 # Jungle Wood Step
+RECORD_12: recordPrice # Base Object
+SLIME_BALL: 10 # Base Object
+DIAMOND_ORE: DIAMOND * diamond_per_ore
+GLOWING_REDSTONE_ORE: -1 # Invalid Object
+LEATHER: 4 # Base Object
+EMERALD_ORE: DIAMOND_ORE * ratio_between_diamond_ore_and_emerald_ore
+WHEAT: 3 # Base Object
+AIR: 0 # NOTHING SELLS FOR NOTHING
+NETHER_STAR: 1000 # Base object
+MAP = (8*PAPER) + COMPASS
+WOOD_STAIRS = (6*WOOD[0]) / 4 # Oak Wood Stairs
+PUMPKIN = 10 # Base Object
+JUNGLE_WOOD_STAIRS = (6*WOOD[3]) / 4 # Jungle Wood Stairs
+PORTAL: -1 # Invalid Object
+GOLD_PICKAXE = (3*GOLD_INGOT) + (2*STICK)
+STONE_PICKAXE = (3*COBBLESTONE) + (2*STICK)
+CACTUS = 10 # Base Object
+RECORD_11 = recordPrice # Base Object
+LAPIS_ORE = DIAMOND_ORE * ratio_between_diamond_ore_and_lapis_Lazuli_ore
+SMOOTH_BRICK: 4*STONE
+LEAVES: 30 # Base Object
+NETHER_BRICK: 5 # Base Object
+SNOW_BLOCK = 4*SNOW_BALL
+LOCKED_CHEST: -1 # Invalid Item
+WALL_SIGN: -1 # Invalid Item
+YELLOW_FLOWER = 3 # Base Object 
+STONE_SPADE = (COBBLESTONE) + (2*STICK)
+STEP = []
+STEP[0] = (3*STONE) / 6 # Stone Slab
+STEP[1] = (3*SANDSTONE) / 6 # Sandstone Slab
+STEP[2] = -1 # Wood Slab (outdated by WOOD_STEP)
+STEP[3] = (3*COBBLESTONE) / 6 # Cobblestone Slab
+STEP[4] = (3*BRICK) / 6 # Brick Slab
+STEP[5] = (3*SMOOTH_BRICK) / 6 # Smooth Brick Slab
+STEP[6] = (3*NETHER_BRICK) / 6 # Nether Brick Slab
+GRASS = DIRT
+GOLDEN_CARROT = (8*GOLD_NUGGET) + CARROT
+WOOD_DOOR = WOOD * 6
+GOLD_SWORD = (2*GOLD_INGOT) + (STICK)
+IRON_HELMET = (5*IRON_INGOT)
 BIRCH_WOOD_STAIRS: -1
 COOKED_FISH: 1
 REDSTONE_WIRE: 1
@@ -105,7 +119,7 @@ BREWING_STAND: 50
 WATCH: 10
 CHEST: 20
 GOLD_HOE: 60
-PUMPKIN_SEEDS: 4
+PUMPKIN_SEEDS: PUMPKIN / 4
 DEAD_BUSH: -1
 IRON_AXE: 60
 MOSSY_COBBLESTONE: 20
@@ -250,7 +264,7 @@ CARROT: -1
 POTATO_ITEM: -1
 IRON_SPADE: 20
 DIAMOND_SPADE: 1000
-SULPHUR: -1
+SULPHUR: 200 # BASE ITEM (GUNPOWDER)
 DIAMOND_HELMET: 5000
 SUGAR_CANE_BLOCK: -1
 GREEN_RECORD: 20000
@@ -263,8 +277,8 @@ GLASS_BOTTLE: 10
 MINECART: 60
 SPIDER_EYE: 1
 POWERED_MINECART: 200
-EMERALD_BLOCK: -1
-WOOD_DOUBLE_STEP: -1
+EMERALD_BLOCK: (9*EMERALD)
+WOOD_DOUBLE_STEP = (2*WOOD_STEP)
 RECORD_9: 200
 RECORD_4: 200
 THIN_GLASS: 3
