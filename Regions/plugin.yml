@@ -10,24 +10,29 @@ commands:
     description: Expand a claim to another block
     aliases: [ex]
     usage: /<command>
-  dark-expand:
+  darkexpand:
     description: Expand a claim without placing torches
-    aliases: [dx]
+    aliases: [dx,dark-expand]
     usage: /<command>
-  add-owner:
+  rename:
+  	description: Rename the plot you are standing
+  	alises: [rename-plot]
+  	usage: /<command> [newName]
+  addowner:
     description: Make another player a co-owner of the plot.
-    aliases: [ao]
+    aliases: [ao,add-owner]
     usage: /<command> [newOwner]
-  add-builder:
+  addbuilder:
     description: Add a builder who can build and break blocks on the plot
-    aliases: [ab]
+    aliases: [ab, add-builder]
     usage: /<command> [newBuilder]
-  remove-builder:
+  removebuilder:
     description: Remove a builder who can build and break blocks on the plot
-    aliases: [rb]
+    aliases: [rb,remove-builder]
     usage: /<command> [builder]
-  unclaim-plot:
+  unclaimplot:
     description: ADMIN ONLY Unclaim a plot without changing the plot config file
+    aliases: [unclaim-plot]
     usage: /<command> 
   listowners:
     description: lists the owners for the plot you specified or the plot you are in
