@@ -513,35 +513,13 @@ public class Regions extends JavaPlugin{
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
 		}
-		/********************************* REMOVE PLOT ********************************\
-		| ### THIS FUNCTION SHOULD ONLY BE USED BY ADMINS, IT WILL DELETE ENTIRE PLOTS |
-		| ### IF USED ON THE LAST REMAINING PLOT, IT CAN ALSO CREATE DISJOINT PLOTS##  |
-		\******************************************************************************/
+		
 		if (commandLabel.equalsIgnoreCase("unclaim-plot")) {
-			if (player == null) {
-				info ("This command can only be used by an admin player");
-				return false;
-			}
-			if (!player.isOp()) {
-				info ("This command can only be used by and admin");
-			}
-			
-			// Attempt to remove the plot
-			String plotName = chunkNames.remove(new Position(player.getLocation()));
-			if (plotName == null) {
-				player.sendMessage("You are not standing in a region that can be removed");
-				return false;
-			}
-			else {
-				player.sendMessage("Plot from "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" removed sucessfully");
-			}
-			// Update the dynmap overlay
-			if (dynmap.isEnabled()){
-				refreshRegions ();
-			}
-			return true;
+			unclaimPlot(player);
 		}
-		if (commandLabel.equalsIgnoreCase("list-owners")) {
+		if (commandLabel.equalsIgnoreCase("listowners") ||
+			commandLabel.equalsIgnoreCase("owners") ||
+			commandLabel.equalsIgnoreCase("list-owners")) {
 			listOwners(args,player);
 		}
 		
@@ -551,6 +529,35 @@ public class Regions extends JavaPlugin{
 			listBuilders(args, player);
 		}
 		return true;		
+	}
+	
+	/********************************* REMOVE PLOT ********************************\
+	| ### THIS FUNCTION SHOULD ONLY BE USED BY ADMINS, IT WILL DELETE ENTIRE PLOTS |
+	| ### IF USED ON THE LAST REMAINING PLOT, IT CAN ALSO CREATE DISJOINT PLOTS##  |
+	\******************************************************************************/
+	void unclaimPlot (Player player) {
+		if (player == null) {
+			info ("This command can only be used by an admin player");
+			return;
+		}
+		if (!player.isOp()) {
+			info ("This command can only be used by and admin");
+		}
+		
+		// Attempt to remove the plot
+		String plotName = chunkNames.remove(new Position(player.getLocation()));
+		if (plotName == null) {
+			player.sendMessage("You are not standing in a region that can be removed");
+			return;
+		}
+		else {
+			player.sendMessage("Plot from "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" removed sucessfully");
+		}
+		// Update the dynmap overlay
+		if (dynmap.isEnabled()){
+			refreshRegions ();
+		}
+		return;
 	}
 
 	// TODO update list owners to a nice function
