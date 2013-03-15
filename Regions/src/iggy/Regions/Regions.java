@@ -119,7 +119,7 @@ public class Regions extends JavaPlugin{
 	public void onEnable() {
 		pdFile = this.getDescription();
 		String pluginName = pdFile.getName();
-		pluginTitle = "[\033[2;33m"+pluginName+"\033[0m]";
+		pluginTitle = "[\033[33m"+pluginName+"\033[0m]";
 
 		pluginMonitor = new BlockMonitor(this);
 		
@@ -397,11 +397,13 @@ public class Regions extends JavaPlugin{
 				chunkOwners.put(plotName, owners);
 				
 				if (player == null) info ("Added "+newBuilder+" to "+plotName);
-				else player.sendMessage("Added "+ChatColor.GOLD+newBuilder+ChatColor.WHITE+" as a bilder for "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+				else player.sendMessage("Added "+ChatColor.GOLD+newBuilder+ChatColor.WHITE+" as a builder for "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
 				
 				Player builderPlayer = Bukkit.getPlayer(newBuilder);
 				if (builderPlayer != null) {
-					builderPlayer.sendMessage(ChatColor.GOLD+player.getName()+ ChatColor.WHITE +" added you as a builder for " + ChatColor.LIGHT_PURPLE +plotName+ChatColor.WHITE);
+					String commanderName = "The Server";
+					if (player != null) commanderName = player.getName();
+					builderPlayer.sendMessage(ChatColor.GOLD+commanderName+ ChatColor.WHITE +" added you as a builder for " + ChatColor.LIGHT_PURPLE +plotName+ChatColor.WHITE);
 				}
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
@@ -448,6 +450,11 @@ public class Regions extends JavaPlugin{
 				return false;
 			}
 			if (player == null || owners.hasOwner(player.getName())) {
+				if (!owners.hasBuilder(oldBuilder)) {
+					if (player == null) info (oldBuilder+" is not a builder in "+plotName);
+					else player.sendMessage(ChatColor.GOLD+oldBuilder+ChatColor.WHITE+" is not a builder in "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+					return false;
+				}
 				// Add the builder to the plot
 				owners.removeBuilder(oldBuilder);
 				// Save the owners list to the global variable
@@ -455,6 +462,8 @@ public class Regions extends JavaPlugin{
 				
 				if (player == null) info ("Removed "+oldBuilder+" from "+plotName);
 				else player.sendMessage("Removed "+ChatColor.GOLD+oldBuilder+ChatColor.WHITE+" from "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+				
+				
 			}
 			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
 			
@@ -463,55 +472,10 @@ public class Regions extends JavaPlugin{
 		/********************************** ADD OWNER *********************************\
 		|
 		\******************************************************************************/
-		if (commandLabel.equalsIgnoreCase("add-owner") || commandLabel.equalsIgnoreCase("ao")) {
-			String newOwner;
-			String plotName;
-			
-			// Get the user attempted to be added and the region name
-			if (args.length == 1){
-				if (player == null) {
-					info ("This command needs two arguments to be run by the console <player> <plot>");
-					return false;
-				}
-				newOwner = args[0];
-				plotName = chunkNames.get(new Position(player.getLocation()));
-				if (plotName == null) {
-					player.sendMessage("You are not standing in a region");
-					return false;
-				}				
-			}
-			// If the player and the region is specified
-			else if (args.length == 2) {
-				newOwner = args[0];
-				plotName = args[1];
-			}
-			// If any other number of arguments are entered
-			else {
-				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
-				else player.sendMessage("Correct usage /add-owner <player> [<plot>]");
-				return false;
-			}
-			
-			// Make sure the user adding the builder is allowed to do so
-			Owners owners = chunkOwners.get(plotName);
-			if (owners == null) {
-				if (player == null) info ("The plot "+plotName+" does not exist");
-				else player.sendMessage("The plot "+plotName+" does not exist");
-				return false;
-			}
-			if (player == null || owners.hasOwner(player.getName())) {
-				// Add the builder to the plot
-				owners.addOwner(newOwner);
-				// Save the owners list to the global variable
-				chunkOwners.put(plotName, owners);
-				
-				// Notify the command sender that the player has been added to the plot
-				if (player == null) info ("Added "+newOwner+" as a owner to "+plotName);
-				else player.sendMessage("Added "+newOwner+" as a owner to "+plotName);
-				
-				
-			}
-			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
+		if (commandLabel.equalsIgnoreCase("addowner") ||
+			commandLabel.equalsIgnoreCase("add-owner") ||
+			commandLabel.equalsIgnoreCase("ao")) {
+			addOwner(args,player);
 		}
 		
 		if (commandLabel.equalsIgnoreCase("unclaim-plot")) {
@@ -529,6 +493,63 @@ public class Regions extends JavaPlugin{
 			listBuilders(args, player);
 		}
 		return true;		
+	}
+	
+	void addOwner(String[] args, Player player) {
+		String newOwner;
+		String plotName;
+		
+		// Get the user attempted to be added and the region name
+		if (args.length == 1){
+			if (player == null) {
+				info ("This command needs two arguments to be run by the console <player> <plot>");
+				return;
+			}
+			newOwner = args[0];
+			plotName = chunkNames.get(new Position(player.getLocation()));
+			if (plotName == null) {
+				player.sendMessage("You are not standing in a region");
+				return;
+			}				
+		}
+		// If the player and the region is specified
+		else if (args.length == 2) {
+			newOwner = args[0];
+			plotName = args[1];
+		}
+		// If any other number of arguments are entered
+		else {
+			if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
+			else player.sendMessage("Correct usage /add-owner <player> [<plot>]");
+			return;
+		}
+		
+		// Make sure the user adding the builder is allowed to do so
+		Owners owners = chunkOwners.get(plotName);
+		if (owners == null) {
+			if (player == null) info ("The plot "+plotName+" does not exist");
+			else player.sendMessage("The plot "+plotName+" does not exist");
+			return;
+		}
+		if (player == null || owners.hasOwner(player.getName())) {
+			// Add the builder to the plot
+			owners.addOwner(newOwner);
+			// Save the owners list to the global variable
+			chunkOwners.put(plotName, owners);
+			
+			// Notify the command sender that the player has been added to the plot
+			if (player == null) info ("Added "+newOwner+" as a owner to "+plotName);
+			else player.sendMessage("Added "+ChatColor.GOLD+newOwner+ChatColor.WHITE+" as a owner of "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+			
+			Player ownerPlayer = Bukkit.getPlayer(newOwner);
+			if (ownerPlayer != null) {
+				String commanderName = "The Server";
+				if (player != null) commanderName = player.getName();
+				ownerPlayer.sendMessage(ChatColor.GOLD+commanderName+ ChatColor.WHITE +" added you as an owner of " + ChatColor.LIGHT_PURPLE +plotName+ChatColor.WHITE);
+				
+			}
+		}
+		else { player.sendMessage("You do not have permission to add an owner to this plot"); }
 	}
 	
 	/********************************* REMOVE PLOT ********************************\
@@ -591,7 +612,23 @@ public class Regions extends JavaPlugin{
 			return;
 		}
 		if (player == null) info ("Owners: "+ owners.getOwners().toString());
-		else player.sendMessage(owners.getOwners().toString());
+		else {//player.sendMessage(owners.getOwners().toString());
+		
+		// Only create a formatted list if there are builders in the list to format
+					if (!owners.getOwners().isEmpty()) {
+						String output = " ";
+						for (String playerString : owners.getOwners()) {
+							String playerName = ChatColor.GOLD+playerString+ChatColor.WHITE+", ";//String.format("%1$-" + 16 + "s", playerString);
+							output += playerName;
+						}
+						output = output.substring(0, output.length() - 2);// cut the last comma and space off the list
+						player.sendMessage("Owners of " + ChatColor.LIGHT_PURPLE + plotName + ChatColor.WHITE + ":");
+						player.sendMessage(output);
+					}
+					else {
+						player.sendMessage("There are no owners for " + ChatColor.LIGHT_PURPLE + plotName + ChatColor.WHITE + "(You should probably tell an admin about this)");
+					}
+		}
 	}
 	/******************************** LIST BUILDERS *******************************\
 	| The list builders command takes the plot a player is standing in, or the     |

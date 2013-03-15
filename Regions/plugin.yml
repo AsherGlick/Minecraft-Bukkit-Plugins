@@ -15,9 +15,9 @@ commands:
     aliases: [dx,dark-expand]
     usage: /<command>
   rename:
-  	description: Rename the plot you are standing
-  	alises: [rename-plot]
-  	usage: /<command> [newName]
+    description: Rename the plot you are standing
+    alises: [rename-plot]
+    usage: /<command> [newName]
   addowner:
     description: Make another player a co-owner of the plot.
     aliases: [ao,add-owner]
