@@ -6,3 +6,6 @@ description: >
 commands:
   completequest:
     description: check to see if a player has completed the given quest before
+  lore:
+    description: Add lore to the item you are holding
+    usage: /<command> lore

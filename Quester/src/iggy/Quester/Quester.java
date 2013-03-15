@@ -16,6 +16,8 @@ import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
 import org.bukkit.entity.Player;
+import org.bukkit.inventory.ItemStack;
+import org.bukkit.inventory.meta.ItemMeta;
 import org.bukkit.plugin.PluginDescriptionFile;
 import org.bukkit.plugin.java.JavaPlugin;
 
@@ -40,7 +42,7 @@ public class Quester extends JavaPlugin{
 	public void onEnable () {
 		pdFile = this.getDescription();
 		String pluginName = pdFile.getName();
-		pluginTitle = "[\033[2;35m"+pluginName+"\033[0m]";
+		pluginTitle = "[\033[34m"+pluginName+"\033[0m]";
 		
 		// Activate the on death listener class
 		deathListener = new DeathListener(this);
@@ -57,14 +59,16 @@ public class Quester extends JavaPlugin{
 		// Stop non-opped players from running these commands
 		if (sender instanceof Player) {
 			player = (Player) sender;
-			if (!player.isOp()) {
-				player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
-				return false;
-			}
 		}
 		
 		// The complete quest function
 		if (commandLabel.equalsIgnoreCase("completeQuest")){
+			if (player != null) {
+				if (!player.isOp()) {
+					player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
+					return false;
+				}
+			}
 			// completeQuest player questname redstonex redstoney restonez
 			if (args.length != 5 && args.length != 6) {
 				String output = "Correct Usage: /completeQuest <player> <questname> <red stone x> <red stone y> <red stone z> [repeatable]";
@@ -99,6 +103,43 @@ public class Quester extends JavaPlugin{
 				
 			}
 			
+		}
+		if (commandLabel.equalsIgnoreCase("lore")) {
+			if (player == null) {
+				info ("This command must be run by a player");
+				return true;
+			}
+			if (!player.isOp()) {
+				player.sendMessage(ChatColor.RED+"This command can only be run by an Admin" + ChatColor.WHITE);
+				return false;
+			}
+			if (args.length == 0) {
+				player.sendMessage("You must specify lore to add to the item");
+				return false;
+			}
+			ItemStack currentItem = player.getItemInHand();
+			if (currentItem.getType() == Material.AIR) {
+				player.sendMessage("You cannot apply lore to Air");
+				return false;
+			}
+			
+			ItemMeta currentItemMeta = currentItem.getItemMeta();
+			List<String> newargs = new ArrayList<String>();
+			String currentLine = "";
+			for (String arg : args) {
+				if (arg.equals("\\n")){
+					currentLine = currentLine.substring(0, currentLine.length() - 1);
+					newargs.add(currentLine);
+					currentLine = "";
+				}
+				else {
+					currentLine += arg + " ";
+				}
+			}
+			currentLine = currentLine.substring(0, currentLine.length() - 1);
+			newargs.add(currentLine);
+			currentItemMeta.setLore(newargs);
+			currentItem.setItemMeta(currentItemMeta);
 		}
 		return false;
 	}
@@ -167,7 +208,7 @@ public class Quester extends JavaPlugin{
 	| that the plugin that sent the message can easily be identified               |
 	\******************************************************************************/
 	public void info(String input) {
-		this.logger.info("  " + pluginTitle + " " + input);
+		this.logger.info("" + pluginTitle + " " + input);
 	}
 	
 	/********************************* LOG SEVERE *********************************\
