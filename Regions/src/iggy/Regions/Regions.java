@@ -178,300 +178,30 @@ public class Regions extends JavaPlugin{
 		if (sender instanceof Player) {
 			player = (Player) sender;
 		}
-		
-		//World world = player.getWorld();
-		/************************************ CLAIM ***********************************\
-		|
-		\******************************************************************************/
+				
 		if (commandLabel.equalsIgnoreCase("claim")){
-			// if economy is enabled
-			if (!economy.isEnabled()) {
-				player.sendMessage("Economy plugin is not enabled, contact admin for help");
-				return false;
-			}
-			// is plot is not already claimed
-			else if (chunkNames.containsKey(new Position(player.getLocation()))){
-				player.sendMessage("This plot has allready been claimed, you cannot claim it");
-				return false;
-			}
-			// is plot in the regular world or the nether
-			else if (player.getWorld() != mainworld && player.getWorld() != thenether){
-				player.sendMessage("You can only claim plots in the nether or the main world");
-			}
-			// is a name given
-			else if (args.length == 0) {
-				player.sendMessage("You need to specify a name for this plot");
-				return false;
-			}
-			// try to claim block
-			else if (args.length == 1){
-				String plotName = args[0];
-				/*for (int i = 1; i < args.length; i++) {
-					plotName += " "+args[i];
-				}*/
-				// check to see if the name has already been taken
-				if (chunkOwners.containsKey(plotName)) {
-					player.sendMessage("This plot name has allready been taken");
-					return false;
-				}
-				
-				if (economyapi.chargeMoney(player, 5000)) {
-					Position plot = new Position(player.getLocation());
-					Owners owner = new Owners();
-					owner.addOwner(player.getName());
-					chunkOwners.put(plotName, owner);
-					chunkNames.put(plot, plotName);
-					
-					// find highest block at the four corners
-					plot.placeTorches();
-					
-					player.sendMessage("You bought the plot "+plotName+" for $5000");
-				}
-				
-				else {
-					player.sendMessage("You dont have enough money to buy this plot ($5000)");
-					return false;
-				}
-			}
-			else {
-				player.sendMessage("correct usage is /claim <plotname>");
-			}
-			saveRegions();
-			
-			// dynmap overlay
-			if (dynmap.isEnabled()){
-				refreshRegions ();
-			}
+			claim(args,player);
 		}
-		/*********************************** EXPAND ***********************************\
-		|
-		\******************************************************************************/
-		if (commandLabel.equalsIgnoreCase("expand") || commandLabel.equalsIgnoreCase("ex") ||
-				commandLabel.equalsIgnoreCase("dark-expand") || commandLabel.equalsIgnoreCase("dx")) {
-			boolean dark = false;
-			// check to see if the expand should have torches
-			if (commandLabel.equalsIgnoreCase("dark-expand") || commandLabel.equalsIgnoreCase("dx")) {
-				dark = true;
-			}
-			// TODO Find the closest plot to your position instead of the first checked
-			// if economy is enabled
-			if (!economy.isEnabled()) {
-				player.sendMessage("Economy plugin is not enabled, contact admin for help");
-				return false;
-			}
-			// is plot is not already claimed
-			else if (chunkNames.containsKey(new Position(player.getLocation()))){
-				player.sendMessage("This plot has allready been claimed, you cannot claim it");
-				return false;
-			}
-			// is plot in the regular world or the nether
-			else if (player.getWorld() != mainworld && player.getWorld() != thenether){
-				player.sendMessage("You can only claim plots in the nether or the main world");
-				return false;
-			}
-			
-			
 
-			// try to claim block
-			else {
-				// if a plot you own is adjacent
-				Position plot = new Position(player.getLocation());
-				String plotName = "";
-				
-				Position plotN = new Position(player.getLocation().add( 8,0, 0));
-				Position plotS = new Position(player.getLocation().add(-8,0, 0));
-				Position plotE = new Position(player.getLocation().add(0, 0, 8));
-				Position plotW = new Position(player.getLocation().add(0, 0,-8));
-				
-				// Check plot to the north
-				if (chunkNames.containsKey(plotN)){
-					String tempName = chunkNames.get(plotN);
-					Owners plotOwners = chunkOwners.get(tempName);
-					// if the player owns the found chunk
-					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
-					// display an error if there is no owners list
-					else severe("Error finding plot owners for "+tempName);
-				}
-				if (chunkNames.containsKey(plotS)){
-					String tempName = chunkNames.get(plotS);
-					Owners plotOwners = chunkOwners.get(tempName);
-					// if the player owns the found chunk
-					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
-					// display an error if there is no owners list
-					else severe("Error finding plot owners for "+tempName);
-				}
-				if (chunkNames.containsKey(plotE)){
-					String tempName = chunkNames.get(plotE);
-					Owners plotOwners = chunkOwners.get(tempName);
-					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
-					// display an error if there is no owners list
-					else severe("error finding plot owners for "+tempName);
-				}
-				if (chunkNames.containsKey(plotW)){
-					String tempName = chunkNames.get(plotW);
-					Owners plotOwners = chunkOwners.get(tempName);
-					if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
-					// display an error if there is no owners list
-					else severe("error finding plot owners for "+tempName);
-				}
-				if (plotName.equalsIgnoreCase("")) {
-					player.sendMessage("No adjacent plot found, cannot expand");
-					return false;
-				}
-				
-				// check to see if the name has already been taken (this is not nessasary
-				// because only plots you own can be expanded
-				/*
-				if (chunkOwners.containsKey(plotName)) {
-					player.sendMessage("This plot name has allready been taken");
-					return false;
-				}*/
-				
-				if (economyapi.chargeMoney(player, 1000)) {
-					
-					chunkNames.put(plot, plotName);
-					
-					// find highest block at the four corners
-					if (!dark) {
-						plot.placeTorches();
-					}
-					
-					player.sendMessage("You expanded the plot "+plotName+" for $1000");
-				}
-				
-				else {
-					player.sendMessage("You dont have enough money to buy this plot");
-					return false;
-				}
-			}
-			saveRegions();
-			// dynmap overlay
-			if (dynmap.isEnabled()){
-				refreshRegions ();
-			}
+		if (commandLabel.equalsIgnoreCase("expand") || 
+			commandLabel.equalsIgnoreCase("ex")) {
+			expand (player,false);
 		}
-		/********************************* ADD BUILDER ********************************\
-		|
-		\******************************************************************************/
-		if (commandLabel.equalsIgnoreCase("add-builder") || commandLabel.equalsIgnoreCase("ab")) {
-			String newBuilder;
-			String plotName;
-			
-			// Get the user attempted to be added and the region name
-			if (args.length == 1){
-				if (player == null) {
-					info ("This command needs two arguments to be run by the console <player> <plot>");
-					return false;
-				}
-				newBuilder = args[0];
-				plotName = chunkNames.get(new Position(player.getLocation()));
-				if (plotName == null) {
-					player.sendMessage("You are not standing in a region");
-					return false;
-				}				
-			}
-			// If the player and the region is specified
-			else if (args.length == 2) {
-				newBuilder = args[0];
-				plotName = args[1];
-			}
-			// If any other number of arguments are entered
-			else {
-				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
-				else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
-				return false;
-			}
-			
-			// Make sure the user adding the builder is allowed to do so
-			Owners owners = chunkOwners.get(plotName);
-			if (owners == null) {
-				if (player == null) info ("The plot "+plotName+" does not exist");
-				else player.sendMessage("The plot "+plotName+" does not exist");
-				return false;
-			}
-			// Check to see if the server or the owner of a plot is running the command
-			if (player == null || owners.hasOwner(player.getName())) {
-				// Add the builder to the plot
-				owners.addBuilder(newBuilder);
-				// Save the owners list to the global variable
-				chunkOwners.put(plotName, owners);
-				
-				if (player == null) info ("Added "+newBuilder+" to "+plotName);
-				else player.sendMessage("Added "+ChatColor.GOLD+newBuilder+ChatColor.WHITE+" as a builder for "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
-				
-				Player builderPlayer = Bukkit.getPlayer(newBuilder);
-				if (builderPlayer != null) {
-					String commanderName = "The Server";
-					if (player != null) commanderName = player.getName();
-					builderPlayer.sendMessage(ChatColor.GOLD+commanderName+ ChatColor.WHITE +" added you as a builder for " + ChatColor.LIGHT_PURPLE +plotName+ChatColor.WHITE);
-				}
-			}
-			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
-			
-						
+		if (commandLabel.equalsIgnoreCase("dark-expand") ||
+			commandLabel.equalsIgnoreCase("dx")) {
+			expand (player,true);
 		}
-		/******************************* REMOVE BUILDER *******************************\
-		|
-		\******************************************************************************/
-		if (commandLabel.equalsIgnoreCase("remove-builder") || commandLabel.equalsIgnoreCase("rb")) {
-			String oldBuilder;
-			String plotName;
-			
-			// Get the user attempted to be added and the region name
-			if (args.length == 1){
-				if (player == null) {
-					info ("This command needs two arguments to be run by the console <player> <plot>");
-					return false;
-				}
-				oldBuilder = args[0];
-				plotName = chunkNames.get(new Position(player.getLocation()));
-				if (plotName == null) {
-					player.sendMessage("You are not standing in a region");
-					return false;
-				}				
-			}
-			// If the player and the region is specified
-			else if (args.length == 2) {
-				oldBuilder = args[0];
-				plotName = args[1];
-			}
-			// If any other number of arguments are entered
-			else {
-				if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
-				else player.sendMessage("Correct usage /remove-builder <player> [<plot>]");
-				return false;
-			}
-			
-			// Make sure the user adding the builder is allowed to do so
-			Owners owners = chunkOwners.get(plotName);
-			if (owners == null) {
-				if (player == null) info ("The plot "+plotName+" does not exist");
-				else player.sendMessage("The plot "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" does not exist");
-				return false;
-			}
-			if (player == null || owners.hasOwner(player.getName())) {
-				if (!owners.hasBuilder(oldBuilder)) {
-					if (player == null) info (oldBuilder+" is not a builder in "+plotName);
-					else player.sendMessage(ChatColor.GOLD+oldBuilder+ChatColor.WHITE+" is not a builder in "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
-					return false;
-				}
-				// Add the builder to the plot
-				owners.removeBuilder(oldBuilder);
-				// Save the owners list to the global variable
-				chunkOwners.put(plotName, owners);
-				
-				if (player == null) info ("Removed "+oldBuilder+" from "+plotName);
-				else player.sendMessage("Removed "+ChatColor.GOLD+oldBuilder+ChatColor.WHITE+" from "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
-				
-				
-			}
-			else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
-			
-						
+		
+		if (commandLabel.equalsIgnoreCase("add-builder") || 
+			commandLabel.equalsIgnoreCase("ab")) {
+			addBuilder(args,player);
 		}
-		/********************************** ADD OWNER *********************************\
-		|
-		\******************************************************************************/
+		
+		if (commandLabel.equalsIgnoreCase("remove-builder") || 
+			commandLabel.equalsIgnoreCase("rb")) {
+			removeBuilder(args,player);
+		}
+		
 		if (commandLabel.equalsIgnoreCase("addowner") ||
 			commandLabel.equalsIgnoreCase("add-owner") ||
 			commandLabel.equalsIgnoreCase("ao")) {
@@ -494,7 +224,287 @@ public class Regions extends JavaPlugin{
 		}
 		return true;		
 	}
+	/************************************ CLAIM ***********************************\
+	|
+	\******************************************************************************/
+	void claim (String[] args, Player player) {
+		// if economy is enabled
+		if (!economy.isEnabled()) {
+			player.sendMessage("Economy plugin is not enabled, contact admin for help");
+			return;
+		}
+		// is plot is not already claimed
+		else if (chunkNames.containsKey(new Position(player.getLocation()))){
+			player.sendMessage("This plot has allready been claimed, you cannot claim it");
+			return;
+		}
+		// is plot in the regular world or the nether
+		else if (player.getWorld() != mainworld && player.getWorld() != thenether){
+			player.sendMessage("You can only claim plots in the nether or the main world");
+		}
+		// is a name given
+		else if (args.length == 0) {
+			player.sendMessage("You need to specify a name for this plot");
+			return;
+		}
+		// try to claim block
+		else if (args.length == 1){
+			String plotName = args[0];
+			/*for (int i = 1; i < args.length; i++) {
+				plotName += " "+args[i];
+			}*/
+			// check to see if the name has already been taken
+			if (chunkOwners.containsKey(plotName)) {
+				player.sendMessage("This plot name has allready been taken");
+				return;
+			}
+			
+			if (economyapi.chargeMoney(player, 5000)) {
+				Position plot = new Position(player.getLocation());
+				Owners owner = new Owners();
+				owner.addOwner(player.getName());
+				chunkOwners.put(plotName, owner);
+				chunkNames.put(plot, plotName);
+				
+				// find highest block at the four corners
+				plot.placeTorches();
+				
+				player.sendMessage("You bought the plot "+plotName+" for $5000");
+			}
+			
+			else {
+				player.sendMessage("You dont have enough money to buy this plot ($5000)");
+				return;
+			}
+		}
+		else {
+			player.sendMessage("correct usage is /claim <plotname>");
+		}
+		saveRegions();
+		
+		// dynmap overlay
+		if (dynmap.isEnabled()){
+			refreshRegions ();
+		}
+	}
 	
+	/*********************************** EXPAND ***********************************\
+	|
+	\******************************************************************************/
+	void expand (Player player, boolean dark) {
+		// TODO Find the closest plot to your position instead of the first checked
+		// if economy is enabled
+		if (!economy.isEnabled()) {
+			player.sendMessage("Economy plugin is not enabled, contact admin for help");
+			return;
+		}
+		// is plot is not already claimed
+		else if (chunkNames.containsKey(new Position(player.getLocation()))){
+			player.sendMessage("This plot has allready been claimed, you cannot claim it");
+			return;
+		}
+		// is plot in the regular world or the nether
+		else if (player.getWorld() != mainworld && player.getWorld() != thenether){
+			player.sendMessage("You can only claim plots in the nether or the main world");
+			return;
+		}
+		// try to claim block
+		else {
+			// if a plot you own is adjacent
+			Position plot = new Position(player.getLocation());
+			String plotName = "";
+			
+			Position plotN = new Position(player.getLocation().add( 8,0, 0));
+			Position plotS = new Position(player.getLocation().add(-8,0, 0));
+			Position plotE = new Position(player.getLocation().add(0, 0, 8));
+			Position plotW = new Position(player.getLocation().add(0, 0,-8));
+			
+			// Check plot to the north
+			if (chunkNames.containsKey(plotN)){
+				String tempName = chunkNames.get(plotN);
+				Owners plotOwners = chunkOwners.get(tempName);
+				// if the player owns the found chunk
+				if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+				// display an error if there is no owners list
+				else severe("Error finding plot owners for "+tempName);
+			}
+			if (chunkNames.containsKey(plotS)){
+				String tempName = chunkNames.get(plotS);
+				Owners plotOwners = chunkOwners.get(tempName);
+				// if the player owns the found chunk
+				if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+				// display an error if there is no owners list
+				else severe("Error finding plot owners for "+tempName);
+			}
+			if (chunkNames.containsKey(plotE)){
+				String tempName = chunkNames.get(plotE);
+				Owners plotOwners = chunkOwners.get(tempName);
+				if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+				// display an error if there is no owners list
+				else severe("error finding plot owners for "+tempName);
+			}
+			if (chunkNames.containsKey(plotW)){
+				String tempName = chunkNames.get(plotW);
+				Owners plotOwners = chunkOwners.get(tempName);
+				if (plotOwners != null) if (plotOwners.hasOwner(player.getName()))plotName = tempName;
+				// display an error if there is no owners list
+				else severe("error finding plot owners for "+tempName);
+			}
+			if (plotName.equalsIgnoreCase("")) {
+				player.sendMessage("No adjacent plot found, cannot expand");
+				return;
+			}
+			
+			// check to see if the name has already been taken (this is not nessasary
+			// because only plots you own can be expanded
+			/*
+			if (chunkOwners.containsKey(plotName)) {
+				player.sendMessage("This plot name has allready been taken");
+				return false;
+			}*/
+			
+			if (economyapi.chargeMoney(player, 1000)) {
+				
+				chunkNames.put(plot, plotName);
+				
+				// find highest block at the four corners
+				if (!dark) {
+					plot.placeTorches();
+				}
+				
+				player.sendMessage("You expanded the plot "+plotName+" for $1000");
+			}
+			
+			else {
+				player.sendMessage("You dont have enough money to buy this plot");
+				return;
+			}
+		}
+		saveRegions();
+		// dynmap overlay
+		if (dynmap.isEnabled()){
+			refreshRegions ();
+		}
+	}
+	/********************************* ADD BUILDER ********************************\
+	|
+	\******************************************************************************/
+	void addBuilder (String[] args, Player player) {
+		String newBuilder;
+		String plotName;
+		
+		// Get the user attempted to be added and the region name
+		if (args.length == 1){
+			if (player == null) {
+				info ("This command needs two arguments to be run by the console <player> <plot>");
+				return;
+			}
+			newBuilder = args[0];
+			plotName = chunkNames.get(new Position(player.getLocation()));
+			if (plotName == null) {
+				player.sendMessage("You are not standing in a region");
+				return;
+			}				
+		}
+		// If the player and the region is specified
+		else if (args.length == 2) {
+			newBuilder = args[0];
+			plotName = args[1];
+		}
+		// If any other number of arguments are entered
+		else {
+			if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
+			else player.sendMessage("Correct usage /add-builder <player> [<plot>]");
+			return;
+		}
+		
+		// Make sure the user adding the builder is allowed to do so
+		Owners owners = chunkOwners.get(plotName);
+		if (owners == null) {
+			if (player == null) info ("The plot "+plotName+" does not exist");
+			else player.sendMessage("The plot "+plotName+" does not exist");
+			return;
+		}
+		// Check to see if the server or the owner of a plot is running the command
+		if (player == null || owners.hasOwner(player.getName())) {
+			// Add the builder to the plot
+			owners.addBuilder(newBuilder);
+			// Save the owners list to the global variable
+			chunkOwners.put(plotName, owners);
+			
+			if (player == null) info ("Added "+newBuilder+" to "+plotName);
+			else player.sendMessage("Added "+ChatColor.GOLD+newBuilder+ChatColor.WHITE+" as a builder for "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+			
+			Player builderPlayer = Bukkit.getPlayer(newBuilder);
+			if (builderPlayer != null) {
+				String commanderName = "The Server";
+				if (player != null) commanderName = player.getName();
+				builderPlayer.sendMessage(ChatColor.GOLD+commanderName+ ChatColor.WHITE +" added you as a builder for " + ChatColor.LIGHT_PURPLE +plotName+ChatColor.WHITE);
+			}
+		}
+		else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
+	}
+	/******************************* REMOVE BUILDER *******************************\
+	|
+	\******************************************************************************/
+	void removeBuilder (String[] args, Player player) {
+		String oldBuilder;
+		String plotName;
+		
+		// Get the user attempted to be added and the region name
+		if (args.length == 1){
+			if (player == null) {
+				info ("This command needs two arguments to be run by the console <player> <plot>");
+				return;
+			}
+			oldBuilder = args[0];
+			plotName = chunkNames.get(new Position(player.getLocation()));
+			if (plotName == null) {
+				player.sendMessage("You are not standing in a region");
+				return;
+			}				
+		}
+		// If the player and the region is specified
+		else if (args.length == 2) {
+			oldBuilder = args[0];
+			plotName = args[1];
+		}
+		// If any other number of arguments are entered
+		else {
+			if (player == null) info ("This command needs two arguments to be run by the console <player> <plot>");
+			else player.sendMessage("Correct usage /remove-builder <player> [<plot>]");
+			return;
+		}
+		
+		// Make sure the user adding the builder is allowed to do so
+		Owners owners = chunkOwners.get(plotName);
+		if (owners == null) {
+			if (player == null) info ("The plot "+plotName+" does not exist");
+			else player.sendMessage("The plot "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" does not exist");
+			return;
+		}
+		if (player == null || owners.hasOwner(player.getName())) {
+			if (!owners.hasBuilder(oldBuilder)) {
+				if (player == null) info (oldBuilder+" is not a builder in "+plotName);
+				else player.sendMessage(ChatColor.GOLD+oldBuilder+ChatColor.WHITE+" is not a builder in "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+				return;
+			}
+			// Add the builder to the plot
+			owners.removeBuilder(oldBuilder);
+			// Save the owners list to the global variable
+			chunkOwners.put(plotName, owners);
+			
+			if (player == null) info ("Removed "+oldBuilder+" from "+plotName);
+			else player.sendMessage("Removed "+ChatColor.GOLD+oldBuilder+ChatColor.WHITE+" from "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE);
+			
+			
+		}
+		else { player.sendMessage("You do not have permission to add a Builder to this plot"); }
+	}
+	
+	/********************************** ADD OWNER *********************************\
+	|
+	\******************************************************************************/
 	void addOwner(String[] args, Player player) {
 		String newOwner;
 		String plotName;
