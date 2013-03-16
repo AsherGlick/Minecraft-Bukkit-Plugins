@@ -62,6 +62,7 @@ import org.bukkit.event.block.BlockBurnEvent;
 import org.bukkit.event.block.BlockIgniteEvent;
 import org.bukkit.event.block.BlockPlaceEvent;
 import org.bukkit.event.entity.EntityDamageEvent;
+import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
@@ -126,7 +127,9 @@ public class BlockMonitor implements Listener{
  	// Protect signs and item frames from damage if they are in plots
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void protectEntities (EntityDamageEvent event) {
- 		
+ 		if (event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION) {
+ 			if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getEntity().getLocation(),null)); }
+ 		}
  	}
  	// Protect Item Frames from damage in a plot
  	@EventHandler (priority = EventPriority.HIGHEST)
