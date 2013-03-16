@@ -191,7 +191,9 @@ public class Regions extends JavaPlugin{
 			commandLabel.equalsIgnoreCase("dx")) {
 			expand (player,true);
 		}
-		
+		if (commandLabel.equalsIgnoreCase("rename")) {
+			renamePlot(args,player);
+		}
 		if (commandLabel.equalsIgnoreCase("add-builder") || 
 			commandLabel.equalsIgnoreCase("ab")) {
 			addBuilder(args,player);
@@ -223,6 +225,76 @@ public class Regions extends JavaPlugin{
 			listBuilders(args, player);
 		}
 		return true;		
+	}
+	
+	// The rename plot function finds the plot that the player is standing in and renames it
+	// to whatever the player specifies, it charges the player 5000 Chips to change the name
+	// because of processing power, it may cost more later depending on the number of chunks
+	void renamePlot(String[] args, Player player) {
+		// if economy is enabled
+				String oldPlotName = "";
+				if (!economy.isEnabled()) {
+					player.sendMessage("Economy plugin is not enabled, contact admin for help");
+					return;
+				}
+				// is plot is not already claimed
+				else if (!chunkNames.containsKey(new Position(player.getLocation()))){
+					player.sendMessage("There is no plot to change the name of");
+					oldPlotName = chunkNames.get(new Position(player.getLocation()));
+					return;
+				}
+				// If 
+				else if (!chunkOwners.get(oldPlotName).hasOwner(player.getName())) {
+					player.sendMessage("You do not own this plot, you cannot rename it");
+					return;
+				}
+				// is a name given
+				else if (args.length == 0) {
+					player.sendMessage("You need to specify a new name for this plot");
+					return;
+				}
+				// try to claim block
+				else if (args.length == 1){
+					String newPlotName = args[0];
+
+					// check to see if the name has already been taken
+					if (chunkOwners.containsKey(newPlotName)) {
+						player.sendMessage("This plot name has allready been taken");
+						return;
+					}
+					
+					if (economyapi.chargeMoney(player, 5000)) {
+						
+						// Change the data in chunk owners
+						Owners owners = chunkOwners.get(oldPlotName);
+						chunkOwners.remove(oldPlotName);
+						chunkOwners.put(newPlotName, owners);
+						
+						// Change the data in Chunk Names
+						for ( Entry<Position, String> chunk: chunkNames.entrySet()) {
+							if (chunk.getValue().equals(oldPlotName)) {
+								chunkNames.remove(chunk.getKey());
+								chunkNames.put(chunk.getKey(), newPlotName);
+							}
+						}
+												
+						player.sendMessage("You changed the name of "+ChatColor.LIGHT_PURPLE+oldPlotName+ChatColor.WHITE+" to "+ChatColor.LIGHT_PURPLE+newPlotName+ChatColor.WHITE+" for $5000");
+					}
+					
+					else {
+						player.sendMessage("You dont have enough money to buy this plot ($5000)");
+						return;
+					}
+				}
+				else {
+					player.sendMessage("correct usage is /claim <plotname>");
+				}
+				saveRegions();
+				
+				// dynmap overlay
+				if (dynmap.isEnabled()){
+					refreshRegions ();
+				}
 	}
 	/************************************ CLAIM ***********************************\
 	|
