@@ -52,6 +52,7 @@ import org.bukkit.Effect;
 import org.bukkit.Location;
 import org.bukkit.Material;
 import org.bukkit.block.Block;
+import org.bukkit.block.BlockFace;
 import org.bukkit.entity.EntityType;
 import org.bukkit.entity.Player;
 import org.bukkit.event.EventHandler;
@@ -65,6 +66,7 @@ import org.bukkit.event.entity.EntityDamageEvent;
 import org.bukkit.event.entity.EntityDamageEvent.DamageCause;
 import org.bukkit.event.entity.EntityExplodeEvent;
 import org.bukkit.event.hanging.HangingBreakByEntityEvent;
+import org.bukkit.event.hanging.HangingPlaceEvent;
 import org.bukkit.event.player.PlayerBucketEmptyEvent;
 import org.bukkit.event.player.PlayerBucketFillEvent;
  
@@ -124,31 +126,41 @@ public class BlockMonitor implements Listener{
 		}
  	}
  	
- 	// Protect signs and item frames from damage if they are in plots
+ 	/********************** PROTECT ENTITIES FROM EXPLOSIONS **********************\
+ 	| This function detects if an entity would be damaged by an explosion. If it   |
+ 	| would be damaged by an explosion and it is inside of a plot then the damage  |
+ 	| is canceled, protecting the entity                                           |
+ 	\******************************************************************************/
  	@EventHandler (priority = EventPriority.HIGHEST)
- 	public void protectEntities (EntityDamageEvent event) {
+ 	public void protectEntitiesfromExplosions (EntityDamageEvent event) {
  		if (event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION) {
  			if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getEntity().getLocation(),null)); }
  		}
  	}
- 	// Protect Item Frames from damage in a plot
+ 	/************************ PROTECT ENTITIES FROM PLAYERS ***********************\
+ 	| This function protects hanging entities (item frames and paintings) from     |
+ 	| player destruction if the entity exists in a region that the player          |
+ 	| breaking them does not own                                                   |
+ 	\******************************************************************************/
  	@EventHandler (priority = EventPriority.HIGHEST)
- 	public void protectEntities (HangingBreakByEntityEvent event) {
- 		
-
- 		
- 		// check to see if the item is an item frame? or will it allways be
- 		
- 		// check to see if the destroyer is a human
- 		if (event.getRemover().getType() == EntityType.PLAYER) {
- 			plugin.info("Player Trying to break item frame");
- 		}
- 		
- 		
+ 	public void protectEntitiesfromPlayers (HangingBreakByEntityEvent event) { 		
+ 		// Check to see if the destroyer is a Player
+ 		if (event.getRemover().getType() == EntityType.PLAYER) plugin.info("Player Trying to break item frame");
+ 		else return;
+ 		// Cancel the event if the player does not own the region the entity is in
  		if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getEntity().getLocation(),(Player)event.getRemover())); }
- 		
- 		plugin.info("Entity Hanging Event");
- 		//event.setCancelled(true);
+ 	}
+ 	
+ 	@EventHandler (priority = EventPriority.HIGHEST)
+ 	public void stopEntityPlacement (HangingPlaceEvent event) {
+ 		// Get the player that is placing the hanging entity
+ 		Player player = event.getPlayer();
+ 		// Get the location that the entity is placed in instead of the location it is placed on
+ 		Location location = event.getBlock().getLocation();
+ 		BlockFace blockFace = event.getBlockFace();
+ 		location.add(blockFace.getModX(),blockFace.getModY(),blockFace.getModZ());
+ 		// Check Should cancel 
+ 		if (!event.isCancelled()) { event.setCancelled(shouldCancel(location,player)); }
  	}
  	
  	/******************************** SHOULD CANCEL *******************************\
