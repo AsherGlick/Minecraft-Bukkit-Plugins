@@ -232,24 +232,25 @@ public class Regions extends JavaPlugin{
 	// because of processing power, it may cost more later depending on the number of chunks
 	void renamePlot(String[] args, Player player) {
 		// if economy is enabled
-				String oldPlotName = "";
 				if (!economy.isEnabled()) {
 					player.sendMessage("Economy plugin is not enabled, contact admin for help");
 					return;
 				}
+				
 				// is plot is not already claimed
-				else if (!chunkNames.containsKey(new Position(player.getLocation()))){
+				if (!chunkNames.containsKey(new Position(player.getLocation()))){
 					player.sendMessage("There is no plot to change the name of");
-					oldPlotName = chunkNames.get(new Position(player.getLocation()));
+					;
 					return;
 				}
+				String oldPlotName = chunkNames.get(new Position(player.getLocation()));
 				// If 
-				else if (!chunkOwners.get(oldPlotName).hasOwner(player.getName())) {
+				if (!chunkOwners.get(oldPlotName).hasOwner(player.getName())) {
 					player.sendMessage("You do not own this plot, you cannot rename it");
 					return;
 				}
 				// is a name given
-				else if (args.length == 0) {
+				if (args.length == 0) {
 					player.sendMessage("You need to specify a new name for this plot");
 					return;
 				}
@@ -263,7 +264,7 @@ public class Regions extends JavaPlugin{
 						return;
 					}
 					
-					if (economyapi.chargeMoney(player, 5000)) {
+					if (economyapi.chargeMoney(player, 50000)) {
 						
 						// Change the data in chunk owners
 						Owners owners = chunkOwners.get(oldPlotName);
@@ -273,7 +274,7 @@ public class Regions extends JavaPlugin{
 						// Change the data in Chunk Names
 						for ( Entry<Position, String> chunk: chunkNames.entrySet()) {
 							if (chunk.getValue().equals(oldPlotName)) {
-								chunkNames.remove(chunk.getKey());
+								//chunkNames.remove(chunk.getKey());
 								chunkNames.put(chunk.getKey(), newPlotName);
 							}
 						}
@@ -288,6 +289,7 @@ public class Regions extends JavaPlugin{
 				}
 				else {
 					player.sendMessage("correct usage is /claim <plotname>");
+					return;
 				}
 				saveRegions();
 				
