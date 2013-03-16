@@ -279,11 +279,11 @@ public class Regions extends JavaPlugin{
 							}
 						}
 												
-						player.sendMessage("You changed the name of "+ChatColor.LIGHT_PURPLE+oldPlotName+ChatColor.WHITE+" to "+ChatColor.LIGHT_PURPLE+newPlotName+ChatColor.WHITE+" for $5000");
+						player.sendMessage("You changed the name of "+ChatColor.LIGHT_PURPLE+oldPlotName+ChatColor.WHITE+" to "+ChatColor.LIGHT_PURPLE+newPlotName+ChatColor.WHITE+" for "+ChatColor.GREEN+"$5000"+ChatColor.WHITE);
 					}
 					
 					else {
-						player.sendMessage("You dont have enough money to buy this plot ($5000)");
+						player.sendMessage("You dont have enough money to buy this plot ("+ChatColor.GREEN+"$5000"+ChatColor.WHITE+")");
 						return;
 					}
 				}
@@ -343,11 +343,11 @@ public class Regions extends JavaPlugin{
 				// find highest block at the four corners
 				plot.placeTorches();
 				
-				player.sendMessage("You bought the plot "+plotName+" for $5000");
+				player.sendMessage("You bought the plot "+plotName+" for "+ChatColor.GREEN+"$5000"+ChatColor.WHITE);
 			}
 			
 			else {
-				player.sendMessage("You dont have enough money to buy this plot ($5000)");
+				player.sendMessage("You dont have enough money to buy this plot ("+ChatColor.GREEN+"$5000"+ChatColor.WHITE+")");
 				return;
 			}
 		}
@@ -446,7 +446,7 @@ public class Regions extends JavaPlugin{
 					plot.placeTorches();
 				}
 				
-				player.sendMessage("You expanded the plot "+plotName+" for $1000");
+				player.sendMessage("You expanded the plot "+ChatColor.LIGHT_PURPLE+plotName+ChatColor.WHITE+" for "+ChatColor.GREEN+"$1000"+ChatColor.WHITE);
 			}
 			
 			else {
