@@ -15,6 +15,7 @@ import org.bukkit.ChatColor;
 import org.bukkit.Material;
 import org.bukkit.command.Command;
 import org.bukkit.command.CommandSender;
+import org.bukkit.configuration.ConfigurationSection;
 import org.bukkit.entity.Player;
 import org.bukkit.inventory.ItemStack;
 import org.bukkit.inventory.meta.ItemMeta;
@@ -49,6 +50,7 @@ public class Quester extends JavaPlugin{
 		
 		// Output that the plugin has been enabled
 		info ("Version " + pdFile.getVersion() +" is enabled");
+		loadQuests();
 	}
 	
 
@@ -102,7 +104,7 @@ public class Quester extends JavaPlugin{
 				}, 20L);
 				
 			}
-			
+			saveQuests();
 		}
 		if (commandLabel.equalsIgnoreCase("lore")) {
 			if (player == null) {
@@ -188,7 +190,7 @@ public class Quester extends JavaPlugin{
 		while (formattedQuestIterator.hasNext()) {
 			Entry<String, List<String>> pair = formattedQuestIterator.next();
 			
-			getConfig().set("quest."+pair.getKey()+".completed", pair.getValue());
+			getConfig().set("quests."+pair.getKey()+".completed", pair.getValue());
 		}
 		
 		this.saveConfig();
@@ -196,7 +198,32 @@ public class Quester extends JavaPlugin{
 	}
 	
 	public void loadQuests() {
-		
+		questList.clear();
+		ConfigurationSection questSection = getConfig().getConfigurationSection("quests");
+		if (questSection == null){
+			severe("cannot load quests (quests section no found)");
+			return;
+		}
+		Set<String> quests = questSection.getKeys(false);
+		if (quests == null){
+			severe("cannot load quests (no quests found)");
+			return;
+		}
+		// for each region
+		for (String quest : quests){
+			 List<String> completedPlayersList = getConfig().getStringList("quests."+quest+".completed");
+			 Set<String> completedPlayersSet = new HashSet<String>();
+	
+			 // Fill the set with all the players who completed the quest
+			 if (completedPlayersList != null) {
+				 for (String player : completedPlayersList) {
+					 completedPlayersSet.add(player);
+				 }
+			 }
+			 
+			 questList.put(quest, completedPlayersSet);
+		}
+		info ("quests loaded");
 	}
 	
   //////////////////////////////////////////////////////////////////////////////
