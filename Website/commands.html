@@ -125,106 +125,151 @@
       <h3>Regions Commands</h3>
       <h4 style="border-bottom: 1px solid #CCC">Claim</h4>
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span3 offset1">
           <code> /claim &lt;region name&gt;</code> <br>
         </div>
-        <div class="span9">
+        <div class="span8">
           Use this command to claim a 8x8 plot of land with a given name for $5000. The corners are marked with four torches. </br>
         </div>
       </div>
       <h4 style="border-bottom: 1px solid #CCC">Expand</h4>
       <div class="row-fluid">
-        <div class="span3">
-          <code> /expand</code> <br>
-          <code> /ex</code>
+        <div class="span3 offset1" style="text-align:center">
+          <code> /expand </code>
         </div>
-        <div class="span9">
+        <div class="span8">
           Add another a 8x8 plot of land to an adjacent plot that you own for $1000. The corners are marked with four torches.</br>
         </div>
       </div>
       <h4 style="border-bottom: 1px solid #CCC">Dark Expand</h4>
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span3 offset1">
           <code> /dark-expand</code> <br>
           <code> /darkexpand</code> <br>
           <code> /dx</code> <br>
         </div>
-        <div class="span9">
+        <div class="span8">
           Add another a 8x8 plot of land to an adjacent plot that you own for $1000. No torches are placed. Useful for claiming plots that you have already built in an dont need torches for.</br>
         </div>
       </div>
       <h4 style="border-bottom: 1px solid #CCC">Rename</h4>
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span3 offset1">
           <code> /rename &lt;new name&gt;</code> <br>
         </div>
-        <div class="span9">
+        <div class="span8">
           Changes the name of the plot you are standing in for $6000.</br>
         </div>
       </div>
 
       <h4 style="border-bottom: 1px solid #CCC">Add Owner</h4>
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span3 offset1" style="text-align:center">
           <code> /add-owner &lt;player name&gt;</code> <br>
           <code> /addowner &lt;player name&gt;</code> <br>
           <code> /ao &lt;player name&gt;</code> <br>
         </div>
-        <div class="span9">
+        <div class="span8">
           Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
         </div>
       </div>
       <h4 style="border-bottom: 1px solid #CCC">List Owners</h4>
       <div class="row-fluid">
-        <div class="span3">
+        <div class="span3 offset1" style="text-align:center">
           <code> /list-owners [plot name]</code> <br>
           <code> /owners [plot name]</code> <br>
         </div>
-        <div class="span9">
+        <div class="span8">
           Lists the owners of a given plot. If no plot is given then it lists the owners of the plot that you are currently standing in. </br>
         </div>
       </div>
+
       <h4 style="border-bottom: 1px solid #CCC">Add builder</h4>
       <div class="row-fluid">
-        <div class="span3">
-          <code> /add-owner &lt;player name&gt;</code> <br>
-          <code> /addowner &lt;player name&gt;</code> <br>
-          <code> /ao &lt;player name&gt;</code> <br>
+        <div class="span3 offset1" style="text-align:center">
+          <code> /add-builder &lt;player name&gt;</code> <br>
+          <code> /addbuilder &lt;player name&gt;</code> <br>
+          <code> /ab &lt;player name&gt;</code> <br>
         </div>
-        <div class="span9">
-          Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
+        <div class="span8">
+          Add a player as a builder to your plot, they can break and place blocks while they are a builder but they cannot expand your plot or add other builders. Builders can be added or removed at any time by an owner.</br>
         </div>
       </div>
       <h4 style="border-bottom: 1px solid #CCC">Remove builder</h4>
       <div class="row-fluid">
-        <div class="span3">
-          <code> /add-owner &lt;player name&gt;</code> <br>
-          <code> /addowner &lt;player name&gt;</code> <br>
-          <code> /ao &lt;player name&gt;</code> <br>
+        <div class="span3 offset1">
+          <code> /remove-builder &lt;player name&gt;</code> <br>
+          <code> /removeowner &lt;player name&gt;</code> <br>
+          <code> /rb &lt;player name&gt;</code> <br>
         </div>
-        <div class="span9">
-          Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
+        <div class="span8">
+          Removes a player as a builder from your plot. </br>
         </div>
       </div>
       <h4 style="border-bottom: 1px solid #CCC">List builders</h4>
       <div class="row-fluid">
-        <div class="span3">
-          <code> /add-owner &lt;player name&gt;</code> <br>
-          <code> /addowner &lt;player name&gt;</code> <br>
-          <code> /ao &lt;player name&gt;</code> <br>
+        <div class="span3 offset1">
+          <code> /list-builders [plot name]</code> <br>
+          <code> /listbuilders [plot name]</code> <br>
+          <code> /builders [plot name]</code> <br>
         </div>
-        <div class="span9">
-          Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
+        <div class="span8">
+          Lists all of the players who are currently assigned as builders to the plot specified. If no plot is given then it lists the builders of the plot you are currently standing in. </br>
         </div>
       </div>
 
 
-      <h3>Teleport Commands</h3>
+      <h3>Economy Commands</h3>
+      <h4 style="border-bottom: 1px solid #CCC">Money</h4>
+      <div class="row-fluid">
+        <div class="span3 offset1">
+          <code> /money</code> <br>
+        </div>
+        <div class="span8">
+          Shows you how much money you have in your bank</br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Shop</h4>
+      <div class="row-fluid">
+        <div class="span3 offset1">
+          <code> /shop</code> <br>
+        </div>
+        <div class="span8">
+          Teleports you to the shop from your location or from the shop back to the location you teleported from.</br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Price</h4>
+      <div class="row-fluid">
+        <div class="span3 offset1">
+          <code> /price</code> <br>
+        </div>
+        <div class="span8">
+          Shows you how much the item you are currently holding costs and how much it would sell to the shop for.</br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Grant</h4>
+      <div class="row-fluid">
+        <div class="span3 offset1">
+          <code> /grant &lt;player&gt; &lt;money&gt;</code> <br>
+        </div>
+        <div class="span8">
+          Gives an ammount of your money to a specified player. Good for trading or helping out new players. </br>
+        </div>
+      </div>
+
+      <h3>Transport Commands</h3>
+      <h4 style="border-bottom: 1px solid #CCC">Warp</h4>
+      <h4 style="border-bottom: 1px solid #CCC">Warp List</h4>
+      <h4 style="border-bottom: 1px solid #CCC">Player Warps</h4>
+      <h4 style="border-bottom: 1px solid #CCC">Flying</h4>
+      <h4 style="border-bottom: 1px solid #CCC">Activating Warps</h4>
+      <h4 style="border-bottom: 1px solid #CCC">Compas Jumping</h4>
 
       <hr> 
 
       <div class="footer">
-        <p>&copy; Company 2013</p>
+        If you find any errors on this page report them on the <a href="https://github.com/AsherGlick/Minecraft-Bukkit-Plugins">Issue Tracker</a>
+        <p>&copy; Asher Glick 2013</p>
       </div>
 
     </div> <!-- /container -->
