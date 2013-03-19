@@ -1,0 +1,241 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Template &middot; Bootstrap</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <!-- Le styles -->
+    <link href="css/bootstrap.css" rel="stylesheet">
+    <style type="text/css">
+      body {
+        padding-top: 20px;
+        padding-bottom: 60px;
+      }
+
+      /* Custom container */
+      .container {
+        margin: 0 auto;
+        max-width: 1000px;
+      }
+      .container > hr {
+        margin: 60px 0;
+      }
+
+      /* Main marketing message and sign up button */
+      .jumbotron {
+        margin: 80px 0;
+        text-align: center;
+      }
+      .jumbotron h1 {
+        font-size: 100px;
+        line-height: 1;
+      }
+      .jumbotron .lead {
+        font-size: 24px;
+        line-height: 1.25;
+      }
+      .jumbotron .btn {
+        font-size: 21px;
+        padding: 14px 24px;
+      }
+
+      /* Supporting marketing content */
+      .marketing {
+        margin: 60px 0;
+      }
+      .marketing p + h4 {
+        margin-top: 28px;
+      }
+
+
+      /* Customize the navbar links to be fill the entire space of the .navbar */
+      .navbar .navbar-inner {
+        padding: 0;
+      }
+      .navbar .nav {
+        margin: 0;
+        display: table;
+        width: 100%;
+      }
+      .navbar .nav li {
+        display: table-cell;
+        width: 1%;
+        float: none;
+      }
+      .navbar .nav li a {
+        font-weight: bold;
+        text-align: center;
+        border-left: 1px solid rgba(255,255,255,.75);
+        border-right: 1px solid rgba(0,0,0,.1);
+      }
+      .navbar .nav li:first-child a {
+        border-left: 0;
+        border-radius: 3px 0 0 3px;
+      }
+      .navbar .nav li:last-child a {
+        border-right: 0;
+        border-radius: 0 3px 3px 0;
+      }
+      object {
+        width: 100%;
+      }
+    </style>
+    <link href="css/bootstrap-responsive.css" rel="stylesheet">
+
+    <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
+    <!--[if lt IE 9]>
+      <script src="../assets/js/html5shiv.js"></script>
+    <![endif]-->
+
+    <!-- Fav and touch icons -->
+    <link rel="apple-touch-icon-precomposed" sizes="144x144" href="../assets/ico/apple-touch-icon-144-precomposed.png">
+    <link rel="apple-touch-icon-precomposed" sizes="114x114" href="../assets/ico/apple-touch-icon-114-precomposed.png">
+      <link rel="apple-touch-icon-precomposed" sizes="72x72" href="../assets/ico/apple-touch-icon-72-precomposed.png">
+                    <link rel="apple-touch-icon-precomposed" href="../assets/ico/apple-touch-icon-57-precomposed.png">
+                                   <link rel="shortcut icon" href="../assets/ico/favicon.png">
+  </head>
+
+  <body>
+
+    <div class="container">
+
+      <div class="masthead">
+        <h3 class="muted">Demeter Minecraft</h3>
+        <div class="navbar">
+          <div class="navbar-inner">
+            <div class="container">
+              <ul class="nav">
+                <li><a href="./home.html">Home</a></li>
+                <li class="active"><a href="#">Commands</a></li>
+                <li><a href="./economy.html">Economy</a></li>
+                <li><a href="./contact.html">Contact</a></li>
+                <li><a href="./map.html">Map</a></li>
+                <li><a href="#">Contribute</a></li>
+              </ul>
+            </div>
+          </div>
+        </div><!-- /.navbar -->
+      </div>
+      
+
+      <h3>Regions Commands</h3>
+      <h4 style="border-bottom: 1px solid #CCC">Claim</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /claim &lt;region name&gt;</code> <br>
+        </div>
+        <div class="span9">
+          Use this command to claim a 8x8 plot of land with a given name for $5000. The corners are marked with four torches. </br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Expand</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /expand</code> <br>
+          <code> /ex</code>
+        </div>
+        <div class="span9">
+          Add another a 8x8 plot of land to an adjacent plot that you own for $1000. The corners are marked with four torches.</br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Dark Expand</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /dark-expand</code> <br>
+          <code> /darkexpand</code> <br>
+          <code> /dx</code> <br>
+        </div>
+        <div class="span9">
+          Add another a 8x8 plot of land to an adjacent plot that you own for $1000. No torches are placed. Useful for claiming plots that you have already built in an dont need torches for.</br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Rename</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /rename &lt;new name&gt;</code> <br>
+        </div>
+        <div class="span9">
+          Changes the name of the plot you are standing in for $6000.</br>
+        </div>
+      </div>
+
+      <h4 style="border-bottom: 1px solid #CCC">Add Owner</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /add-owner &lt;player name&gt;</code> <br>
+          <code> /addowner &lt;player name&gt;</code> <br>
+          <code> /ao &lt;player name&gt;</code> <br>
+        </div>
+        <div class="span9">
+          Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">List Owners</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /list-owners [plot name]</code> <br>
+          <code> /owners [plot name]</code> <br>
+        </div>
+        <div class="span9">
+          Lists the owners of a given plot. If no plot is given then it lists the owners of the plot that you are currently standing in. </br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Add builder</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /add-owner &lt;player name&gt;</code> <br>
+          <code> /addowner &lt;player name&gt;</code> <br>
+          <code> /ao &lt;player name&gt;</code> <br>
+        </div>
+        <div class="span9">
+          Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">Remove builder</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /add-owner &lt;player name&gt;</code> <br>
+          <code> /addowner &lt;player name&gt;</code> <br>
+          <code> /ao &lt;player name&gt;</code> <br>
+        </div>
+        <div class="span9">
+          Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
+        </div>
+      </div>
+      <h4 style="border-bottom: 1px solid #CCC">List builders</h4>
+      <div class="row-fluid">
+        <div class="span3">
+          <code> /add-owner &lt;player name&gt;</code> <br>
+          <code> /addowner &lt;player name&gt;</code> <br>
+          <code> /ao &lt;player name&gt;</code> <br>
+        </div>
+        <div class="span9">
+          Add another player as an owner of your plot. Owners have full rights and can act as if they claimed the plot in the first place. Owners cannot be removed from plots. </br>
+        </div>
+      </div>
+
+
+      <h3>Teleport Commands</h3>
+
+      <hr> 
+
+      <div class="footer">
+        <p>&copy; Company 2013</p>
+      </div>
+
+    </div> <!-- /container -->
+
+    <!-- Le javascript
+    ================================================== -->
+    <!-- Placed at the end of the document so the pages load faster -->
+    <script src="http://code.jquery.com/jquery.js"> </script>
+    <script src="js/bootstrap.min.js"></script>
+    <script>
+      $("#map").html('<object style="width:100%;height:100%" data="http://demetermine.com:8123">');
+    </script>
+  </body>
+</html>
