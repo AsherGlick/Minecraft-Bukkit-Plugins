@@ -102,15 +102,18 @@
 
       {{include("global_templates/header.html", currentpage="economy")}}
 
+      <div class="row-fluid">
+        <input id="searchbox" type="text" placeholder="Search…" style="min-width: 80%">
+      </div>
       <table class="table table-bordered table-hover" >
-          <tr> <th style="text-align:center" > icon </th> <th> Item Name </th> <th> price </th> </tr>
-          <tr> <td> icon </td> <td> Item Name </td> <td> price </td> </tr>
-          <tr> <td> icon </td> <td> Item Name </td> <td> price </td> </tr>
-          <tr> <td> icon </td> <td> Item Name </td> <td> price </td> </tr>
-          <tr> <td> icon </td> <td> Item Name </td> <td> price </td> </tr>
-          <tr> <td> icon </td> <td> Item Name </td> <td> price </td> </tr>
-          <tr> <td> icon </td> <td> Item Name </td> <td> price </td> </tr>
-
+        <thead>
+          <tr> <th style="text-align:center" > Icon </th> <th> Item Name </th> <th> Price </th> </tr>
+        </thead>
+        <tbody>
+          {{include("economy_templates/item.html", item="Item Name", price=500)}}
+          {{include("economy_templates/item.html", item="Diamond Block", price=9000)}}
+          {{include("economy_templates/item.html", item="Diamond", price=1000)}}
+        </tbody>
       </table>
 
       <hr>
@@ -125,7 +128,8 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="http://code.jquery.com/jquery.js"> </script>
-    <script src="js/bootstrap.min.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script src="js/tableSearch.js"></script>
 
   </body>
 </html>
