@@ -1,4 +1,4 @@
-
+{{AMASSITE-DOC}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -103,25 +103,8 @@
 
     <div class="container">
 
-      <div class="masthead">
-        <h3 class="muted">Demeter Minecraft</h3>
-        <div class="navbar">
-          <div class="navbar-inner">
-            <div class="container">
-              <ul class="nav">
-                <li><a href="./home.html">Home</a></li>
-                <li><a href="./commands.html">Commands</a></li>
-                <li><a href="./economy.html">Economy</a></li>
-                <li><a href="./contact.html">Contact</a></li>
-                <li class="active"><a href="#">Map</a></li>
-                <li><a href="#">Contribute</a></li>
-              </ul>
-            </div>
-          </div>
-        </div><!-- /.navbar -->
-      </div>
+      {{include("global_templates/header.html", currentpage="map")}}
       
-
       <!-- Map Frame -->
       <div class="row-fluid">
         <div class="span12" style="background:#CCC">

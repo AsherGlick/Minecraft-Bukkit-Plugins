@@ -1,4 +1,4 @@
-
+{{AMASSITE-DOC}}
 <!DOCTYPE html>
 <html lang="en">
   <head>
@@ -103,24 +103,7 @@
 
     <div class="container">
 
-      <div class="masthead">
-        <h3 class="muted">Demeter Minecraft</h3>
-        <div class="navbar">
-          <div class="navbar-inner">
-            <div class="container">
-              <ul class="nav">
-                <li><a href="./home.html">Home</a></li>
-                <li class="active"><a href="#">Commands</a></li>
-                <li><a href="./economy.html">Economy</a></li>
-                <li><a href="./contact.html">Contact</a></li>
-                <li><a href="./map.html">Map</a></li>
-                <li><a href="#">Contribute</a></li>
-              </ul>
-            </div>
-          </div>
-        </div><!-- /.navbar -->
-      </div>
-      
+      {{include("global_templates/header.html", currentpage="commands")}}
 
       <h3>Regions Commands</h3>
       <h4 style="border-bottom: 1px solid #CCC">Claim</h4>
