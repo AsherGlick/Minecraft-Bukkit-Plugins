@@ -1,10 +1,26 @@
-function onEdit() {
-	alert("pre");
+function onEdit(searchValue) {
 	var count = 0;
 	$('#mainTable > tbody  > tr').each(function() {
-		count += 1;
+		var itemName = $(this).children()[1].innerHTML;
+		if (itemName.indexOf(searchValue) === -1) {
+			$(this).hide();
+		}
+		else {
+			$(this).show();
+			count += 1;
+		}
+		
 	});
-	alert(count);
+
+	if (count === 0) {
+		$('#searchbox').attr('pattern', '');
+	}
+	else {
+		$('#searchbox').attr('pattern', '.*');
+	}
+	//console.log(count);
+
+	//alert(count);
 }
 
 
@@ -26,18 +42,21 @@ $('#searchbox').blur(function() {
 function recursiveCall () {
 	//console.log("recursiveCall");
 	if (lastSearchValue != $('#searchbox').val()) {
-		console.log("new search value:"+$('#searchbox').val());
+		//console.log("new search value:"+$('#searchbox').val());
 		lastSearchValue = $('#searchbox').val();
-		if (lastSearchValue.length > 10) {
+
+		onEdit(lastSearchValue);
+
+		/*if (lastSearchValue.length > 10) {
 			$('#searchbox').attr('pattern', '');
 		}
 		else {
 			$('#searchbox').attr('pattern', '.*');
-		}
+		}*/
 	}
 	if (continueRecursiveCall) {
 		setTimeout(recursiveCall,10);
 	}
 }
 
-console.log("FINISHED");
+//console.log("FINISHED");
