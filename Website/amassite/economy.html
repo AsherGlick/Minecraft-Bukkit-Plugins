@@ -103,9 +103,9 @@
       {{include("global_templates/header.html", currentpage="economy")}}
 
       <div class="row-fluid">
-        <input id="searchbox" type="text" placeholder="Search…" style="min-width: 80%">
+        <input id="searchbox" type="text" placeholder="Search…" style="min-width: 80%" pattern=".*">
       </div>
-      <table class="table table-bordered table-hover" >
+      <table class="table table-bordered table-hover" id="mainTable">
         <thead>
           <tr> <th style="text-align:center" > Icon </th> <th> Item Name </th> <th> Price </th> </tr>
         </thead>
@@ -128,8 +128,9 @@
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
 	<script src="http://code.jquery.com/jquery.js"> </script>
-  <script src="js/bootstrap.min.js"></script>
+  
   <script src="js/tableSearch.js"></script>
+  <script src="js/bootstrap.min.js"></script>
 
   </body>
 </html>
