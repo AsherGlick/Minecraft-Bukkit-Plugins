@@ -1,0 +1,19 @@
+{{AMASSITE-TEMPLATE}}
+<!-- currentpage = The page that the user is currently on, decides which tab is recessed -->
+<div class="masthead">
+	<h3 class="muted">Demeter Minecraft</h3>
+	<div class="navbar">
+		<div class="navbar-inner">
+			<div class="container">
+				<ul class="nav">
+					<li {{if currentpage == "home"      }}class="active"><a href="#"{{else}}><a href="./home.html"      {{endif}}>Home</a></li>
+					<li {{if currentpage == "commands"  }}class="active"><a href="#"{{else}}><a href="./commands.html"  {{endif}}>Commands</a></li>
+					<li {{if currentpage == "economy"  }}class="active"><a href="#"{{else}}><a href="./economy.html"   {{endif}}>Economy</a></li>
+					<!-- <li {{if currentpage == "contact"   }}class="active"><a href="#"{{else}}><a href="./contact.html"   {{endif}}>Contact</a></li> -->
+					<li {{if currentpage == "map"       }}class="active"><a href="#"{{else}}><a href="./map.html"       {{endif}}>Map</a></li>
+					<li {{if currentpage == "contribute"}}class="active"><a href="#"{{else}}><a href="./contribute.html"{{endif}}>Contribute</a></li>
+				</ul>
+			</div>
+		</div>
+	</div><!-- /.navbar -->
+</div>
