@@ -1,22 +1,30 @@
+# 1% chance in 60 for coal          0.6
+# .6% chance in 60 for iron         0.36
+# .8% chance in 15 for redstone     0.12
+# .1% chance 30 for gold            0.03
+# .1% chance in 15 for diamond      0.015
+# .1% chance in 15 for lapis        0.015
+
 def createPrices():
     i = {}
     # Constants
     plotPrice = 1000
-    ratio_between_diamond_ore_and_coal_ore = 1           # incorrect value
-    ratio_between_diamond_ore_and_iron_ore = 1           # incorrect value
-    ratio_between_diamond_ore_and_lapis_Lazuli_ore = 1   # incorrect value
-    ratio_between_diamond_ore_and_gold_ore = 1           # incorrect value
-    ratio_between_diamond_ore_and_redstone_ore = 1       # incorrect value
-    ratio_between_diamond_ore_and_emerald_ore = 1        # incorrect value
-    ratio_between_diamond_ore_and_nether_quartz_ore = 1  # incorrect value
+    ratio_between_diamond_ore_and_coal_ore = 0.015/0.6
+    ratio_between_diamond_ore_and_iron_ore = 0.015/0.36
+    ratio_between_diamond_ore_and_gold_ore = 0.015/0.03
+    ratio_between_diamond_ore_and_lapis_ore = 0.015/0.015
+    ratio_between_diamond_ore_and_emerald_ore = 0.015/0.005
+    ratio_between_diamond_ore_and_redstone_ore = 0.015/0.12
+    ratio_between_diamond_ore_and_nether_quartz_ore = 0.015/0.036  # incorrect value
 
-    coal_per_ore = 5          # incorrect value
-    iron_per_ore = 1          # incorrect value
-    lapis_lazuli_per_ore = 5  # incorrect value
-    gold_per_ore = 1          # incorrect value
-    redstone_per_ore = 10     # incorrect value
-    diamond_per_ore = 1       # incorrect value
-    emerald_per_ore = 1       # incorrect value
+    coal_per_ore = 1
+    iron_per_ore = 1
+    lapis_lazuli_per_ore = 6
+    gold_per_ore = 1
+    redstone_per_ore = 4.5
+    diamond_per_ore = 1
+    emerald_per_ore = 1
+    
     buketlessMilk = 20
     bucketlessWater = 20
     bucketlessLava = 20
@@ -112,17 +120,19 @@ def createPrices():
     
     # Ores Objects
     i["DIAMOND_ORE"] = i["DIAMOND"] * diamond_per_ore
+    
+    i["COAL_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_coal_ore
     i["IRON_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_iron_ore
+    i["GOLD_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_gold_ore
+    i["LAPIS_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_lapis_ore
+    i["EMERALD_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_emerald_ore
+    i["REDSTONE_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_redstone_ore
+
     i["IRON_INGOT"] = i["IRON_ORE"] + smeltingCost
     i["IRON_BLOCK"] = (9*i["IRON_INGOT"])
     chainMailIngot = i["IRON_INGOT"]  # the price of a imaginary chainmail ingot
-    i["GOLD_ORE"] = (i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_gold_ore)
     i["GOLD_INGOT"] = i["GOLD_ORE"] + smeltingCost
-    i["REDSTONE_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_redstone_ore
     i["REDSTONE"] = i["REDSTONE_ORE"] / redstone_per_ore
-    i["EMERALD_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_emerald_ore
-    i["COAL_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_coal_ore
-    i["LAPIS_ORE"] = i["DIAMOND_ORE"] * ratio_between_diamond_ore_and_lapis_Lazuli_ore
 
     # Wood Items
     genericLog = 8
@@ -232,7 +242,7 @@ def createPrices():
     i["STONE_SPADE"] = (i["COBBLESTONE"]) + (2*i["STICK"])
     i["GRASS"] = i["DIRT"]
     i["GOLDEN_CARROT"] = (8*i["GOLD_NUGGET"]) + i["CARROT"]
-    i["WOOD_DOOR"] = i["WOOD"] * 6
+    i["WOOD_DOOR"] = genericWood * 6
     i["GOLD_SWORD"] = (2*i["GOLD_INGOT"]) + (i["STICK"])
     i["IRON_HELMET"] = (5*i["IRON_INGOT"])
     i["BIRCH_WOOD_STAIRS"] = (6*i["WOOD"][2]) / 4
@@ -402,5 +412,19 @@ def createPrices():
     i["REDSTONE_TORCH_OFF"] = -1
     i["PISTON_MOVING_PIECE"] = -1
     i["GLOWING_REDSTONE_ORE"] = -1
+
+    for item in i:
+        print repr(item).ljust(25),
+        values = [-1]*16
+        if isinstance (i[item], list):
+            for (index,price) in enumerate(i[item]):
+                values[index] = price
+        else:
+            values[0] = i[item]
+
+        for price in values:
+            print repr(int(price)).rjust(5),
+
+        print ""
 
 createPrices();
