@@ -104,6 +104,12 @@ def createPrices():
     i["SAPLING"][2] = 1   # Birch Sapling
     i["SAPLING"][3] = 1   # Jungle Sapling
 
+
+    ###########
+    #### VALUES BELOW HERE SHOULD NOT BE MODIFIED UNLESS THE GAME UPDATES
+    ###########
+
+
     # Records
     i["RECORD_3"] = recordPrice
     i["RECORD_4"] = recordPrice
@@ -413,14 +419,16 @@ def createPrices():
     i["PISTON_MOVING_PIECE"] = -1
     i["GLOWING_REDSTONE_ORE"] = -1
 
+    print 'NAME                  DAMAGE: 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15'
     for item in i:
         print repr(item).ljust(25),
-        values = [-1]*16
+        values = [] #[-1]*16
         if isinstance (i[item], list):
             for (index,price) in enumerate(i[item]):
-                values[index] = price
+                #values[index] = price
+                values.append(price)
         else:
-            values[0] = i[item]
+            values.append(i[item])
 
         for price in values:
             print repr(int(price)).rjust(5),
