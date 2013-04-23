@@ -114,6 +114,10 @@ public class BlockMonitor implements Listener{
  	public void catchExplosions (EntityExplodeEvent event) { 			
 		plugin.info("Explodesion Detected");
 		event.setCancelled(true);
+		if (event.getEntityType() == EntityType.CREEPER) {
+			return;
+		}
+		
 		Location explosionLocation = event.getLocation();
 		//explosionLocation.getWorld().createExplosion(explosionLocation, 0.0F, false);
 		explosionLocation.getWorld().playEffect(explosionLocation, Effect.SMOKE, 100);
@@ -134,6 +138,7 @@ public class BlockMonitor implements Listener{
  	@EventHandler (priority = EventPriority.HIGHEST)
  	public void protectEntitiesfromExplosions (EntityDamageEvent event) {
  		if (event.getCause() == DamageCause.BLOCK_EXPLOSION || event.getCause() == DamageCause.ENTITY_EXPLOSION) {
+ 			if (event.getEntityType() == EntityType.PAINTING || event.getEntityType() == EntityType.PAINTING)
  			if (!event.isCancelled()) { event.setCancelled(shouldCancel(event.getEntity().getLocation(),null)); }
  		}
  	}
