@@ -5,6 +5,8 @@
 # .1% chance in 15 for diamond      0.015
 # .1% chance in 15 for lapis        0.015
 
+from itertools import imap
+
 def createPrices():
     i = {}
     # Constants
@@ -337,7 +339,6 @@ def createPrices():
     i["GLASS_BOTTLE"] = (3*i["GLASS"]) / 3
     i["POWERED_MINECART"] = (i["FURNACE"] + i["MINECART"])
     i["EMERALD_BLOCK"] = (9*i["EMERALD"])
-    i["WOOD_DOUBLE_STEP"] = (2*i["WOOD_STEP"])
     i["THIN_GLASS"] = (6*i["GLASS"]) / 16
     i["WOOD_SPADE"] = (genericWood) + (2*i["STICK"])
     i["CARROT_STICK"] = i["FISHING_ROD"] + i["CARROT_ITEM"]
@@ -418,21 +419,55 @@ def createPrices():
     i["REDSTONE_TORCH_OFF"] = -1
     i["PISTON_MOVING_PIECE"] = -1
     i["GLOWING_REDSTONE_ORE"] = -1
+    i["WOOD_DOUBLE_STEP"] = -1
 
-    print 'NAME                  DAMAGE: 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15'
-    for item in i:
-        print repr(item).ljust(25),
-        values = [] #[-1]*16
-        if isinstance (i[item], list):
-            for (index,price) in enumerate(i[item]):
-                #values[index] = price
-                values.append(price)
-        else:
-            values.append(i[item])
 
-        for price in values:
-            print repr(int(price)).rjust(5),
 
-        print ""
+
+
+
+    # multi value names
+    multivalue = {'SAPLING':['OAK','SPRUCE','BIRCH','JUNGLE'],
+        'WOOD':['OAK','SPRUCE','BIRCH','JUNGLE'],
+        'LOG':['OAK','SPRUCE','BIRCH','JUNGLE'],
+        'WOOD_STEP':['OAK','SPRUCE','BIRCH','JUNGLE'],
+       'STEP':['STONE','SANDSTONE','WOODEN','COBBLESTONE','BRICK','STONE BRICK','NETHER BRICK', 'QUARTZ','SMOOTH STONE','SMOOTH SANDSTONE','TILE QUARTZ'],
+       'WOOL':['WHITE','ORANGE','MAGENTA','LIGHT' 'BLUE','YELLOW', 'LIME', 'PINK', 'GRAY', 'LIGHT GRAY', 'CYAN', 'PURPLE', 'BLUE', 'BROWN', 'GREEN', 'RED', 'BLACK'] }
+
+
+
+
+
+
+
+    displayType = "web"
+    if displayType == "table":
+        print 'NAME                  DAMAGE: 0     1     2     3     4     5     6     7     8     9    10    11    12    13    14    15'
+        for item in i:
+            print repr(item).ljust(25),
+            values = [] #[-1]*16
+            if isinstance (i[item], list):
+                for (index,price) in enumerate(i[item]):
+                    #values[index] = price
+                    values.append(price)
+            else:
+                values.append(i[item])
+
+            for price in values:
+                print repr(int(price)).rjust(5),
+
+            print ""
+    elif displayType == "web":
+        maxlen = max(imap(len,i))
+        print maxlen
+        for item in i:
+            if isinstance(i[item], list):
+                if item in multivalue:
+                    for (index,price) in enumerate(i[item]):
+                        print '{{include("economy_templates/item.html", item="'+(item+'_'+multivalue[item][index]+'"').ljust(maxlen+1)+' price='+str(price).ljust(5)+')}}'
+            else:
+                print '{{include("economy_templates/item.html", item="'+(item+'"').ljust(maxlen+1)+' price='+str(int(i[item])).ljust(5)+')}}'
+
+
 
 createPrices();
