@@ -2,7 +2,7 @@ function onEdit(searchValue) {
 	var count = 0;
 	$('#mainTable > tbody  > tr').each(function() {
 		var itemName = $(this).children()[1].innerHTML;
-		if (itemName.indexOf(searchValue) === -1) {
+		if (itemName.toLowerCase().indexOf(searchValue.toLowerCase()) === -1) {
 			$(this).hide();
 		}
 		else {
