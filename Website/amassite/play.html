@@ -80,8 +80,12 @@
         border-right: 0;
         border-radius: 0 3px 3px 0;
       }
+      object {
+        width: 100%;
+      }
     </style>
     <link href="css/bootstrap-responsive.css" rel="stylesheet">
+    <link href="Minecraft_Regular/stylesheet.css" rel="stylesheet">
 
     <!-- HTML5 shim, for IE6-8 support of HTML5 elements -->
     <!--[if lt IE 9]>
@@ -100,37 +104,21 @@
 
     <div class="container">
 
-      {{include("global_templates/header.html", currentpage="home")}}
-
-      <!-- Jumbotron -->
-      <div class="jumbotron">
-        <h1>Demeter!</h1>
-        <p class="lead">Welcome to the wonderful world of Demeter</p>
-        <a class="btn btn-large btn-success" href="play.html">Start Playing Now</a>
-      </div>
-
-      <hr>
-
-      <!-- Example row of columns -->
+      {{include("global_templates/header.html", currentpage="")}}
+      
+      <!-- Map Frame -->
       <div class="row-fluid">
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
+        PLAY NOW!
+      </div>
+
+      <div style="text-align: left; margin: 20px 0;">
+        <div style="width: 880px; height:528px; background-image:url('img/blankServer.png'); margin-right: auto; margin-left: auto">
+          <div style="font-family:'Minecraft Regular'; color: #FFF; position: relative; top: 257px; font-size: 1.1em; width: 390px; margin-right: auto; margin-left: auto;">server.demetermine.com</div>
+          <div style="font-family:'Minecraft Regular'; color: #FFF; position: relative; top: 157px; font-size: 1.1em; width: 390px; margin-right: auto; margin-left: auto;">Demeter</div>
         </div>
       </div>
 
-      <hr>
+      <hr> 
 
       <div class="footer">
         <p>&copy; Company 2013</p>
@@ -141,8 +129,10 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-	<script src="http://code.jquery.com/jquery.js"> </script>
+    <script src="http://code.jquery.com/jquery.js"> </script>
     <script src="js/bootstrap.min.js"></script>
-
+    <script>
+      $("#map").html('<object style="width:100%;height:100%" data="http://demetermine.com:8123">');
+    </script>
   </body>
 </html>
