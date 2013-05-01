@@ -464,9 +464,11 @@ def createPrices():
             if isinstance(i[item], list):
                 if item in multivalue:
                     for (index,price) in enumerate(i[item]):
-                        print '{{include("economy_templates/item.html", item="'+(item+'_'+multivalue[item][index]+'",').ljust(maxlen+2)+' price='+str(price).ljust(5)+')}}'
+                        if price != -1:
+                            print '{{include("economy_templates/item.html", item="'+(item+'_'+multivalue[item][index]+'",').replace("_"," ").title().ljust(maxlen+2)+' price='+str(price).ljust(5)+')}}'
             else:
-                print '{{include("economy_templates/item.html", item="'+(item+'",').ljust(maxlen+2)+' price='+str(int(i[item])).ljust(5)+')}}'
+                if i[item] != -1:
+                    print '{{include("economy_templates/item.html", item="'+(item+'",').replace("_"," ").title().ljust(maxlen+2)+' price='+str(int(i[item])).ljust(5)+')}}'
 
 
 
