@@ -1,11 +1,17 @@
 .footer {
-	position: absolute;
-	bottom: 0px;
 	border-radius: 5px;
-	border: 1px solid #CCC;
 	width: 100%;
 	padding: 10px;
-	height: 50px;
+  /*padding-bottom: 20px;*/
+	height: 80px;
+  /*margin: 0px;*/
+
+}
+
+.floatBottom {
+  border: 1px solid #CCC;
+  position: absolute;
+  bottom: 0px;
 }
 
 .bodywrapper {
@@ -20,8 +26,9 @@ html {
 }
 body {
         padding-top: 20px;
-        padding-bottom: 60px;
+        /*padding-bottom: 60px;*/
         height:100%;
+        /*background: #AAA;*/
       }
 
       /* Custom container */
@@ -31,6 +38,7 @@ body {
         max-width: 1000px;
         /*height: 100%;*/
         min-height: 100%;
+        /*padding-bottom: 70px;*/
       }
       .container > hr {
         margin: 60px 0;
@@ -94,3 +102,33 @@ body {
       object {
         width: 100%;
       }
+
+.blogContent {
+    position: relative;
+    max-height: 135px;
+    overflow: hidden;
+}
+
+.blogContent::before {
+    background-image: linear-gradient( top, 
+            rgba( 255, 255, 255, 0 ) 0%, rgba( 255, 255, 255, 1 ) 100% );
+        background-image: -moz-linear-gradient( top, 
+            rgba( 255, 255, 255, 0 ) 0%, rgba( 255, 255, 255, 1 ) 100% );
+        background-image: -ms-linear-gradient( top, 
+            rgba( 255, 255, 255, 0 ) 0%, rgba( 255, 255, 255, 1 ) 100% );
+        background-image: -o-linear-gradient( top, 
+            rgba( 255, 255, 255, 0 ) 0%, rgba( 255, 255, 255, 1 ) 100% );
+        background-image: -webkit-linear-gradient( top, 
+            rgba( 255, 255, 255, 0 ) 0%, rgba( 255, 255, 255, 1 ) 100% );
+    content: "\00a0";
+    height: 30%;
+    position: absolute;
+    bottom: 0px;
+    width: 100%;
+}
+
+.blogelement {
+  margin-top: 20px;
+      border-bottom: 1px solid #DDD;
+
+}
