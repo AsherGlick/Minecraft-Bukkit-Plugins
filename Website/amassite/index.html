@@ -39,28 +39,14 @@
         <a class="btn btn-large btn-success" href="play.html">Start Playing Now</a>
       </div>
 
-      <hr>
+      <!-- <hr> -->
 
       <!-- Example row of columns -->
-      <div class="row-fluid">
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec id elit non mi porta gravida at eget metus. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa justo sit amet risus. Etiam porta sem malesuada magna mollis euismod. Donec sed odio dui. </p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-       </div>
-        <div class="span4">
-          <h2>Heading</h2>
-          <p>Donec sed odio dui. Cras justo odio, dapibus ac facilisis in, egestas eget quam. Vestibulum id ligula porta felis euismod semper. Fusce dapibus, tellus ac cursus commodo, tortor mauris condimentum nibh, ut fermentum massa.</p>
-          <p><a class="btn" href="#">View details &raquo;</a></p>
-        </div>
+      <div style="text-align:center; border-bottom: 3px solid #AAA">
+        <span style="font-size:20px">News</span>
       </div>
-
-      <hr>
+      <div id="blog">
+      </div>
 
       {{include("global_templates/footer.html")}}
 
@@ -69,8 +55,72 @@
     <!-- Le javascript
     ================================================== -->
     <!-- Placed at the end of the document so the pages load faster -->
-	<script src="http://code.jquery.com/jquery.js"> </script>
-    <script src="js/bootstrap.min.js"></script>
+	<script src="http://code.jquery.com/jquery-1.9.1.min.js"> </script>
+  <script src="js/jquery.jfeed.pack.js"></script>
+  <script src="js/bootstrap.min.js"></script>
+  <script>
+    $(document).ready(function() {
+      $.ajax({
+        type: "POST",
+        url: "http://demetermine.blogspot.com/feeds/posts/default",
+        dataType: "jsonp",
+        crossDomain: true,
+        success: function (msg) {
+          if (msg) {
+            //alert("got the rss Feed");
+            var xml = $.parseXML(msg);
+            $(xml).find("entry:lt(4)").each( function () {
+              var linkUrl = "";
+              
+              $(this).find("link").each(function() {
+                if (this.getAttribute("rel") == "alternate") {
+                  linkUrl = this.getAttribute("href");
+                }
+              })
 
+              var row = document.createElement('div');
+              row.className="row-fluid blogelement";
+              var column = document.createElement('div');
+              column.className="span12";
+              row.appendChild(column);
+              var title = document.createElement('h2');
+              title.innerHTML = $(this).find("title").text();
+              column.appendChild(title);
+              var content = document.createElement('div');
+              content.className="blogContent";
+              content.innerHTML = $(this).find("content").text();
+              column.appendChild(content);
+              var buttonWrapper = document.createElement('p');
+              column.appendChild(buttonWrapper);
+              var button = document.createElement('a');
+              button.className = "btn";
+              button.href = linkUrl;
+              button.innerHTML = "Read More &raquo;";
+              buttonWrapper.appendChild(button);
+
+              $("#blog").append(row);
+            });
+
+            /*
+            console.log(xml);
+            document.getElementById("blogTitle1").innerHTML = $(item1).find("title").text();
+            document.getElementById("blogContent1").innerHTML = $(item1).find("content").text().substr(0,1000)+"...";
+            var linkUrl = "";
+            $(item1).find("link").each(function() {
+              if (this.getAttribute("rel") == "alternate") {
+                linkUrl = this.getAttribute("href");
+              }
+            })*/
+          }
+          else {
+            alert("Cannot add to list !");
+          }
+        },
+        error: function(jqxhr, textStatus, errorThrown) {
+          alert("failure:"+errorThrown);
+        }
+      });
+    });
+  </script>
   </body>
 </html>
